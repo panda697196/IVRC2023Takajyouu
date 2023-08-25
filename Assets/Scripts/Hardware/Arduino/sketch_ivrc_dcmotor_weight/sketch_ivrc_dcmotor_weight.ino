@@ -6,7 +6,7 @@
 
 BluetoothSerial SerialBT;
 // ピン定義。
-#define PIN_STBY 16
+#define PIN_STBY 19
 #define PIN_IN1 17
 #define PIN_IN2 5
 #define PIN_PWM 18
@@ -22,17 +22,19 @@ void setup() {
 
   //モータの初期設定
   digitalWrite(PIN_STBY, HIGH);
+  digitalWrite(PIN_IN1, LOW);
+  digitalWrite(PIN_IN2, LOW);
   analogWrite(PIN_PWM, 0);
 }
 
 void loop() {
   if(SerialBT.available()){
-    String command = Serial.readStringUntil('\n');
+    String command = SerialBT.readStringUntil('\n');
     if(command == "S"){ // 停止命令
       stop();
     }
     else{
-      int speed = Serial.readStringUntil('\n').toInt();
+      int speed = SerialBT.readStringUntil('\n').toInt();
       if(command == "C"){ // 順転命令
         rotate(true, speed);
       }
@@ -61,6 +63,6 @@ void rotate(bool cw, int speed){ //モータを回す関数 boolに直す
 }
 
 void stop(){ //モータを止める関数
-  digitalWrite(PIN_IN1, LOW);
-  digitalWrite(PIN_IN2, LOW);
+  digitalWrite(PIN_IN1, HIGH);
+  digitalWrite(PIN_IN2, HIGH);
 }
