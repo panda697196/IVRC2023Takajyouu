@@ -25,6 +25,8 @@ void setup() {
   digitalWrite(PIN_IN1, LOW);
   digitalWrite(PIN_IN2, LOW);
   analogWrite(PIN_PWM, 0);
+
+  stop();
 }
 
 void loop() {
@@ -33,14 +35,13 @@ void loop() {
     if(command == "S"){ // 停止命令
       stop();
     }
-    else{
+    else if (command == "C"){ // 順転命令
       int speed = SerialBT.readStringUntil('\n').toInt();
-      if(command == "C"){ // 順転命令
-        rotate(true, speed);
-      }
-      else if(command == "R"){ // 逆転命令
-        rotate(false, speed);
-      }
+      rotate(true, speed);
+    }
+    else if(command == "R"){ // 逆転命令
+      int speed = SerialBT.readStringUntil('\n').toInt();
+      rotate(false, speed);
     }
   }
 }
