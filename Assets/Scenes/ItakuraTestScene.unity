@@ -526,3 +526,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 1126198688}
+  _eagleState: 0
