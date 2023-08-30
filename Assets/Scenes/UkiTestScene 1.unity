@@ -8948,11 +8948,19 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 478087966}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a1d19f2b1a0c78409891b236402bae2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  MainCamera: {fileID: 0}
+  _crowState: 0
+  _isDebug: 1
+  song1: {fileID: 0}
+  song2: {fileID: 0}
+  flyAway1: {fileID: 0}
+  flyAway2: {fileID: 0}
+  fleeCrows: 1
 --- !u!1 &484510612
 GameObject:
   m_ObjectHideFlags: 0

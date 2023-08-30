@@ -2089,7 +2089,6 @@ GameObject:
   m_Component:
   - component: {fileID: 400124}
   - component: {fileID: 9500000}
-  - component: {fileID: 11400000}
   - component: {fileID: 6500000}
   - component: {fileID: 5400000}
   - component: {fileID: 8200000}
@@ -2140,23 +2139,6 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &11400000
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 100124}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2a58512123bcd224eb61112b203e6413, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  song1: {fileID: 8300000, guid: e2622b95524aab94b9a0448a1a4c6fc8, type: 3}
-  song2: {fileID: 8300000, guid: aa29893140715234fa4c6f0f17bc3d88, type: 3}
-  flyAway1: {fileID: 8300000, guid: 9dabaef0cd2ecb241956e3db52d3bc8d, type: 3}
-  flyAway2: {fileID: 8300000, guid: ae13220b2fee67344b8b455414c59ff4, type: 3}
-  fleeCrows: 0
 --- !u!65 &6500000
 BoxCollider:
   m_ObjectHideFlags: 0
