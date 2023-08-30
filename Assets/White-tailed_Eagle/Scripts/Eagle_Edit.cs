@@ -10,6 +10,8 @@ public class Eagle_Edit : MonoBehaviour
     [Header("鷹の状態を表示")]
     public EagleState _eagleState;
 
+    [Header("DebugMode 鷹の状態を変えることで鷹を動かせる")]
+    public bool _isDebug;
     public enum EagleState
     {
         Idle,Takeoff,TurnR,TurnL,Lauding,Walk,Walkend,Glide,Attack,Hunt
@@ -22,79 +24,79 @@ public class Eagle_Edit : MonoBehaviour
 	void Update ()
     {
      
-     
-        
-        if (_eagleState.ToString()=="Idle")
-        {
-            IdleFlyMode();
-        }
-        
         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("idle"))
-        {
-            eagle.SetBool("takeoff", false);
-            eagle.SetBool("fly", false);
-            eagle.SetBool("landing", false);
-        }
-        
-        
-        if (_eagleState.ToString()=="Takeoff")
-        {
-            IdleFlyMode();
-            test();
-            TakeOff();
-        }
-        if (_eagleState.ToString()=="TurnL")
-        {
-            IdleFlyMode();
-            test();
-            TurnLeft();
-        }
-        if (_eagleState.ToString()=="TurnR")
-        {
-            IdleFlyMode();
-            test();
-            TurnRight();
-        }
-        if (_eagleState.ToString()=="Lauding")
-        {
-            IdleFlyMode();
-            test();
-            Lauding();
-        }
-        if (_eagleState.ToString()=="Walk")
-        {
-            IdleFlyMode();
-            test();
-            Walk();
-        }
-        if (_eagleState.ToString()=="Walkend")
-        {
-            WalkEnd();
-        }
-        if (_eagleState.ToString()=="Glide")
-        {
-            IdleFlyMode();
-            test();
-            Glide();
-        }
-        if (_eagleState.ToString()=="Attack")
-        {
-            IdleFlyMode();
-            test();
-            Attack();
-        }
-        if (_eagleState.ToString()=="Hunt")
-        {
-            IdleFlyMode();
-            test();
-            Hunt();
-            
-        }
+             {
+                 eagle.SetBool("takeoff", false);
+                 eagle.SetBool("fly", false);
+                 eagle.SetBool("landing", false);
+             }
 
-        if (Input.GetKeyDown(KeyCode.A))
+        if (_isDebug)
         {
-            ToFry();
+            if (_eagleState.ToString()=="Idle")
+            {
+                IdleFlyMode();
+            }
+        
+       
+        
+            if (_eagleState.ToString()=="Takeoff")
+            {
+                IdleFlyMode();
+                test();
+                TakeOff();
+            }
+            if (_eagleState.ToString()=="TurnL")
+            {
+                IdleFlyMode();
+                test();
+                TurnLeft();
+            }
+            if (_eagleState.ToString()=="TurnR")
+            {
+                IdleFlyMode();
+                test();
+                TurnRight();
+            }
+            if (_eagleState.ToString()=="Lauding")
+            {
+                IdleFlyMode();
+                test();
+                Lauding();
+            }
+            if (_eagleState.ToString()=="Walk")
+            {
+                IdleFlyMode();
+                test();
+                Walk();
+            }
+            if (_eagleState.ToString()=="Walkend")
+            {
+                WalkEnd();
+            }
+            if (_eagleState.ToString()=="Glide")
+            {
+                IdleFlyMode();
+                test();
+                Glide();
+            }
+            if (_eagleState.ToString()=="Attack")
+            {
+                IdleFlyMode();
+                test();
+                Attack();
+            }
+            if (_eagleState.ToString()=="Hunt")
+            {
+                IdleFlyMode();
+                test();
+                Hunt();
+            
+            }
         }
+        
+
+       
 	}
 
     public void IdleFlyMode()
@@ -185,12 +187,12 @@ public class Eagle_Edit : MonoBehaviour
         }
     }
 
-    public void ToFry()
-    {
-        IdleFlyMode();
-        eagle.SetBool("takeoff", false);
-        eagle.SetBool("fly", false);
-        eagle.SetBool("landing", false);
-        TakeOff();
-    }
+    // public void ToFry()
+    // {
+    //     IdleFlyMode();
+    //     eagle.SetBool("takeoff", false);
+    //     eagle.SetBool("fly", false);
+    //     eagle.SetBool("landing", false);
+    //     TakeOff();
+    // }
 }

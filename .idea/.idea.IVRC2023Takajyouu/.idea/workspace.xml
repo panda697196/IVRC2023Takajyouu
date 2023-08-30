@@ -3,13 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="8f957aef-ffae-4691-b3ff-58c4fd5bbb39" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.IVRC2023Takajyouu/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.IVRC2023Takajyouu/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/ItakuraTestScene.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/ItakuraTestScene.unity" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Scripts/Eagle_Edit.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Scripts/Eagle_Edit.cs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/Assets/TestScripts.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -68,7 +70,7 @@
       <updated>1692353403665</updated>
       <workItem from="1692353423560" duration="2584000" />
       <workItem from="1692952608720" duration="3479000" />
-      <workItem from="1693301318640" duration="5624000" />
+      <workItem from="1693301318640" duration="6195000" />
     </task>
     <servers />
   </component>
