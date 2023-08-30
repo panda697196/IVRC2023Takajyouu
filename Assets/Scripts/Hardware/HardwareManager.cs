@@ -13,8 +13,8 @@ public class HardwareManager : MonoBehaviour
     [Header("モータ速度")]
     [SerializeField] private int _ropeSpeedC = 100;
     [SerializeField] private int _ropeSpeedR = 100;
-    [SerializeField] private int _weightSpeedC = 100;
-    [SerializeField] private int _weightSpeedR = 100;
+    [SerializeField] private int _weightSpeedC = 255;
+    [SerializeField] private int _weightSpeedR = 255;
     // モータを止めるまでの時間[s]，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータを止めるまでの時間[s]")]
     [SerializeField] private float _ropeTimeC = 5;
@@ -132,7 +132,7 @@ public class HardwareManager : MonoBehaviour
     {
         _ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
         _isRopeTight = true;
-        yield return new WaitUntil(() => _ropeSender._afterstop == true); // 紐が張ったことを確認できるまで待機
+        yield return new WaitUntil(() => _pressSender._afterstop == true); // 紐が張ったことを確認できるまで待機
         _isRopeTight = false;
         
         _weightSender.DataSend("C\n" + _weightSpeedC.ToString() + "\n"); // 重りを落とし始める

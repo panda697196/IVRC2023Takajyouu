@@ -21,6 +21,7 @@ public class Sender : MonoBehaviour
         {
             if (mySerialHandler._message == "AS")
             {
+                DataSend("S\n");
                 _afterstop = true;
             }
             if (mySerialHandler._message == "BS")
