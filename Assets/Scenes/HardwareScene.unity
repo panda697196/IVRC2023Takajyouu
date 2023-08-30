@@ -165,6 +165,8 @@ MonoBehaviour:
   _weightTimeC: 5
   _weightTimeR: 5
   _isDebug: 1
+  _weightPosition: 0
+  _ropePosition: 0
 --- !u!4 &389080396
 Transform:
   m_ObjectHideFlags: 0
@@ -332,7 +334,7 @@ MonoBehaviour:
   _isNewMessageReceived: 0
   _message: 
   _bandRate: 115200
-  _portName: COM6
+  _portName: COM9
 --- !u!4 &619462543
 Transform:
   m_ObjectHideFlags: 0
