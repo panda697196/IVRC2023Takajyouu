@@ -27,6 +27,9 @@ public class HardwareManager : MonoBehaviour
     [SerializeField] private float _ropeTimeMiddle = 5f;
     [SerializeField] private float _weightTimeC = 2f;
     [SerializeField] private float _weightTimeR = 2f;
+    [Header("ファン稼働時間[s]")]
+    [SerializeField] private float _fanTimeOfCome = 1.5f;
+    [SerializeField] private float _fanTimeOfGo = 2f;
     [Header("デバック等")]
     public bool _isDebug = true;
     [SerializeField] private float _weightSec = 0;//おもりの位置　上が0で下げるほど＋
@@ -46,6 +49,8 @@ public class HardwareManager : MonoBehaviour
     void Start()
     {
         _tightenSpeed = _ropeSpeedFast;
+        _weightSender.DataSend("S\n");
+        _ropeSender.DataSend("S\n");
     }
 
     // Update is called once per frame
@@ -122,12 +127,22 @@ public class HardwareManager : MonoBehaviour
             {
                 _weightSender.DataSend("S\n");
             }
+            if (Input.GetKeyUp(KeyCode.F))
+            {
+                StartCoroutine(AppearWind());
+            }
             if (Input.GetKeyUp(KeyCode.Space))
             {
                 _weightSender.DataSend("S\n");
                 _ropeSender.DataSend("S\n");
             }
         }
+    }
+
+    private void OnApplicationQuit()
+    {
+        _weightSender.DataSend("S\n");
+        _ropeSender.DataSend("S\n");
     }
 
     public IEnumerator Appear() // 鷹が腕に止まるときの関数
@@ -288,19 +303,18 @@ public class HardwareManager : MonoBehaviour
     {
         //爪を放すプログラム
     }
-
+    */
     public IEnumerator AppearWind() // 鷹が腕に止まるときの風提示の関数
     {
-        WindSender.DataSend(風を起こす命令);
-        yield return new WaitForSeconds(風を起こす時間); // 一定時間風を起こす
-        WindSender.DataSend(風をやませる命令);
+        _windSender.DataSend("S\n");
+        yield return new WaitForSeconds(_fanTimeOfCome); // 一定時間風を起こす
+        _windSender.DataSend("S\n");
     }
 
     public IEnumerator DisappearWind() // 鷹が飛び立つときの風提示の関数
     {
-        WindSender.DataSend(風を起こす命令);
-        yield return new WaitForSeconds(風を起こす時間); // 一定時間風を起こす
-        WindSender.DataSend(風をやませる命令);
+        _windSender.DataSend("S\n");
+        yield return new WaitForSeconds(_fanTimeOfGo); // 一定時間風を起こす
+        _windSender.DataSend("S\n");
     }
-    */
 }

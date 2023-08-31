@@ -25,7 +25,7 @@ public class PullInspector : MonoBehaviour
 
     public void OffPullStatus()
     {
-        _isPull = !_isPull;
+        _isPull = false;
     }
 
     public void OnPullStatus()
