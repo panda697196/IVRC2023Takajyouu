@@ -39,7 +39,7 @@ public class lb_Crow : MonoBehaviour
     Vector3 originalVelocity = Vector3.zero;
     private Transform _crowTransform;
     private Vector3 _crowPrevPosition;
-    float Angle = 0;
+    float Angle = 0.0f;
 
     //hash variables for the animation states and animation properties
     int idleAnimationHash;
@@ -123,7 +123,7 @@ public class lb_Crow : MonoBehaviour
                     l -= 0.01f;
                     anim.SetFloat("flyingDirectionX", l);
                 }
-                //Fly(l);
+                Fly(l);
                 break;
             case birdBehaviors.flyRight:
                 anim.SetBool("flying", true);
@@ -134,7 +134,7 @@ public class lb_Crow : MonoBehaviour
                     r += 0.01f;
                     anim.SetFloat("flyingDirectionX", r);
                 }
-                //Fly(r);
+                Fly(r);
                 break;
             case birdBehaviors.flyStraight:
                 anim.SetBool("flying", true);
@@ -150,7 +150,7 @@ public class lb_Crow : MonoBehaviour
                     s += 0.01f;
                     anim.SetFloat("flyingDirectionX", s);
                 }
-               // Fly(s);
+                Fly(s);
                 break;
             case birdBehaviors.landing:
                 anim.SetBool("landing", true);
@@ -168,9 +168,15 @@ public class lb_Crow : MonoBehaviour
 
     void Fly(float p)
     {
-        // ローカル座標を基準に、回転を取得
-        Vector3 localAngle = _crowTransform.localEulerAngles;
-        Angle += -45.0f * p;//回す角度を算出
+        originalAnimSpeed = 1.0f;
+        Vector3 direction = transform.position;
+        // 方向に速度を掛け合わせて移動ベクトルを求める
+        originalVelocity = transform.position * originalAnimSpeed * Time.deltaTime;
+        // 物体を移動する
+        transform.position += transform.rotation * originalVelocity;
+
+
+        /*Angle = -45.0f * p;//回す角度を算出
         originalAnimSpeed = 1.0f;
         // 角度をラジアンに変換
         float rad = Angle * Mathf.Deg2Rad;
@@ -178,46 +184,14 @@ public class lb_Crow : MonoBehaviour
         Vector3 direction = new Vector3(Mathf.Cos(rad), 0, Mathf.Sin(rad));
         // 方向に速度を掛け合わせて移動ベクトルを求める
         originalVelocity = direction * originalAnimSpeed * Time.deltaTime;
-        // 進行方向（移動量ベクトル）に向くようなクォータニオンを取得
-        var rotation = Quaternion.LookRotation(originalVelocity + localAngle);
         // 物体を移動する
-        transform.localPosition += originalVelocity;
-        /*// オブジェクトの回転に反映
-        _crowTransform.localRotation = rotation;
-
-        
-        // 現在フレームのワールド位置
-        var position = _crowTransform.position;
-
-        // 移動量を計算
-        var delta = position - _crowPrevPosition;
-
-        // 次のUpdateで使うための前フレーム位置更新
-        _crowPrevPosition = position;
-
-        // 静止している状態だと、進行方向を特定できないため回転しない
-       // if (delta == Vector3.zero)
-       //     return;
-
-        
-
-        
-
-
-        localAngle.x = 10.0f; // ローカル座標を基準に、x軸を軸にした回転を10度に変更
-        localAngle.y = 10.0f; // ローカル座標を基準に、y軸を軸にした回転を10度に変更
-        localAngle.z = 10.0f; // ローカル座標を基準に、z軸を軸にした回転を10度に変更
-        _crowTransform.localEulerAngles = localAngle; // 回転角度を設定*/
-
-
+        transform.position += transform.rotation * originalVelocity;
+        // 進行方向（移動量ベクトル）に向くようなクォータニオンを取得
+        var rotation = Quaternion.LookRotation(transform.position);
         // transformを取得
-        Transform myTransform = this.transform;
+        transform.rotation = rotation;
+        UnityEngine.Debug.Log(Angle);*/
 
-        // ローカル座標を基準に、回転を取得
-        localAngle.x = 10.0f; // ローカル座標を基準に、x軸を軸にした回転を10度に変更
-        localAngle.y = 10.0f; // ローカル座標を基準に、y軸を軸にした回転を10度に変更
-        localAngle.z = 10.0f; // ローカル座標を基準に、z軸を軸にした回転を10度に変更
-        myTransform.localEulerAngles = localAngle; // 回転角度を設定
     }
 
     void PlaySong()
