@@ -5,6 +5,7 @@ using UnityEngine;
 public class Sender : MonoBehaviour
 {
     [SerializeReference] private INexusRobotSend _sender;
+    [SerializeField] private PullInspector _pullInspector;
     [SerializeField] private MySerialHandler mySerialHandler;
     public bool _afterstop = false;
 
@@ -23,6 +24,8 @@ public class Sender : MonoBehaviour
             {
                 DataSend("S\n");
                 _afterstop = true;
+                
+                _pullInspector.DetectPull();
             }
             if (mySerialHandler._message == "BS")
             {

@@ -9,6 +9,7 @@ public class HardwareManager : MonoBehaviour
     [SerializeField] private Sender _ropeSender;
     [SerializeField] private Sender _pressSender;
     [SerializeField] private Sender _windSender;
+    [SerializeField] private PullInspector _pullInspector;
     // モータの回転速度(0-255)，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータ速度")]
     [SerializeField] private int _ropeSpeedC = 100;
@@ -116,6 +117,28 @@ public class HardwareManager : MonoBehaviour
         //GameManagerに処理が終了したことの報告
     }
 
+    public IEnumerator StandbyComeHawk()// 鷹が腕に留まる前に　紐を張るなど準備をする
+    {
+        StartCoroutine(StandbyShock());
+        /*
+        yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true);
+        */
+        yield return StandbyShock();
+        //GameManagerに処理が終了したことの報告
+    }
+
+    public IEnumerator ComeHawk()// 鷹が腕に留まる瞬間
+    {
+        StartCoroutine(Stimulate());
+        /*
+        StartCoroutine(AppearWind());
+        yield return new WaitForSeconds(重りが到達するまでの時間);
+        StartCoroutine(AppearPress());
+        */
+        yield return Stimulate();
+        //GameManagerに処理が終了したことの報告
+    }
+
     public IEnumerator Disappear() // 鷹が飛び立つときの関数
     {
         StartCoroutine(DisappearShock());
@@ -132,9 +155,39 @@ public class HardwareManager : MonoBehaviour
     {
         _ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
         _isRopeTight = true;
-        yield return new WaitUntil(() => _pressSender._afterstop == true); // 紐が張ったことを確認できるまで待機
+        
+        //yield return new WaitUntil(() => _pressSender._afterstop == true); // 紐が張ったことを確認できるまで待機
+        yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true); // 紐が張ったことを確認できるまで待機
+        _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
         _isRopeTight = false;
         
+        _weightSender.DataSend("C\n" + _weightSpeedC.ToString() + "\n"); // 重りを落とし始める
+        _isWeightDown = true;
+        yield return new WaitForSeconds(_weightTimeC);
+        _weightSender.DataSend("S\n"); // 重りが落ちたらモータを止める
+        _isWeightDown = false;
+        
+        _ropeSender.DataSend("R\n" + _ropeSpeedR.ToString() + "\n"); // 紐を緩める
+        _isRopeLoose = true;
+        _pressSender._afterstop = false;
+        yield return new WaitForSeconds(_ropeTimeR);
+        _ropeSender.DataSend("S\n");
+        _isRopeLoose = false;
+    }
+
+    public IEnumerator StandbyShock()
+    {
+        _ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
+        _isRopeTight = true;
+        
+        //yield return new WaitUntil(() => _pressSender._afterstop == true); // 紐が張ったことを確認できるまで待機
+        yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true); // 紐が張ったことを確認できるまで待機
+        _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
+        _isRopeTight = false;
+    }
+
+    public IEnumerator Stimulate()
+    {
         _weightSender.DataSend("C\n" + _weightSpeedC.ToString() + "\n"); // 重りを落とし始める
         _isWeightDown = true;
         yield return new WaitForSeconds(_weightTimeC);
