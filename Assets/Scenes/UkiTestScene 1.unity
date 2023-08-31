@@ -8928,6 +8928,10 @@ PrefabInstance:
       propertyPath: m_Enabled
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 3703409041653443093, guid: a7d4a7ff2205aa749bd53da3fa5c878f, type: 3}
+      propertyPath: m_ApplyRootMotion
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -8953,7 +8957,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a1d19f2b1a0c78409891b236402bae2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainCamera: {fileID: 0}
+  MainCamera: {fileID: 1126198688}
   _crowState: 0
   _isDebug: 1
   song1: {fileID: 0}
@@ -21351,7 +21355,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5998d711da0cd344cb24d9bcd200638d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 2065981283}
+  target: {fileID: 1151852120}
   offset: {x: 1, y: 1, z: 1}
   SmoothSpeed: 1
 --- !u!1 &1129001030
@@ -21985,6 +21989,11 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!4 &1151852120 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3703409041644438925, guid: a7d4a7ff2205aa749bd53da3fa5c878f, type: 3}
+  m_PrefabInstance: {fileID: 478087965}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1156346840
 GameObject:
   m_ObjectHideFlags: 0
@@ -39981,11 +39990,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 2065981287}
   m_SourcePrefab: {fileID: 100100000, guid: 9df48033d668fe145b5024bf6d6d3de1, type: 3}
---- !u!4 &2065981283 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4165697585445146472, guid: 9df48033d668fe145b5024bf6d6d3de1, type: 3}
-  m_PrefabInstance: {fileID: 2065981282}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &2065981287
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -39998,7 +40002,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc18067b958a56448830762c0a5d94b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainCamera: {fileID: 1126198688}
+  MainCamera: {fileID: 0}
   _eagleState: 0
   _isDebug: 1
 --- !u!1 &2068114302
