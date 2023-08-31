@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class PullInspector : MonoBehaviour
 {
-    [SerializeField] private float _timeThreshold = 0.3f;
+    [SerializeField] private float _timeThreshold = 5f;
     private bool _isPull = false;
 
     private float _time = 0;
@@ -17,6 +17,10 @@ public class PullInspector : MonoBehaviour
 
         if (_time < 0)
             _time = 0;
+
+        if (_time == 0 && _isPull)
+            _isPull = false;
+
     }
 
     public void OffPullStatus()
@@ -38,9 +42,6 @@ public class PullInspector : MonoBehaviour
     public void DetectPull()
     {
         _time = _timeThreshold;
-        if (_time > 0)
-            return; //押されたばかりの場合は何もしない
-
         OnPullStatus();
     }
 

@@ -13,18 +13,24 @@ public class HardwareManager : MonoBehaviour
     // モータの回転速度(0-255)，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータ速度")]
     [SerializeField] private int _ropeSpeedC = 100;
-    [SerializeField] private int _ropeSpeedR = 100;
+    [SerializeField] private int _ropeSpeedR = 255;
+    [SerializeField] private int _ropeSpeedFast = 200;
+    [SerializeField] private int _ropeSpeedMiddle = 100;
+    [SerializeField] private int _ropeSpeedLow = 50;
     [SerializeField] private int _weightSpeedC = 255;
     [SerializeField] private int _weightSpeedR = 255;
     // モータを止めるまでの時間[s]，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータを止めるまでの時間[s]")]
     [SerializeField] private float _ropeTimeC = 5;
     [SerializeField] private float _ropeTimeR = 5;
-    [SerializeField] private float _weightTimeC = 5;
-    [SerializeField] private float _weightTimeR = 5;
+    [SerializeField] private float _ropeTimeFast = 5f;
+    [SerializeField] private float _ropeTimeMiddle = 5f;
+    [SerializeField] private float _weightTimeC = 2f;
+    [SerializeField] private float _weightTimeR = 2f;
     [Header("デバック等")]
     public bool _isDebug = true;
-    [SerializeField] private float _weightPosition = 0;//おもりの位置　上が0で下げるほど＋
+    [SerializeField] private float _weightSec = 0;//おもりの位置　上が0で下げるほど＋
+    [SerializeField] private float _ropeSec = 0 ;
     [SerializeField] private float _ropePosition = 0; //ロープの位置　たるんでいると0できつくするほど+
 
     private bool _isWeightUp = false; // おもりが動いているかどうか
@@ -33,11 +39,13 @@ public class HardwareManager : MonoBehaviour
     private bool _isRopeLoose = false;
 
     private float _timeToUpdate;
+    private int _tightenSpeed;
+    private float _timeFromTighten = 0;
 
     // Start is called before the first frame update
     void Start()
     {
-
+        _tightenSpeed = _ropeSpeedFast;
     }
 
     // Update is called once per frame
@@ -46,27 +54,41 @@ public class HardwareManager : MonoBehaviour
         //おもりの場所を把握（単位は[sec]）
         _timeToUpdate = Time.deltaTime;
         if (_isWeightUp)
-            _weightPosition -= _timeToUpdate;
+            _weightSec -= _timeToUpdate;
         if (_isWeightDown)
-            _weightPosition += _timeToUpdate;
+            _weightSec += _timeToUpdate;
         if (_isRopeTight)
-            _ropePosition += _timeToUpdate;
+        {
+            _ropeSec += _timeToUpdate;
+            _timeFromTighten += _timeToUpdate;
+            _ropePosition += _timeToUpdate * _tightenSpeed;
+        }
         if (_isRopeLoose)
-            _ropePosition -= _timeToUpdate;
-        
-        
+        {
+            _ropeSec -= _timeToUpdate;
+            _ropePosition -= _timeToUpdate * _ropeSpeedR;
+        }
+
+        //ロープを巻き取るとき，速度を可変にする
+        if (_isRopeTight)
+            ChangeRopeTightenSpeed();
+
         //Debug
         if (_isDebug)
         {
             if (Input.GetKey(KeyCode.P))
             {
-                StartCoroutine(Appear());
+                StartCoroutine(StandbyShock());
             }
             if (Input.GetKey(KeyCode.L))
             {
+                StartCoroutine(Stimulate());
+            }
+            if (Input.GetKey(KeyCode.Comma))
+            {
                 StartCoroutine(Disappear());
             }
-            
+
             if (Input.GetKeyDown(KeyCode.I))
             {
                 _ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
@@ -99,6 +121,11 @@ public class HardwareManager : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.H))
             {
                 _weightSender.DataSend("S\n");
+            }
+            if (Input.GetKeyUp(KeyCode.Space))
+            {
+                _weightSender.DataSend("S\n");
+                _ropeSender.DataSend("S\n");
             }
         }
     }
@@ -153,8 +180,11 @@ public class HardwareManager : MonoBehaviour
 
     public IEnumerator AppearShock() // 鷹が腕に止まるときの衝撃提示の関数
     {
-        _ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
+        //_ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
+        _ropeSender.DataSend("C\n" + _ropeSpeedFast.ToString() + "\n"); // 紐を張る
         _isRopeTight = true;
+        _timeFromTighten = 0;
+        _tightenSpeed = _ropeSpeedFast;
         
         //yield return new WaitUntil(() => _pressSender._afterstop == true); // 紐が張ったことを確認できるまで待機
         yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true); // 紐が張ったことを確認できるまで待機
@@ -171,16 +201,20 @@ public class HardwareManager : MonoBehaviour
         _isRopeLoose = true;
         _pullInspector.OffPullStatus();
         _pressSender._afterstop = false;
-        yield return new WaitForSeconds(_ropeTimeR);
+        yield return new WaitForSeconds(CalcLoosenTime());
+        //yield return new WaitForSeconds(_ropeTimeR);
         _ropeSender.DataSend("S\n");
         _isRopeLoose = false;
     }
 
     public IEnumerator StandbyShock()
     {
-        _ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
+        //_ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
+        _ropeSender.DataSend("C\n" + _ropeSpeedFast.ToString() + "\n"); // 紐を張る
         _isRopeTight = true;
-        
+        _timeFromTighten = 0;
+        _tightenSpeed = _ropeSpeedFast;
+
         //yield return new WaitUntil(() => _pressSender._afterstop == true); // 紐が張ったことを確認できるまで待機
         yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true); // 紐が張ったことを確認できるまで待機
         _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
@@ -199,7 +233,8 @@ public class HardwareManager : MonoBehaviour
         _isRopeLoose = true;
         _pullInspector.OffPullStatus();
         _pressSender._afterstop = false;
-        yield return new WaitForSeconds(_ropeTimeR);
+        yield return new WaitForSeconds(CalcLoosenTime());
+        //yield return new WaitForSeconds(_ropeTimeR);
         _ropeSender.DataSend("S\n");
         _isRopeLoose = false;
     }
@@ -211,6 +246,36 @@ public class HardwareManager : MonoBehaviour
         yield return new WaitForSeconds(_weightTimeR);
         _weightSender.DataSend("S\n");
         _isWeightUp = false;
+    }
+
+    private void ChangeRopeTightenSpeed() //時間ごとにロープの巻き取り速度を遅くする　閾値は_ropeTime系
+    {
+        if (_timeFromTighten > _ropeTimeFast && (_timeFromTighten - _timeToUpdate) <= _ropeTimeFast)
+        {
+            _tightenSpeed = _ropeSpeedMiddle;
+            _ropeSender.DataSend("C\n" + _tightenSpeed.ToString() + "\n"); // 紐を張る
+        }
+        else if (_timeFromTighten > (_ropeTimeFast + _ropeTimeMiddle) && (_timeFromTighten - _timeToUpdate) <= (_ropeTimeFast + _ropeTimeMiddle))
+        {
+            _tightenSpeed = _ropeSpeedLow;
+            _ropeSender.DataSend("C\n" + _tightenSpeed.ToString() + "\n"); // 紐を張る
+        }
+    }
+
+    private float CalcLoosenTime()//ロープを緩める時間を，きつくした時間から逆算
+    {
+        if (_timeFromTighten <= _ropeTimeFast)
+        {
+            return (_timeFromTighten * _ropeSpeedFast) / _ropeSpeedR;
+        }
+        else if (_timeFromTighten <= (_ropeTimeFast + _ropeTimeMiddle))
+        {
+            return ((_ropeTimeFast * _ropeSpeedFast) + (_timeFromTighten - _ropeTimeFast) * _ropeSpeedMiddle) / _ropeSpeedR;
+        }
+        else
+        {
+            return (_ropeTimeFast * _ropeSpeedFast + _ropeTimeMiddle * _ropeSpeedMiddle + (_timeFromTighten - _ropeTimeFast - _ropeTimeMiddle) * _ropeSpeedLow) / _ropeSpeedR;
+        }
     }
 
     /*

@@ -156,17 +156,23 @@ MonoBehaviour:
   _ropeSender: {fileID: 879138560}
   _pressSender: {fileID: 1227539144}
   _windSender: {fileID: 744667497}
-  _pullInspector: {fileID: 0}
+  _pullInspector: {fileID: 1227539147}
   _ropeSpeedC: 100
-  _ropeSpeedR: 100
+  _ropeSpeedR: 255
+  _ropeSpeedFast: 200
+  _ropeSpeedMiddle: 100
+  _ropeSpeedLow: 50
   _weightSpeedC: 255
   _weightSpeedR: 255
   _ropeTimeC: 5
   _ropeTimeR: 5
-  _weightTimeC: 5
-  _weightTimeR: 5
+  _ropeTimeFast: 1
+  _ropeTimeMiddle: 1
+  _weightTimeC: 3
+  _weightTimeR: 3
   _isDebug: 1
-  _weightPosition: 0
+  _weightSec: 0
+  _ropeSec: 0
   _ropePosition: 0
 --- !u!4 &389080396
 Transform:
@@ -298,7 +304,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &619462541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -369,7 +375,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &744667497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -478,7 +484,7 @@ MonoBehaviour:
   _isNewMessageReceived: 0
   _message: 
   _bandRate: 115200
-  _portName: COM6
+  _portName: COM20
 --- !u!4 &879138562
 Transform:
   m_ObjectHideFlags: 0
@@ -550,7 +556,7 @@ MonoBehaviour:
   _isNewMessageReceived: 0
   _message: 
   _bandRate: 115200
-  _portName: COM6
+  _portName: COM25
 --- !u!4 &1227539146
 Transform:
   m_ObjectHideFlags: 0
