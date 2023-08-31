@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44402242, g: 0.49316543, b: 0.5722324, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -158,8 +158,8 @@ MonoBehaviour:
   _windSender: {fileID: 744667497}
   _ropeSpeedC: 100
   _ropeSpeedR: 100
-  _weightSpeedC: 100
-  _weightSpeedR: 100
+  _weightSpeedC: 255
+  _weightSpeedR: 255
   _ropeTimeC: 5
   _ropeTimeR: 5
   _weightTimeC: 5
@@ -334,7 +334,7 @@ MonoBehaviour:
   _isNewMessageReceived: 0
   _message: 
   _bandRate: 115200
-  _portName: COM9
+  _portName: COM13
 --- !u!4 &619462543
 Transform:
   m_ObjectHideFlags: 0

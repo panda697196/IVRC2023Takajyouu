@@ -143,6 +143,7 @@ public class HardwareManager : MonoBehaviour
         
         _ropeSender.DataSend("R\n" + _ropeSpeedR.ToString() + "\n"); // 紐を緩める
         _isRopeLoose = true;
+        _pressSender._afterstop = false;
         yield return new WaitForSeconds(_ropeTimeR);
         _ropeSender.DataSend("S\n");
         _isRopeLoose = false;
