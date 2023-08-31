@@ -78,11 +78,11 @@ public class HardwareManager : MonoBehaviour
         {
             if (Input.GetKey(KeyCode.P))
             {
-                StartCoroutine(StandbyShock());
+                StartCoroutine(StandbyComeHawk());
             }
             if (Input.GetKey(KeyCode.L))
             {
-                StartCoroutine(Stimulate());
+                StartCoroutine(ComeHawk());
             }
             if (Input.GetKey(KeyCode.Comma))
             {
