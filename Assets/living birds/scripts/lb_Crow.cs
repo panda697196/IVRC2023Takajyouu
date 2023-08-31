@@ -35,11 +35,17 @@ public class lb_Crow : MonoBehaviour
     SphereCollider solidCollider;
     float distanceToTarget = 0.0f;
     float agitationLevel = .5f;
-    float originalAnimSpeed = 1.0f;
-    Vector3 originalVelocity = Vector3.zero;
-    private Transform _crowTransform;
-    private Vector3 _crowPrevPosition;
     float Angle = 0.0f;
+    int sp = 0;
+
+
+    //飛行関連
+    // 加速度
+    [SerializeField] private Vector3 _acceleration = new Vector3();
+    // 初速度
+    [SerializeField] private float _speed = 0.01f;
+    // 現在速度
+    private Vector3 _velocity = Vector3.zero;
 
     //hash variables for the animation states and animation properties
     int idleAnimationHash;
@@ -118,7 +124,7 @@ public class lb_Crow : MonoBehaviour
                 anim.SetBool("flying", true);
                 anim.SetBool("idle", false);
                 float l = anim.GetFloat("flyingDirectionX");
-                if (l > -1.0f)
+                if (l > -0.5f)
                 {
                     l -= 0.01f;
                     anim.SetFloat("flyingDirectionX", l);
@@ -129,7 +135,7 @@ public class lb_Crow : MonoBehaviour
                 anim.SetBool("flying", true);
                 anim.SetBool("idle", false);
                 float r = anim.GetFloat("flyingDirectionX");
-                if (r < 1.0f)
+                if (r < 0.5f)
                 {
                     r += 0.01f;
                     anim.SetFloat("flyingDirectionX", r);
@@ -153,8 +159,20 @@ public class lb_Crow : MonoBehaviour
                 Fly(s);
                 break;
             case birdBehaviors.landing:
-                anim.SetBool("landing", true);
-                anim.SetBool("flying", false);
+                if (_speed > 0)
+                {
+                    anim.SetBool("landing", true);
+                    anim.SetBool("flying", false);
+                    Land();
+                }
+                else
+                {
+                    anim.SetBool("idle", true);
+                    anim.SetBool("landing", false);
+                    anim.SetBool("flying", false);
+                    float j = Random.Range(0, 1);
+                    anim.SetFloat("IdleAgitated", j);
+                }
                 break;
             case birdBehaviors.idle:
                 anim.SetBool("idle", true);
@@ -166,33 +184,35 @@ public class lb_Crow : MonoBehaviour
         }
     }
 
-    void Fly(float p)
+    void Fly(float t)
     {
-        originalAnimSpeed = 1.0f;
-        Vector3 direction = transform.position;
-        // 方向に速度を掛け合わせて移動ベクトルを求める
-        originalVelocity = transform.position * originalAnimSpeed * Time.deltaTime;
-        // 物体を移動する
-        transform.position += transform.rotation * originalVelocity;
-
-
-        /*Angle = -45.0f * p;//回す角度を算出
-        originalAnimSpeed = 1.0f;
+        Angle = 45f * t;
         // 角度をラジアンに変換
         float rad = Angle * Mathf.Deg2Rad;
+        _speed += 1f;
+        _speed = Mathf.Clamp(_speed, 0, 100f);
         // ラジアンから進行方向を設定
-        Vector3 direction = new Vector3(Mathf.Cos(rad), 0, Mathf.Sin(rad));
+        Vector3 direction = new Vector3(Mathf.Sin(rad), 0, Mathf.Cos(rad));
         // 方向に速度を掛け合わせて移動ベクトルを求める
-        originalVelocity = direction * originalAnimSpeed * Time.deltaTime;
-        // 物体を移動する
-        transform.position += transform.rotation * originalVelocity;
-        // 進行方向（移動量ベクトル）に向くようなクォータニオンを取得
-        var rotation = Quaternion.LookRotation(transform.position);
-        // transformを取得
-        transform.rotation = rotation;
-        UnityEngine.Debug.Log(Angle);*/
-
+        _velocity = direction * _speed * Time.deltaTime;
+        transform.position += _velocity * Time.deltaTime;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
+
+    void Land()
+    {
+        // 角度をラジアンに変換
+        float rad = Angle * Mathf.Deg2Rad;
+        _speed -= 1f;
+        _speed = Mathf.Clamp(_speed, 0, 100f);
+        // ラジアンから進行方向を設定
+        Vector3 direction = new Vector3(Mathf.Sin(rad), 0, Mathf.Cos(rad));
+        // 方向に速度を掛け合わせて移動ベクトルを求める
+        _velocity = direction * _speed * Time.deltaTime;
+        transform.position += _velocity * Time.deltaTime;
+        transform.rotation = Quaternion.LookRotation(direction);
+    }
+
 
     void PlaySong()
     {
@@ -209,7 +229,6 @@ public class lb_Crow : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
-        _crowTransform = transform;
     }
 
     void Update()
