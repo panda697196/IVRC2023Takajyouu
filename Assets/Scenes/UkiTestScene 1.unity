@@ -8960,11 +8960,10 @@ MonoBehaviour:
   MainCamera: {fileID: 1126198688}
   _crowState: 0
   _isDebug: 1
-  song1: {fileID: 0}
-  song2: {fileID: 0}
-  flyAway1: {fileID: 0}
-  flyAway2: {fileID: 0}
-  fleeCrows: 1
+  song1: {fileID: 8300000, guid: e2622b95524aab94b9a0448a1a4c6fc8, type: 3}
+  song2: {fileID: 8300000, guid: aa29893140715234fa4c6f0f17bc3d88, type: 3}
+  flyAway1: {fileID: 8300000, guid: 9dabaef0cd2ecb241956e3db52d3bc8d, type: 3}
+  flyAway2: {fileID: 8300000, guid: ae13220b2fee67344b8b455414c59ff4, type: 3}
 --- !u!1 &484510612
 GameObject:
   m_ObjectHideFlags: 0
