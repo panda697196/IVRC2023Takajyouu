@@ -12,7 +12,6 @@ int _buttonState = 0;
 void setup() {
   // espの設定
   SerialBT.begin("ServoMotor"); //Bluetooth device name
-  Serial.begin(9600);
   delay(1000);
   pinMode(PIN_BUTTON, INPUT_PULLUP);
   _buttonState = digitalRead(PIN_BUTTON);
@@ -20,8 +19,8 @@ void setup() {
 
 void loop() {
   if(_buttonState != digitalRead(PIN_BUTTON)){
-    Serial.print("AS");
-    SerialBT.print("AS"); // モータが止まったことをunityに知らせる
+    SerialBT.println("AS"); // モータが止まったことをunityに知らせる
+    delay(500);
     _buttonState = digitalRead(PIN_BUTTON);
   }
 }
