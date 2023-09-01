@@ -38,6 +38,7 @@ public class Eagle_Navigation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(_edit.EagleCurrentState);
         Animator _animator = GetComponent<Animator>();
         _animator.SetFloat("Speed", _speed);
         
@@ -46,13 +47,16 @@ public class Eagle_Navigation : MonoBehaviour
             case Eagle_Edit.EagleState.Idle:
                 if (_isFly)
                 {
+                    Debug.Log("Fly");
                     FlyTo(_target.transform,_flyState.ToString());
                 }
                 break;
             case Eagle_Edit.EagleState.Takeoff:
+                Debug.Log("taleoff");
                 TakeOff(_target.transform);
                 break;
             case Eagle_Edit.EagleState.Lauding:
+                Debug.Log("Lauding");
                 Land(_target.transform);
                 break;
         }
@@ -61,14 +65,18 @@ public class Eagle_Navigation : MonoBehaviour
     // 飛び立つ
     void TakeOff(Transform target)
     {
+        Debug.Log("takeoff");
         _isFly = true;
         _flyFirst = true;
+        //ここeagle_editのカレントステイトを編集してます．なんとかしたいね．
+        _edit.SetEagleState(Eagle_Edit.EagleState.Idle);
     }
 
     [SerializeField] private GameObject debug;
     // 向かう
     void FlyTo(Transform target,string state)
     {
+        
         switch (state)
         {
             case "laud":
