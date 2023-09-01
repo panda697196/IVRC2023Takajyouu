@@ -17,6 +17,8 @@ public class gameManager : MonoBehaviour
         //シーン遷移用変数 0:スタート,１：待機a, 2:飛び立ちa、3：帰還a、４：結果a,５：待機b、６：飛び立ちb、７：帰還b、8:結果b, 9:終了処理
         callOnceFlag = false; //１シーンに一回呼び出すときに使う変数,trueなら呼び出し済み
         sceneTransitionFlag = false;//デバッグ用フラグ
+        
+        //_uiDispalyaa=UI,Getcomponent<UIdisplayer>();
     }
 
     // Update is called once per frame
@@ -31,6 +33,7 @@ public class gameManager : MonoBehaviour
                 {
                     // スタートシーンでの処理内容(一回)
                     Debug.Log("StartScene");
+                    //_UIDisplayer.happen("satart");
                     callOnceFlag = true;
                 }
 
