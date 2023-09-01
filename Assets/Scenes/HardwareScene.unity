@@ -157,19 +157,19 @@ MonoBehaviour:
   _pressSender: {fileID: 1227539144}
   _windSender: {fileID: 744667497}
   _pullInspector: {fileID: 1227539147}
-  _ropeSpeedC: 100
-  _ropeSpeedR: 255
+  _ropeTightSpeed: 100
+  _ropeLooseSpeed: 255
   _ropeSpeedFast: 200
   _ropeSpeedMiddle: 100
   _ropeSpeedLow: 50
-  _weightSpeedC: 255
-  _weightSpeedR: 255
-  _ropeTimeC: 5
-  _ropeTimeR: 5
+  _weightDropSpeed: 255
+  _weightLiftSpeed: 255
+  _ropeTightTime: 5
+  _ropeLooseTime: 5
   _ropeTimeFast: 1
   _ropeTimeMiddle: 1
-  _weightTimeC: 3
-  _weightTimeR: 3
+  _weightDropTime: 2
+  _weightLiftTime: 2
   _fanTimeOfCome: 1.5
   _fanTimeOfGo: 1.7
   _isDebug: 1
@@ -306,7 +306,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &619462541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,7 +448,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &879138560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -520,7 +520,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &1227539144
 MonoBehaviour:
   m_ObjectHideFlags: 0
