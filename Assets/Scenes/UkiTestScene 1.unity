@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -39975,6 +39975,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Eagle
       objectReference: {fileID: 0}
+    - target: {fileID: 4165697585445507912, guid: 9df48033d668fe145b5024bf6d6d3de1, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 4165697585626023153, guid: 9df48033d668fe145b5024bf6d6d3de1, type: 3}
       propertyPath: m_Enabled
       value: 0
@@ -40005,7 +40009,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 0}
   _eagleState: 0
-  _isDebug: 1
+  _isDebug: 0
 --- !u!1 &2068114302
 GameObject:
   m_ObjectHideFlags: 0

@@ -156,8 +156,12 @@ public class lb_Crow : MonoBehaviour
                 Fly(s);
                 break;
             case birdBehaviors.landing:
-                if (_speed > 0)
+                if (transform.position.y >= -0.001f)
                 {
+                    if (_hight > 0)
+                    {
+                        _hight = -_hight;
+                    }
                     anim.SetBool("landing", true);
                     anim.SetBool("flying", false);
                     Land();
@@ -177,47 +181,59 @@ public class lb_Crow : MonoBehaviour
                 anim.SetBool("flying", false);
                 float i = Random.Range(0, 1);
                 anim.SetFloat("IdleAgitated",i);
+                _hight = 0.5f;
                 break;
         }
     }
 
     void Fly(float t)
     {
-        /*_hight = Random.Range(-0.1f, 0.1f);
-        if(transform.position.y <= -0.02)
+        if (_hight > 0)
         {
-            _hight = 0.5f;
-        }*/
-        Angle = 45f * t;
-        // 角度をラジアンに変換
-        float rad = Angle * Mathf.Deg2Rad;
-        _speed += 1f;
-        _speed = Mathf.Clamp(_speed, 0, 100f);
-        // ラジアンから進行方向を設定
-        Vector3 direction = new Vector3(Mathf.Sin(rad), 0.5f, Mathf.Cos(rad));
-        // 方向に速度を掛け合わせて移動ベクトルを求める
-        _velocity = direction * _speed * Time.deltaTime;
-        transform.position += _velocity * Time.deltaTime;
-        transform.rotation = Quaternion.LookRotation(direction);
-        UnityEngine.Debug.Log(direction);
-    }
-
-    void Land()
-    {
-        _hight -= 0.1f;
-        if (transform.position.y <= -0.01f)
+            _hight -= Random.Range(0.000001f, 0.00001f);
+        }
+        else
         {
             _hight = 0;
         }
+        Angle = 60f * t;
         // 角度をラジアンに変換
         float rad = Angle * Mathf.Deg2Rad;
-        _speed -= 1f;
-        _speed = Mathf.Clamp(_speed, 0, 100f);
+        _speed += 10f;
+        _speed = Mathf.Clamp(_speed, 0, 500f);
         // ラジアンから進行方向を設定
         Vector3 direction = new Vector3(Mathf.Sin(rad), _hight, Mathf.Cos(rad));
         // 方向に速度を掛け合わせて移動ベクトルを求める
         _velocity = direction * _speed * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
+        UnityEngine.Debug.Log(direction);
+        direction.y = 0;
+        transform.rotation = Quaternion.LookRotation(direction);
+    }
+
+    void Land()
+    {
+        if (transform.position.y <= -0.001f)
+        {
+            _hight = 0;
+            _speed = 0;
+        }
+        else
+        {
+            _hight = Mathf.Clamp(_hight, -0.5f, 0.1f);
+            _hight += Random.Range(0.000001f, 0.00001f);
+            _speed -= 0.1f;
+            _speed = Mathf.Clamp(_speed, 100f, 500f);
+        }
+        // 角度をラジアンに変換
+        float rad = Angle * Mathf.Deg2Rad;
+        // ラジアンから進行方向を設定
+        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight, Mathf.Cos(rad));
+        // 方向に速度を掛け合わせて移動ベクトルを求める
+        _velocity = direction * _speed * Time.deltaTime;
+        transform.position += _velocity * Time.deltaTime;
+        UnityEngine.Debug.Log(direction);
+        direction.y = 0;
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
