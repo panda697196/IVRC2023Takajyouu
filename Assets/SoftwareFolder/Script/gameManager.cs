@@ -20,10 +20,11 @@ public class gameManager : MonoBehaviour
     private int crowCountFromCase2; // ケース2で得られたカラスの数
     private int initialSpeedFromCase6; // ケース6で得られた初速
     private int crowCountFromCase6; // ケース6で得られたカラスの数
+    private bool flyFlag;
     public Text thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
     public Eagle_Edit eagleEdit;
     public Eagle_Navigation eagleNavigation;
-
+    public GameObject flyFlagObj;
 
     // Start is called before the first frame update
     void Awake()
@@ -45,11 +46,14 @@ public class gameManager : MonoBehaviour
         // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
         eagleEdit = GetComponent<Eagle_Edit>();
         eagleNavigation = GetComponent<Eagle_Navigation>();
+
+        flyFlag = flyFlagObj.GetComponent<ArmAngle>().flyFlag;
     }
 
     // Update is called once per frame
     void Update()
     {
+        Debug.Log("Updata");
         switch (gameSceneState)
         {
             // スタートシーン
@@ -66,7 +70,7 @@ public class gameManager : MonoBehaviour
                     callOnceFlag = true;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return) ) /* 腕の振りを検出?*/
+                if (Input.GetKeyDown(KeyCode.Return) ) //鷹がうでにとまる
                 {
                     callOnceFlag = false;
                     sceneTransitionFlag = false;
@@ -80,7 +84,11 @@ public class gameManager : MonoBehaviour
                 break;
             // 待機a
             case 1:
+                Debug.Log("待機A");
                 // 待機aでの処理内容(毎フレーム)
+                flyFlag = flyFlagObj.GetComponent<ArmAngle>().flyFlag;
+                Debug.Log("flyflag:" + flyFlag);
+                
                 if (callOnceFlag == false)
                 {
                     // 待機aでの処理内容(1回)
@@ -88,9 +96,11 @@ public class gameManager : MonoBehaviour
                     callOnceFlag = true;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出?
+                // if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出
+                if (Input.GetKeyDown(KeyCode.Return) || flyFlag == true) // 腕の振りを検出
                 {
                     // Enterキーが押されたら、次のゲーム状態
+                    flyFlagObj.GetComponent<ArmAngle>().flyFlag = false; //flagを戻す
                     callOnceFlag = false; // 
                     gameSceneState = 2; // 
                 }

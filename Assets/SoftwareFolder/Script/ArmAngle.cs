@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 public class ArmAngle : MonoBehaviour
@@ -25,6 +26,10 @@ public class ArmAngle : MonoBehaviour
 
     private float delta = 0;
 
+    public bool flyFlag;
+
+    private bool resetFlyFlag;
+
     private void Start()
     {
         sceneTarans = gameManager.GetComponent<gameManager>().gameSceneState;
@@ -34,6 +39,7 @@ public class ArmAngle : MonoBehaviour
         prevDiffLine = prevPosition2 - prevPosition1;
         inputGoalPosition = new Vector3(0.0f, 0.0f, 0.0f);
         goalPosition.position = inputGoalPosition;
+        flyFlag = false;
     }
 
     private void Update()
@@ -73,6 +79,7 @@ public class ArmAngle : MonoBehaviour
                 // if (Mathf.Abs(angle) >= 30f && Time.deltaTime <= 0.01f)
                 if (Mathf.Abs(angle) >= baseAngle)
                 {
+                    flyFlag = true;
                     Debug.Log("fly");
                     // inputGoalPosition = new Vector3(0.0f, 10.0f, -10.0f); //テスト用仮ゴール座標
                     goalPosition.position = inputGoalPosition;//
@@ -97,5 +104,6 @@ public class ArmAngle : MonoBehaviour
         goalPosition.position = tmpGoalPos;
     }
     
+
 }
 
