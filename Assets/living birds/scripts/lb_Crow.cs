@@ -4,6 +4,8 @@ using System.Runtime.CompilerServices;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using static Eagle_Edit;
+using static UnityEngine.GraphicsBuffer;
 
 
 public class lb_Crow : MonoBehaviour
@@ -12,7 +14,15 @@ public class lb_Crow : MonoBehaviour
     Animator anim;
 
     [Header("カラスの状態を表示")]
-    public birdBehaviors _crowState;
+    [SerializeField] private birdBehaviors _crowState;
+    //target
+    [SerializeField] private GameObject _target;
+
+    public void SetCrowState(birdBehaviors state)
+    {
+        _crowState = state;
+    }
+    public birdBehaviors CrowCurrentState => _crowState;
 
     [Header("DebugMode カラスの状態を変えることでカラスを動かせる")]
     public bool _isDebug;
@@ -24,7 +34,7 @@ public class lb_Crow : MonoBehaviour
 
     public enum birdBehaviors
     {
-        idle, sing, preen, ruffle, peck,
+        idle, flyToTarget, sing, preen, ruffle, peck,
         flyLeft, flyRight, flyStraight, landing,
         hopForward, hopBackward, hopLeft, hopRight,
     }
@@ -38,11 +48,11 @@ public class lb_Crow : MonoBehaviour
     float Angle = 0.0f;
 
     // 初速度
-    [SerializeField] private float _speed = 0.01f;
+    [SerializeField] private float _speed2 = 0.01f;
     // 現在速度
     private Vector3 _velocity = Vector3.zero;
     // 高さ
-    [SerializeField] private float _hight = 0;
+    [SerializeField] private float _hight2 = 0;
 
     //hash variables for the animation states and animation properties
     int idleAnimationHash;
@@ -156,8 +166,12 @@ public class lb_Crow : MonoBehaviour
                 Fly(s);
                 break;
             case birdBehaviors.landing:
-                if (_speed > 0)
+                if (transform.position.y >= -0.001f)
                 {
+                    if (_hight2 > 0)
+                    {
+                        _hight2 = -_hight2;
+                    }
                     anim.SetBool("landing", true);
                     anim.SetBool("flying", false);
                     Land();
@@ -177,47 +191,114 @@ public class lb_Crow : MonoBehaviour
                 anim.SetBool("flying", false);
                 float i = Random.Range(0, 1);
                 anim.SetFloat("IdleAgitated",i);
+                _hight2 = 0.5f;
+                break;
+            case birdBehaviors.flyToTarget:
+                float dis = Vector3.SqrMagnitude(_target.transform.position - transform.position);
+                if(dis > 10f)
+                {
+                    anim.SetBool("flying", true);
+                    anim.SetBool("idle", false);
+                    Flytest(_target.transform);
+                }
+                else
+                {
+                    if (dis < 0.01f)
+                    {
+                        anim.SetBool("idle", true);
+                        anim.SetBool("landing", false);
+                        anim.SetBool("flying", false);
+                        float j = Random.Range(0, 1);
+                        anim.SetFloat("IdleAgitated", j);
+                        _crowState = birdBehaviors.idle;
+                    }
+                    else
+                    {
+                        anim.SetBool("landing", true);
+                        anim.SetBool("flying", false);
+                        Landtest(_target.transform);
+                    }
+                }
+                UnityEngine.Debug.Log(dis);
                 break;
         }
     }
 
+    public void Flytest(Transform target)
+    {
+        _speed2 += 0.1f;
+        _speed2 = Mathf.Clamp(_speed2, 0, 10f);
+        transform.position = Vector3.MoveTowards(transform.position, target.position, _speed2 * Time.deltaTime);
+        gameObject.transform.LookAt(target.transform);
+        UnityEngine.Debug.Log("FlyTest");
+    }
+
+    void Landtest(Transform target)
+    {
+        if (transform.position.y == target.position.y)
+        {
+            _speed2 = 0;
+        }
+        else
+        {
+            _speed2 -= 0.1f;
+            _speed2 = Mathf.Clamp(_speed2, 0.5f, 10f);
+        }
+        var direction = transform.forward;
+        // 方向に速度を掛け合わせて移動ベクトルを求める
+        transform.position = Vector3.MoveTowards(transform.position, target.position, _speed2 * Time.deltaTime);
+        gameObject.transform.LookAt(target.transform);
+        UnityEngine.Debug.Log("LandTest");
+    }
+
     void Fly(float t)
     {
-        /*_hight = Random.Range(-0.1f, 0.1f);
-        if(transform.position.y <= -0.02)
+        if (_hight2 > 0)
         {
-            _hight = 0.5f;
-        }*/
-        Angle = 45f * t;
+            _hight2 -= Random.Range(0.000001f, 0.00001f);
+        }
+        else
+        {
+            _hight2 = 0;
+        }
+        Angle = 60f * t;
         // 角度をラジアンに変換
         float rad = Angle * Mathf.Deg2Rad;
-        _speed += 1f;
-        _speed = Mathf.Clamp(_speed, 0, 100f);
+        _speed2 += 10f;
+        _speed2 = Mathf.Clamp(_speed2, 0, 500f);
         // ラジアンから進行方向を設定
-        Vector3 direction = new Vector3(Mathf.Sin(rad), 0.5f, Mathf.Cos(rad));
+        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight2, Mathf.Cos(rad));
         // 方向に速度を掛け合わせて移動ベクトルを求める
-        _velocity = direction * _speed * Time.deltaTime;
+        _velocity = direction * _speed2 * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
-        transform.rotation = Quaternion.LookRotation(direction);
         UnityEngine.Debug.Log(direction);
+        direction.y = 0;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     void Land()
     {
-        _hight -= 0.1f;
-        if (transform.position.y <= -0.01f)
+        if (transform.position.y <= -0.001f)
         {
-            _hight = 0;
+            _hight2 = 0;
+            _speed2 = 0;
+        }
+        else
+        {
+            _hight2 = Mathf.Clamp(_hight2, -0.5f, 0.1f);
+            _hight2 += Random.Range(0.000001f, 0.00001f);
+            _speed2 -= 0.1f;
+            _speed2 = Mathf.Clamp(_speed2, 100f, 500f);
         }
         // 角度をラジアンに変換
         float rad = Angle * Mathf.Deg2Rad;
-        _speed -= 1f;
-        _speed = Mathf.Clamp(_speed, 0, 100f);
         // ラジアンから進行方向を設定
-        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight, Mathf.Cos(rad));
+        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight2, Mathf.Cos(rad));
         // 方向に速度を掛け合わせて移動ベクトルを求める
-        _velocity = direction * _speed * Time.deltaTime;
+        _velocity = direction * _speed2 * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
+        UnityEngine.Debug.Log(direction);
+        direction.y = 0;
         transform.rotation = Quaternion.LookRotation(direction);
     }
 
@@ -294,6 +375,10 @@ public class lb_Crow : MonoBehaviour
             if (_crowState.ToString() == "hopBackward")
             {
                 DisplayBehavior(birdBehaviors.hopBackward);
+            }
+            if (_crowState.ToString() == "flyToTarget")
+            {
+                DisplayBehavior(birdBehaviors.flyToTarget);
             }
         }
     }
