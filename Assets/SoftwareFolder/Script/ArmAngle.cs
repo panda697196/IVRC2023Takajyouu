@@ -8,6 +8,8 @@ public class ArmAngle : MonoBehaviour
     public Transform tracker2; // トラッカー2のTransformコンポーネント
 
     public float baseAngle = 65f;
+    public Transform goalPosition;
+    public Vector3 inputGoalPosition;
 
     private Vector3 prevPosition1;
     private Vector3 prevPosition2;
@@ -21,6 +23,7 @@ public class ArmAngle : MonoBehaviour
         prevPosition1 = tracker1.position;
         prevPosition2 = tracker2.position;
         prevDiffLine = prevPosition2 - prevPosition1;
+        inputGoalPosition = new Vector3(0.0f, 10.0f, -10.0f);
     }
 
     private void Update()
@@ -57,6 +60,8 @@ public class ArmAngle : MonoBehaviour
             if (Mathf.Abs(angle) >= baseAngle)
             {
                 Debug.Log("fly");
+                goalPosition.position = inputGoalPosition;
+
             }
 
             // 現在の位置情報を保存
