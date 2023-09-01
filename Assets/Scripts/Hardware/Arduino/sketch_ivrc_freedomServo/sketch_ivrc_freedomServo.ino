@@ -7,7 +7,7 @@
 
 BluetoothSerial SerialBT;
 // ピン定義。
-#define PIN_Servo 16
+#define PIN_Servo 25
 
 Servo _myServo;
 
