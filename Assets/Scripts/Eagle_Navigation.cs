@@ -23,13 +23,15 @@ public class Eagle_Navigation : MonoBehaviour
     public float _speed = 1.0f;
     public enum FlyState
     {
-        laud,target,targetAround
+        laud,target,targetAround,getOnArm
     }
 
     [Header("飛行状況")]public FlyState _flyState;
     [Header("旋回飛行の半径")] public float _radius;
     [Header("旋回飛行の高さ補正")] public float _height;　
     private  float _totalTime;
+    public float xzMargin = 2.0f;
+    public float yMargin = 1.5f;
     void Start()
     {
         _edit = gameObject.GetComponent<Eagle_Edit>();
@@ -38,6 +40,7 @@ public class Eagle_Navigation : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Debug.Log(_edit.EagleCurrentState);
         Animator _animator = GetComponent<Animator>();
         _animator.SetFloat("Speed", _speed);
         
@@ -46,13 +49,23 @@ public class Eagle_Navigation : MonoBehaviour
             case Eagle_Edit.EagleState.Idle:
                 if (_isFly)
                 {
+                   
+                    Debug.Log("Fly");
                     FlyTo(_target.transform,_flyState.ToString());
                 }
                 break;
             case Eagle_Edit.EagleState.Takeoff:
+                Debug.Log("takeoff");
                 TakeOff(_target.transform);
+                if (_isFly)
+                {
+                   
+                    Debug.Log("Fly");
+                    FlyTo(_target.transform,_flyState.ToString());
+                }
                 break;
             case Eagle_Edit.EagleState.Lauding:
+                Debug.Log("Lauding");
                 Land(_target.transform);
                 break;
         }
@@ -61,22 +74,27 @@ public class Eagle_Navigation : MonoBehaviour
     // 飛び立つ
     void TakeOff(Transform target)
     {
+        Debug.Log("takeoff");
         _isFly = true;
         _flyFirst = true;
+        //_edit.TakeOff();
+        //ここeagle_editのカレントステイトを編集してます．なんとかしたいね
+        //_edit.SetEagleState(Eagle_Edit.EagleState.Idle);
     }
 
     [SerializeField] private GameObject debug;
     // 向かう
     void FlyTo(Transform target,string state)
     {
+        
         switch (state)
         {
             case "laud":
             {
                 Debug.Log("laud");
                 //アニメーションのxz平面の移動距離とy軸方向の移動距離
-                var xzMargin = 2.0f;
-                var yMargin = 1.5f;
+                // var xzMargin = 2.0f;
+                // var yMargin = 1.5f;
         
                 //ターゲットオブジェクトの着地面を補正
                 var objectTop = target.localScale.y/2;
@@ -116,7 +134,7 @@ public class Eagle_Navigation : MonoBehaviour
 
             case "target":
             {
-                Debug.Log("target");
+               Debug.Log("target");
                 // 向かせる
                 gameObject.transform.LookAt(_target.transform);
                 debug.transform.position = _target.transform.position;
@@ -125,10 +143,49 @@ public class Eagle_Navigation : MonoBehaviour
 
             case "targetAround":
             {
-                Debug.Log("targetAround");
+               Debug.Log("targetAround");
                 //ターゲットの周りを周回させる
                 gameObject.transform.LookAt(CalcRotationPosition(_target));
                 debug.transform.position = CalcRotationPosition(_target);
+                break;
+            }
+            case "getOnArm":
+            {
+               
+                
+                Debug.Log("getOnArm");
+                //ターゲットオブジェクトの着地面を補正
+                //var objectTop = target.localScale.y/2;
+        
+                var arrangeTarget = target.position ;
+                
+                
+                if (_flyFirst)
+                {
+                    _slerpStart = gameObject.transform.position;
+                    _flyTime = 0;
+                    _flyFirst = false;
+                }
+        
+
+                
+                // 次の移動場所を計算する
+                _flyTime += Time.deltaTime;
+                var nextPos = Vector3.Slerp(_slerpStart, target.transform.position, Mathf.Min(1.0f,_flyTime / _limitTime));
+               
+
+                debug.transform.position = nextPos;
+        
+                // 向かせる
+                gameObject.transform.LookAt(nextPos);
+
+                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.1f)
+                {
+                    _edit.SetEagleState(Eagle_Edit.EagleState.Lauding);
+                    gameObject.transform.LookAt(new Vector3(target.transform.parent.transform.position.x,nextPos.y,target.transform.parent.transform.position.z));
+                    _isFly = false;
+                }
+
                 break;
             }
         }

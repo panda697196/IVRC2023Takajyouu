@@ -17,7 +17,12 @@ public class lb_Crow : MonoBehaviour
     [SerializeField] private birdBehaviors _crowState;
     //target
     [SerializeField] private GameObject _target;
-
+    //板倉追加セット要素 
+    public void SetTarget(GameObject newTarget)
+    {
+        _target = newTarget;
+    }
+    
     public void SetCrowState(birdBehaviors state)
     {
         _crowState = state;
@@ -219,7 +224,7 @@ public class lb_Crow : MonoBehaviour
                         Landtest(_target.transform);
                     }
                 }
-                UnityEngine.Debug.Log(dis);
+                //UnityEngine.Debug.Log(dis);
                 break;
         }
     }

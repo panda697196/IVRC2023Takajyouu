@@ -3,15 +3,21 @@
   <component name="ChangeListManager">
     <list default="true" id="8f957aef-ffae-4691-b3ff-58c4fd5bbb39" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.IVRC2023Takajyouu/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.IVRC2023Takajyouu/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/ItakuraTestScene.unity" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scenes/ItakuraTestScene.unity.meta" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Animations/eagle@fly.FBX.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Animations/eagle@fly.FBX.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Animations/eagle@idle.FBX.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Animations/eagle@idle.FBX.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Animations/eagle@landing.FBX.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Animations/eagle@landing.FBX.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Animations/eagle@takeoff.FBX.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Animations/eagle@takeoff.FBX.meta" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Eagle.controller" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Eagle.controller" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Scripts/Eagle_Edit.cs" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/White-tailed_Eagle/Scripts/Eagle_Edit.cs.meta" beforeDir="false" />
+<<<<<<< Updated upstream
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/ItakuraCrowScene.unity" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scenes/ItakuraCrowScene.unity.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs.meta" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/ProjectSettings.asset" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/Eagle_Navigation.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/Eagle_Navigation.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/SoftwareFolder/Script/gameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SoftwareFolder/Script/gameManager.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/SteamVR_Resources/Resources/SteamVR_Settings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SteamVR_Resources/Resources/SteamVR_Settings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/SteamVR_Resources/Resources/SteamVR_Settings.asset.meta" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/SteamVR_Resources/Resources/SteamVR_Settings.asset.meta" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/XR/Settings/OpenVRSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/XR/Settings/OpenVRSettings.asset" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/living birds/scripts/lb_Crow.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/living birds/scripts/lb_Crow.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/living birds/scripts/lb_CrowProximity.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/living birds/scripts/lb_CrowProximity.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
+>>>>>>> Stashed changes
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -22,6 +28,9 @@
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Eagle_Moving.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Scripts/Eagle_Navigation.cs" root0="FORCE_HIGHLIGHTING" />
     <setting file="file://$PROJECT_DIR$/Assets/Test.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/living birds/scripts/CrowGenerater.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/living birds/scripts/lb_Crow.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/living birds/scripts/lb_CrowTrigger.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -31,15 +40,16 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Discover.Launch.Via.Unity&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;WebServerToolWindowFactoryState&quot;: &quot;false&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Discover.Launch.Via.Unity": "true",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "settings.editor.selected.configurable": "ReSpellerSettingsId",
+    "vue.rearranger.settings.migration": "true"
   }
-}</component>
+}]]></component>
   <component name="RunManager" selected="Attach to Unity Editor.Attach to Unity Editor">
     <configuration name="UnitTests (batch mode)" type="RunUnityExe" factoryName="Unity Executable">
       <option name="EXE_PATH" value="C:\Program Files\Unity\Hub\Editor\2022.3.4f1\Editor\Unity.exe" />
@@ -82,6 +92,7 @@
       <workItem from="1692952608720" duration="3479000" />
       <workItem from="1693301318640" duration="6195000" />
       <workItem from="1693363445863" duration="41912000" />
+      <workItem from="1693561555854" duration="2381000" />
     </task>
     <servers />
   </component>

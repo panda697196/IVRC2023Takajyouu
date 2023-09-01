@@ -15,7 +15,11 @@ public class Eagle_Edit : MonoBehaviour
         _eagleState = state;
         
     }
-    public EagleState EagleCurrentState => _eagleState;
+    public EagleState EagleCurrentState
+    {
+        get => _eagleState;
+
+    }
 
     [Header("DebugMode 鷹の状態を変えることで鷹を動かせる")]
     public bool _isDebug;
@@ -30,11 +34,11 @@ public class Eagle_Edit : MonoBehaviour
 	
 	void Update ()
     {
-     
+        Debug.Log(EagleCurrentState);
         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("idle"))
              {
                  
-                 Debug.Log("Idle");
+                 //Debug.Log("Idle");
                  //RootMotionOnOff(false);
                  eagle.SetBool("takeoff", false);
                  eagle.SetBool("fly", false);
@@ -42,12 +46,12 @@ public class Eagle_Edit : MonoBehaviour
              }
         else if(eagle.GetCurrentAnimatorStateInfo(0).IsName("fly"))
         {
-            Debug.Log("fly");
+            //Debug.Log("fly");
             //RootMotionOnOff(false);
         }
         else
         {
-            Debug.Log("else");
+            //Debug.Log("else");
             //RootMotionOnOff(true);
         }
             
@@ -66,6 +70,7 @@ public class Eagle_Edit : MonoBehaviour
                 
                // RootMotionOnOff(true);
                 TakeOff();
+                
             }
             if (_eagleState.ToString()=="TurnL")
             {
@@ -144,7 +149,7 @@ public class Eagle_Edit : MonoBehaviour
     {
         eagle.SetBool("idle", false);
         eagle.SetBool("takeoff", true);
-        _eagleState = EagleState.Idle;
+        //_eagleState = EagleState.Idle;
     }
 
     public void TurnLeft()
