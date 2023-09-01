@@ -23,7 +23,8 @@ public class ArmAngle : MonoBehaviour
         prevPosition1 = tracker1.position;
         prevPosition2 = tracker2.position;
         prevDiffLine = prevPosition2 - prevPosition1;
-        inputGoalPosition = new Vector3(0.0f, 10.0f, -10.0f);
+        inputGoalPosition = new Vector3(0.0f, 0.0f, 0.0f);
+        goalPosition.position = inputGoalPosition;
     }
 
     private void Update()
@@ -60,6 +61,7 @@ public class ArmAngle : MonoBehaviour
             if (Mathf.Abs(angle) >= baseAngle)
             {
                 Debug.Log("fly");
+                inputGoalPosition = new Vector3(0.0f, 10.0f, -10.0f);
                 goalPosition.position = inputGoalPosition;
 
             }
