@@ -12,21 +12,21 @@ public class HardwareManager : MonoBehaviour
     [SerializeField] private PullInspector _pullInspector;
     // モータの回転速度(0-255)，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータ速度")]
-    [SerializeField] private int _ropeSpeedC = 100;
-    [SerializeField] private int _ropeSpeedR = 255;
+    [SerializeField] private int _ropeTightSpeed = 100;
+    [SerializeField] private int _ropeLooseSpeed = 255;
     [SerializeField] private int _ropeSpeedFast = 200;
     [SerializeField] private int _ropeSpeedMiddle = 100;
     [SerializeField] private int _ropeSpeedLow = 50;
-    [SerializeField] private int _weightSpeedC = 255;
-    [SerializeField] private int _weightSpeedR = 255;
+    [SerializeField] private int _weightDropSpeed = 255;
+    [SerializeField] private int _weightLiftSpeed = 255;
     // モータを止めるまでの時間[s]，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータを止めるまでの時間[s]")]
-    [SerializeField] private float _ropeTimeC = 5;
-    [SerializeField] private float _ropeTimeR = 5;
+    [SerializeField] private float _ropeTightTime = 5;
+    [SerializeField] private float _ropeLooseTime = 5;
     [SerializeField] private float _ropeTimeFast = 5f;
     [SerializeField] private float _ropeTimeMiddle = 5f;
-    [SerializeField] private float _weightTimeC = 2f;
-    [SerializeField] private float _weightTimeR = 2f;
+    [SerializeField] private float _weightDropTime = 2f;
+    [SerializeField] private float _weightLiftTime = 2f;
     [Header("ファン稼働時間[s]")]
     [SerializeField] private float _fanTimeOfCome = 1.5f;
     [SerializeField] private float _fanTimeOfGo = 2f;
@@ -71,7 +71,7 @@ public class HardwareManager : MonoBehaviour
         if (_isRopeLoose)
         {
             _ropeSec -= _timeToUpdate;
-            _ropePosition -= _timeToUpdate * _ropeSpeedR;
+            _ropePosition -= _timeToUpdate * _ropeLooseSpeed;
         }
 
         //ロープを巻き取るとき，速度を可変にする
@@ -96,7 +96,7 @@ public class HardwareManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                _ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
+                _ropeSender.DataSend("C\n" + _ropeTightSpeed.ToString() + "\n"); // 紐を張る
             }
             if (Input.GetKeyUp(KeyCode.I))
             {
@@ -105,7 +105,7 @@ public class HardwareManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.J))
             {
-                _ropeSender.DataSend("R\n" + _ropeSpeedR.ToString() + "\n"); // 紐を緩める
+                _ropeSender.DataSend("R\n" + _ropeLooseSpeed.ToString() + "\n"); // 紐を緩める
             }
             if (Input.GetKeyUp(KeyCode.J))
             {
@@ -113,7 +113,7 @@ public class HardwareManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.U))
             {
-                _weightSender.DataSend("R\n" + _weightSpeedR.ToString() + "\n");
+                _weightSender.DataSend("R\n" + _weightLiftSpeed.ToString() + "\n");
             }
             if (Input.GetKeyUp(KeyCode.U))
             {
@@ -121,7 +121,7 @@ public class HardwareManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.H))
             {
-                _weightSender.DataSend("C\n" + _weightSpeedC.ToString() + "\n"); // 重りを落とし始める
+                _weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
             }
             if (Input.GetKeyUp(KeyCode.H))
             {
@@ -162,9 +162,8 @@ public class HardwareManager : MonoBehaviour
     public IEnumerator StandbyComeHawk()// 鷹が腕に留まる前に　紐を張るなど準備をする
     {
         StartCoroutine(StandbyShock());
-        /*
         yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true);
-        */
+        
         yield return StandbyShock();
         //GameManagerに処理が終了したことの報告
     }
@@ -172,11 +171,10 @@ public class HardwareManager : MonoBehaviour
     public IEnumerator ComeHawk()// 鷹が腕に留まる瞬間
     {
         StartCoroutine(Stimulate());
-        /*
         StartCoroutine(AppearWind());
-        yield return new WaitForSeconds(重りが到達するまでの時間);
-        StartCoroutine(AppearPress());
-        */
+        yield return new WaitForSeconds(_weightDropTime - 1f); //無駄に緩める分の時間を減算
+        //StartCoroutine(AppearPress());
+        
         yield return Stimulate();
         //GameManagerに処理が終了したことの報告
     }
@@ -184,11 +182,9 @@ public class HardwareManager : MonoBehaviour
     public IEnumerator Disappear() // 鷹が飛び立つときの関数
     {
         StartCoroutine(DisappearShock());
-        /*
-        StartCoroutine(DisappearPress());
-        yield return new WaitForSeconds(風を起こすまでの時間);
+        //StartCoroutine(DisappearPress());
         StartCoroutine(DisappearWind());
-        */
+        
         yield return DisappearShock();
         //GameManagerに処理が終了したことの報告
     }
@@ -206,13 +202,13 @@ public class HardwareManager : MonoBehaviour
         _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
         _isRopeTight = false;
         
-        _weightSender.DataSend("C\n" + _weightSpeedC.ToString() + "\n"); // 重りを落とし始める
+        _weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
         _isWeightDown = true;
-        yield return new WaitForSeconds(_weightTimeC);
+        yield return new WaitForSeconds(_weightDropTime);
         _weightSender.DataSend("S\n"); // 重りが落ちたらモータを止める
         _isWeightDown = false;
         
-        _ropeSender.DataSend("R\n" + _ropeSpeedR.ToString() + "\n"); // 紐を緩める
+        _ropeSender.DataSend("R\n" + _ropeLooseSpeed.ToString() + "\n"); // 紐を緩める
         _isRopeLoose = true;
         _pullInspector.OffPullStatus();
         _pressSender._afterstop = false;
@@ -238,13 +234,13 @@ public class HardwareManager : MonoBehaviour
 
     public IEnumerator Stimulate()
     {
-        _weightSender.DataSend("C\n" + _weightSpeedC.ToString() + "\n"); // 重りを落とし始める
+        _weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
         _isWeightDown = true;
-        yield return new WaitForSeconds(_weightTimeC);
+        yield return new WaitForSeconds(_weightDropTime);
         _weightSender.DataSend("S\n"); // 重りが落ちたらモータを止める
         _isWeightDown = false;
         
-        _ropeSender.DataSend("R\n" + _ropeSpeedR.ToString() + "\n"); // 紐を緩める
+        _ropeSender.DataSend("R\n" + _ropeLooseSpeed.ToString() + "\n"); // 紐を緩める
         _isRopeLoose = true;
         _pullInspector.OffPullStatus();
         _pressSender._afterstop = false;
@@ -256,9 +252,9 @@ public class HardwareManager : MonoBehaviour
 
     public IEnumerator DisappearShock() // 鷹が飛び立つときの衝撃提示の関数
     {
-        _weightSender.DataSend("R\n" + _weightSpeedR.ToString() + "\n");
+        _weightSender.DataSend("R\n" + _weightLiftSpeed.ToString() + "\n");
         _isWeightUp = true;
-        yield return new WaitForSeconds(_weightTimeR);
+        yield return new WaitForSeconds(_weightLiftTime);
         _weightSender.DataSend("S\n");
         _isWeightUp = false;
     }
@@ -281,15 +277,15 @@ public class HardwareManager : MonoBehaviour
     {
         if (_timeFromTighten <= _ropeTimeFast)
         {
-            return (_timeFromTighten * _ropeSpeedFast) / _ropeSpeedR;
+            return (_timeFromTighten * _ropeSpeedFast) / _ropeLooseSpeed;
         }
         else if (_timeFromTighten <= (_ropeTimeFast + _ropeTimeMiddle))
         {
-            return ((_ropeTimeFast * _ropeSpeedFast) + (_timeFromTighten - _ropeTimeFast) * _ropeSpeedMiddle) / _ropeSpeedR;
+            return ((_ropeTimeFast * _ropeSpeedFast) + (_timeFromTighten - _ropeTimeFast) * _ropeSpeedMiddle) / _ropeLooseSpeed;
         }
         else
         {
-            return (_ropeTimeFast * _ropeSpeedFast + _ropeTimeMiddle * _ropeSpeedMiddle + (_timeFromTighten - _ropeTimeFast - _ropeTimeMiddle) * _ropeSpeedLow) / _ropeSpeedR;
+            return (_ropeTimeFast * _ropeSpeedFast + _ropeTimeMiddle * _ropeSpeedMiddle + (_timeFromTighten - _ropeTimeFast - _ropeTimeMiddle) * _ropeSpeedLow) / _ropeLooseSpeed;
         }
     }
 
