@@ -21,6 +21,9 @@ public class gameManager : MonoBehaviour
     private int initialSpeedFromCase6; // ケース6で得られた初速
     private int crowCountFromCase6; // ケース6で得られたカラスの数
     public Text thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
+    public Eagle_Edit eagleEdit;
+    public Eagle_Navigation eagleNavigation;
+
 
     // Start is called before the first frame update
     void Awake()
@@ -38,6 +41,10 @@ public class gameManager : MonoBehaviour
         // 
         titleLabel.gameObject.SetActive(false);
         instructionLabel.gameObject.SetActive(false);
+
+        // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
+        eagleEdit = GetComponent<Eagle_Edit>();
+        eagleNavigation = GetComponent<Eagle_Navigation>();
     }
 
     // Update is called once per frame
@@ -59,7 +66,7 @@ public class gameManager : MonoBehaviour
                     callOnceFlag = true;
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return) || /* 腕の振りを検出?*/)
+                if (Input.GetKeyDown(KeyCode.Return) ) /* 腕の振りを検出?*/
                 {
                     callOnceFlag = false;
                     sceneTransitionFlag = false;
@@ -86,9 +93,10 @@ public class gameManager : MonoBehaviour
                     // Enterキーが押されたら、次のゲーム状態
                     callOnceFlag = false; // 
                     gameSceneState = 2; // 
-                    break;
+                }
+                break;
+                
             // 飛び立ちa
-            case 2:
             case 2:
                 // 飛び立ちa（Case 2）
                 if (callOnceFlag == false)
@@ -98,14 +106,12 @@ public class gameManager : MonoBehaviour
                     callOnceFlag = true;
 
                   
-                    Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
-                    float flightSpeed = GetFlightSpeed(); // 飛行速度を得る
+                   // Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
+                   //float flightSpeed = GetFlightSpeed(); // 飛行速度を得る
 
-                    initialSpeedFromCase2 = flightSpeed;
+                    //initialSpeedFromCase2 = flightSpeed;
 
-                    // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
-                    Eagle_Edit eagleEdit = GetComponent<Eagle_Edit>();
-                    Eagle_Navigation eagleNavigation = GetComponent<Eagle_Navigation>();
+                    
 
                     if (eagleEdit != null && eagleNavigation != null)
                     {
@@ -113,17 +119,16 @@ public class gameManager : MonoBehaviour
                         eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
 
                         // フライトの開始
-                        eagleEdit.TakeOff(targetPosition);
+                       // eagleEdit.TakeOff(targetPosition);
 
                         // Eagle_Navigationで目標位置と飛行速度を設定する
-                        eagleNavigation.SetTarget(targetPosition);
-                        eagleNavigation.SetSpeed(flightSpeed);
+                       // eagleNavigation.SetTarget(targetPosition);
+                       // eagleNavigation.SetSpeed(flightSpeed);
                     }
-                    crowCountFromCase2 = 38;//例を挙げる
+                    //カラス？？
+                    crowCountFromCase2 = 38;//殺したカラス
                 }
 
-                initialSpeedFromCase2 = CalculateInitialSpeed();
-                crowCountFromCase2 = CalculateCrowCount();
 
                 if (sceneTransitionFlag == true)
                 {
@@ -142,7 +147,7 @@ public class gameManager : MonoBehaviour
                     callOnceFlag = true;
 
                     // トラッカーから提供されたプレーヤーの手の位置を取得する。
-                    Vector3 playerHandPosition = GetPlayerHandPosition();
+                   // Vector3 playerHandPosition = GetPlayerHandPosition();
 
                     // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
                     Eagle_Edit eagleEdit = GetComponent<Eagle_Edit>();
@@ -154,10 +159,10 @@ public class gameManager : MonoBehaviour
                         eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
 
                         // イーグルの目標位置をプレーヤーの手の位置に設定する。
-                        eagleNavigation.SetTarget(playerHandPosition);
+                       // eagleNavigation.SetTarget(playerHandPosition);
 
                         // 必要に応じて飛行速度を設定する
-                        eagleNavigation.SetSpeed(yourSpeedValue);
+                        //eagleNavigation.SetSpeed(yourSpeedValue);
                     }
                 }
 
@@ -192,7 +197,9 @@ public class gameManager : MonoBehaviour
                 {
                     callOnceFlag = false;
                     gameSceneState = 5;
-                    break;
+                }
+                break;
+                
             // 待機b
             case 5:
 
@@ -209,10 +216,12 @@ public class gameManager : MonoBehaviour
                     // Enterキーが押されたら、次のゲーム状態
                     callOnceFlag = false; // 
                     gameSceneState = 6; // 
-                    break;
+                }
+                break;
+                
             // 飛び立ちb
             case 6:
-                // 飛び立ちa（Case 2）的处理
+                // 飛び立ちa（Case 6)
                 if (callOnceFlag == false)
                 {
 
@@ -220,10 +229,10 @@ public class gameManager : MonoBehaviour
                     callOnceFlag = true;
 
 
-                    Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
-                    float flightSpeed = GetFlightSpeed(); // 飛行速度を得る
+                   // Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
+                    //float flightSpeed = GetFlightSpeed(); // 飛行速度を得る
 
-                    initialSpeedFromCase6 = flightSpeed;
+                    //initialSpeedFromCase6 = flightSpeed;
 
                     // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
                     Eagle_Edit eagleEdit = GetComponent<Eagle_Edit>();
@@ -235,13 +244,13 @@ public class gameManager : MonoBehaviour
                         eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
 
                         // フライトの開始
-                        eagleEdit.TakeOff(targetPosition);
+                       // eagleEdit.TakeOff(targetPosition);
 
                         // Eagle_Navigationで目標位置と飛行速度を設定する
-                        eagleNavigation.SetTarget(targetPosition);
-                        eagleNavigation.SetSpeed(flightSpeed);
+                      //  eagleNavigation.SetTarget(targetPosition);
+                       // eagleNavigation.SetSpeed(flightSpeed);
                     }
-                    crowCountFromCase6 = 39;//例を挙げる
+                    crowCountFromCase6 = 39;//ころしかカラス
                 }
 
                 if (sceneTransitionFlag == true)
@@ -260,11 +269,7 @@ public class gameManager : MonoBehaviour
                     callOnceFlag = true;
 
                     // トラッカーから提供されたプレーヤーの手の位置を取得する。
-                    Vector3 playerHandPosition = GetPlayerHandPosition();
-
-                    // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
-                    Eagle_Edit eagleEdit = GetComponent<Eagle_Edit>();
-                    Eagle_Navigation eagleNavigation = GetComponent<Eagle_Navigation>();
+                    //Vector3 playerHandPosition = GetPlayerHandPosition();
 
                     if (eagleEdit != null && eagleNavigation != null)
                     {
@@ -272,10 +277,10 @@ public class gameManager : MonoBehaviour
                         eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
 
                         // イーグルの目標位置をプレーヤーの手の位置に設定する。
-                        eagleNavigation.SetTarget(playerHandPosition);
+                       // eagleNavigation.SetTarget(playerHandPosition);
 
                         // 必要に応じて飛行速度を設定する
-                        eagleNavigation.SetSpeed(yourSpeedValue);
+                       // eagleNavigation.SetSpeed(yourSpeedValue);
                     }
                 }
 
@@ -311,9 +316,10 @@ public class gameManager : MonoBehaviour
                 {
                     callOnceFlag = false;
                     gameSceneState = 9;
-                    break;
+                 
+                }
+                break;
             // 終了処理
-            case 9:
             case 9:
                 // 終了処理
                 if (callOnceFlag == false)
