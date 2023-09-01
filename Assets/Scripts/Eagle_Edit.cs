@@ -70,6 +70,7 @@ public class Eagle_Edit : MonoBehaviour
                 
                // RootMotionOnOff(true);
                 TakeOff();
+                
             }
             if (_eagleState.ToString()=="TurnL")
             {
