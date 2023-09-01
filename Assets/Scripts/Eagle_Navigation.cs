@@ -81,7 +81,7 @@ public class Eagle_Navigation : MonoBehaviour
         {
             case "laud":
             {
-                Debug.Log("laud");
+                //Debug.Log("laud");
                 //アニメーションのxz平面の移動距離とy軸方向の移動距離
                 var xzMargin = 2.0f;
                 var yMargin = 1.5f;
@@ -124,7 +124,7 @@ public class Eagle_Navigation : MonoBehaviour
 
             case "target":
             {
-                Debug.Log("target");
+              //  Debug.Log("target");
                 // 向かせる
                 gameObject.transform.LookAt(_target.transform);
                 debug.transform.position = _target.transform.position;
@@ -133,7 +133,7 @@ public class Eagle_Navigation : MonoBehaviour
 
             case "targetAround":
             {
-                Debug.Log("targetAround");
+               // Debug.Log("targetAround");
                 //ターゲットの周りを周回させる
                 gameObject.transform.LookAt(CalcRotationPosition(_target));
                 debug.transform.position = CalcRotationPosition(_target);
