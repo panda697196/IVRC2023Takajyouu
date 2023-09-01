@@ -9,6 +9,7 @@ public class HardwareManager : MonoBehaviour
     [SerializeField] private Sender _ropeSender;
     [SerializeField] private Sender _pressSender;
     [SerializeField] private Sender _windSender;
+    [SerializeField] private Sender _freedomDropSender;
     [SerializeField] private PullInspector _pullInspector;
     // モータの回転速度(0-255)，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータ速度")]
@@ -121,15 +122,19 @@ public class HardwareManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.H))
             {
-                _weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
+                //_weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
+                _freedomDropSender.DataSend("30\n");
             }
             if (Input.GetKeyUp(KeyCode.H))
             {
-                _weightSender.DataSend("S\n");
+                //_weightSender.DataSend("S\n");
+                _freedomDropSender.DataSend("50\n");
             }
             if (Input.GetKeyUp(KeyCode.F))
             {
-                StartCoroutine(AppearWind());
+                //StartCoroutine(AppearWind());
+                _freedomDropSender.DataSend("10\n");
+                Debug.Log("10");
             }
             if (Input.GetKeyUp(KeyCode.Space))
             {

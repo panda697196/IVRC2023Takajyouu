@@ -5,6 +5,7 @@
 #error Bluetooth is not enabled! Please run `make menuconfig` to and enable it
 #endif
 
+
 BluetoothSerial SerialBT;
 // ピン定義。
 #define PIN_Servo 25
@@ -22,8 +23,7 @@ void setup() {
 
 void loop() {
   if(SerialBT.available()){
-    String command = SerialBT.readStringUntil('\n');
-    int spd = command.toInt();
+    int spd = SerialBT.readStringUntil('\n').toInt();
     _myServo.write(spd);
   }
 }
