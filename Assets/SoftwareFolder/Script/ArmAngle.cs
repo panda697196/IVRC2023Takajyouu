@@ -10,6 +10,7 @@ public class ArmAngle : MonoBehaviour
     public float baseAngle = 65f;
     public Transform goalPosition;
     public Vector3 inputGoalPosition;
+    public Transform tmpGoalPosObj;
 
     private Vector3 prevPosition1;
     private Vector3 prevPosition2;
@@ -61,8 +62,10 @@ public class ArmAngle : MonoBehaviour
             if (Mathf.Abs(angle) >= baseAngle)
             {
                 Debug.Log("fly");
-                inputGoalPosition = new Vector3(0.0f, 10.0f, -10.0f);
-                goalPosition.position = inputGoalPosition;
+                inputGoalPosition = new Vector3(0.0f, 10.0f, -10.0f); //テスト用仮ゴール座標
+                goalPosition.position = inputGoalPosition;//
+                Vector3 tmpGoalPos = tmpGoalPosObj.position;
+                setGoal(tmpGoalPos);
 
             }
 
@@ -75,6 +78,12 @@ public class ArmAngle : MonoBehaviour
             this.delta = 0; //deltaの初期化
         }
         
+    }
+
+    private void setGoal(Vector3 tmpGoalPos)
+    {
+        Debug.Log("一時ゴールの位置："+tmpGoalPos);
+        goalPosition.position = tmpGoalPos;
     }
 }
 
