@@ -8964,8 +8964,13 @@ MonoBehaviour:
   song2: {fileID: 8300000, guid: aa29893140715234fa4c6f0f17bc3d88, type: 3}
   flyAway1: {fileID: 8300000, guid: 9dabaef0cd2ecb241956e3db52d3bc8d, type: 3}
   flyAway2: {fileID: 8300000, guid: ae13220b2fee67344b8b455414c59ff4, type: 3}
-  _acceleration: {x: 0, y: 0, z: 0}
   _speed: 0.01
+  _hight: 0
+--- !u!4 &478087973 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3703409041644438921, guid: a7d4a7ff2205aa749bd53da3fa5c878f, type: 3}
+  m_PrefabInstance: {fileID: 478087965}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &484510612
 GameObject:
   m_ObjectHideFlags: 0
@@ -18626,11 +18631,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 985059119}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
---- !u!4 &989777404 stripped
-Transform:
-  m_CorrespondingSourceObject: {fileID: 4165697586004178307, guid: 9df48033d668fe145b5024bf6d6d3de1, type: 3}
-  m_PrefabInstance: {fileID: 2065981282}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &990827792
 GameObject:
   m_ObjectHideFlags: 0
@@ -21361,7 +21361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5998d711da0cd344cb24d9bcd200638d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  target: {fileID: 989777404}
+  target: {fileID: 478087973}
   offset: {x: 1, y: 1, z: 1}
   SmoothSpeed: 1
 --- !u!1 &1129001030

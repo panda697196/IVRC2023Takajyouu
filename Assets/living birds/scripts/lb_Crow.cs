@@ -36,16 +36,13 @@ public class lb_Crow : MonoBehaviour
     float distanceToTarget = 0.0f;
     float agitationLevel = .5f;
     float Angle = 0.0f;
-    int sp = 0;
 
-
-    //飛行関連
-    // 加速度
-    [SerializeField] private Vector3 _acceleration = new Vector3();
     // 初速度
     [SerializeField] private float _speed = 0.01f;
     // 現在速度
     private Vector3 _velocity = Vector3.zero;
+    // 高さ
+    [SerializeField] private float _hight = 0;
 
     //hash variables for the animation states and animation properties
     int idleAnimationHash;
@@ -186,27 +183,38 @@ public class lb_Crow : MonoBehaviour
 
     void Fly(float t)
     {
+        /*_hight = Random.Range(-0.1f, 0.1f);
+        if(transform.position.y <= -0.02)
+        {
+            _hight = 0.5f;
+        }*/
         Angle = 45f * t;
         // 角度をラジアンに変換
         float rad = Angle * Mathf.Deg2Rad;
         _speed += 1f;
         _speed = Mathf.Clamp(_speed, 0, 100f);
         // ラジアンから進行方向を設定
-        Vector3 direction = new Vector3(Mathf.Sin(rad), 0, Mathf.Cos(rad));
+        Vector3 direction = new Vector3(Mathf.Sin(rad), 0.5f, Mathf.Cos(rad));
         // 方向に速度を掛け合わせて移動ベクトルを求める
         _velocity = direction * _speed * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
         transform.rotation = Quaternion.LookRotation(direction);
+        UnityEngine.Debug.Log(direction);
     }
 
     void Land()
     {
+        _hight -= 0.1f;
+        if (transform.position.y <= -0.01f)
+        {
+            _hight = 0;
+        }
         // 角度をラジアンに変換
         float rad = Angle * Mathf.Deg2Rad;
         _speed -= 1f;
         _speed = Mathf.Clamp(_speed, 0, 100f);
         // ラジアンから進行方向を設定
-        Vector3 direction = new Vector3(Mathf.Sin(rad), 0, Mathf.Cos(rad));
+        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight, Mathf.Cos(rad));
         // 方向に速度を掛け合わせて移動ベクトルを求める
         _velocity = direction * _speed * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
