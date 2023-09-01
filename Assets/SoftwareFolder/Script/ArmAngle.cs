@@ -16,7 +16,7 @@ public class ArmAngle : MonoBehaviour
     private Vector3 prevPosition2;
     private Vector3 prevDiffLine;
 
-    private float span = 0.2f;
+    public float span = 0.3f;
     private float delta = 0;
 
     private void Start()
