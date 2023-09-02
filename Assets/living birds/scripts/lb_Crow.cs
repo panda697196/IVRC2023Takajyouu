@@ -39,9 +39,9 @@ public class lb_Crow : MonoBehaviour
 
     public enum birdBehaviors
     {
-        idle, flyToTarget, sing, preen, ruffle, peck,
+        idle, flyToTarget, sing, /*preen, ruffle, peck,
         flyLeft, flyRight, flyStraight, landing,
-        hopForward, hopBackward, hopLeft, hopRight,
+        hopForward, hopBackward, hopLeft, hopRight,*/
     }
 
     BoxCollider birdCollider;
@@ -103,8 +103,44 @@ public class lb_Crow : MonoBehaviour
             case birdBehaviors.sing:
                 anim.SetBool("idle", false);
                 anim.SetTrigger(singTriggerHash);
+                PlaySong();
                 break;
-            case birdBehaviors.ruffle:
+            case birdBehaviors.idle:
+                anim.SetBool("idle", true);
+                anim.SetBool("landing", false);
+                anim.SetBool("flying", false);
+                float i = Random.Range(0, 1);
+                anim.SetFloat("IdleAgitated",i);
+                _hight2 = 0.5f;
+                break;
+            case birdBehaviors.flyToTarget:
+                float dis = Vector3.SqrMagnitude(_target.transform.position - transform.position);
+                if(dis > 10f)
+                {
+                    anim.SetBool("flying", true);
+                    anim.SetBool("idle", false);
+                    Flytest(_target.transform);
+                }
+                else
+                {
+                    if (dis < 0.01f)
+                    {
+                        anim.SetBool("idle", true);
+                        anim.SetBool("landing", false);
+                        anim.SetBool("flying", false);
+                        float j = Random.Range(0, 1);
+                        anim.SetFloat("IdleAgitated", j);
+                        _crowState = birdBehaviors.idle;
+                    }
+                    else
+                    {
+                        anim.SetBool("landing", true);
+                        anim.SetBool("flying", false);
+                        Landtest(_target.transform);
+                    }
+                }
+                break;
+                /*case birdBehaviors.ruffle:
                 anim.SetBool("idle", false);
                 anim.SetTrigger(ruffleBoolHash);
                 break;
@@ -189,43 +225,7 @@ public class lb_Crow : MonoBehaviour
                     float j = Random.Range(0, 1);
                     anim.SetFloat("IdleAgitated", j);
                 }
-                break;
-            case birdBehaviors.idle:
-                anim.SetBool("idle", true);
-                anim.SetBool("landing", false);
-                anim.SetBool("flying", false);
-                float i = Random.Range(0, 1);
-                anim.SetFloat("IdleAgitated",i);
-                _hight2 = 0.5f;
-                break;
-            case birdBehaviors.flyToTarget:
-                float dis = Vector3.SqrMagnitude(_target.transform.position - transform.position);
-                if(dis > 10f)
-                {
-                    anim.SetBool("flying", true);
-                    anim.SetBool("idle", false);
-                    Flytest(_target.transform);
-                }
-                else
-                {
-                    if (dis < 0.01f)
-                    {
-                        anim.SetBool("idle", true);
-                        anim.SetBool("landing", false);
-                        anim.SetBool("flying", false);
-                        float j = Random.Range(0, 1);
-                        anim.SetFloat("IdleAgitated", j);
-                        _crowState = birdBehaviors.idle;
-                    }
-                    else
-                    {
-                        anim.SetBool("landing", true);
-                        anim.SetBool("flying", false);
-                        Landtest(_target.transform);
-                    }
-                }
-                //UnityEngine.Debug.Log(dis);
-                break;
+                break;*/
         }
     }
 
@@ -333,7 +333,15 @@ public class lb_Crow : MonoBehaviour
             {
                 DisplayBehavior(birdBehaviors.idle);
             }
-            if (_crowState.ToString() == "flyLeft")
+            if (_crowState.ToString() == "flyToTarget")
+            {
+                DisplayBehavior(birdBehaviors.flyToTarget);
+            }
+            if (_crowState.ToString() == "sing")
+            {
+                DisplayBehavior(birdBehaviors.sing);
+            }
+            /*if (_crowState.ToString() == "flyLeft")
             {
                 DisplayBehavior(birdBehaviors.flyLeft);
             }
@@ -348,10 +356,6 @@ public class lb_Crow : MonoBehaviour
             if (_crowState.ToString() == "landing")
             {
                 DisplayBehavior(birdBehaviors.landing);
-            }
-            if (_crowState.ToString() == "sing")
-            {
-                DisplayBehavior(birdBehaviors.sing);
             }
             if (_crowState.ToString() == "preen")
             {
@@ -380,11 +384,7 @@ public class lb_Crow : MonoBehaviour
             if (_crowState.ToString() == "hopBackward")
             {
                 DisplayBehavior(birdBehaviors.hopBackward);
-            }
-            if (_crowState.ToString() == "flyToTarget")
-            {
-                DisplayBehavior(birdBehaviors.flyToTarget);
-            }
+            }*/
         }
     }
 }

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,20 +12,21 @@ public class gameManager : MonoBehaviour
 
     private bool callOnceFlag;
 
-    public Text titleLabel;
-    public Text instructionLabel;
-
-    public Text scoreText; // UI 得点を表示するためのテキスト要素
+    public TextMeshProUGUI titleLabel; //タイトル画面
+    public TextMeshProUGUI instructionLabel; //instructionUI
+    public TextMeshPro scoreText; // UI 得点を表示するためのテキスト要素
     private int initialSpeed; // 初速
     private int initialSpeedFromCase2; // ケース2で得られた初速
     private int crowCountFromCase2; // ケース2で得られたカラスの数
     private int initialSpeedFromCase6; // ケース6で得られた初速
     private int crowCountFromCase6; // ケース6で得られたカラスの数
-    private bool flyFlag;
-    public Text thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
+    private bool flyFlag; //とびたちフラグ
+    public TextMeshProUGUI thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
     public Eagle_Edit eagleEdit;
     public Eagle_Navigation eagleNavigation;
     public GameObject flyFlagObj;
+    public Transform rawfingerPos;
+    private Vector3 fingerPos;
 
     // Start is called before the first frame update
     void Awake()
@@ -36,24 +38,26 @@ public class gameManager : MonoBehaviour
 
         //_uiDispalyaa=UI,Getcomponent<UIdisplayer>();
         // 
-        titleLabel = GameObject.Find("TitleLabel").GetComponent<Text>();
-        instructionLabel = GameObject.Find("InstructionLabel").GetComponent<Text>();
+        // titleLabel = GameObject.Find("TitleLabel").GetComponent<Text>();//いる？
+        // instructionLabel = GameObject.Find("InstructionLabel").GetComponent<Text>();
 
-        // 
+        // titleLabelとインストラクションの初期化
         titleLabel.gameObject.SetActive(false);
         instructionLabel.gameObject.SetActive(false);
 
         // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
-        eagleEdit = GetComponent<Eagle_Edit>();
-        eagleNavigation = GetComponent<Eagle_Navigation>();
+        // eagleEdit = GetComponent<Eagle_Edit>();
+        // eagleNavigation = GetComponent<Eagle_Navigation>();
 
         flyFlag = flyFlagObj.GetComponent<ArmAngle>().flyFlag;
+
+        fingerPos = rawfingerPos.position;
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Updata");
+        // Debug.Log("Updata");
         switch (gameSceneState)
         {
             // スタートシーン
@@ -64,16 +68,18 @@ public class gameManager : MonoBehaviour
                     titleLabel.gameObject.SetActive(true);
                     instructionLabel.gameObject.SetActive(true);
 
-                    titleLabel.text = "鷹匠"; //タイトル
-                    instructionLabel.text = "Enterキーを押してゲームを開始"; // プロンプトテキストの設定
+                    titleLabel.text = "Takasyo"; //タイトル
+                    instructionLabel.text = "Please press enter key"; // プロンプトテキストの設定
 
                     callOnceFlag = true;
+
+                    // eagleNavigation.;
                 }
 
                 if (Input.GetKeyDown(KeyCode.Return) ) //鷹がうでにとまる
                 {
-                    callOnceFlag = false;
-                    sceneTransitionFlag = false;
+                    callOnceFlag = false; //一回フラグの初期化
+                    sceneTransitionFlag = false; //シーン遷移フラグの初期化
 
                     // ヘッダーとアラートを隠す
                     titleLabel.gameObject.SetActive(false);
@@ -84,7 +90,7 @@ public class gameManager : MonoBehaviour
                 break;
             // 待機a
             case 1:
-                Debug.Log("待機A");
+                // Debug.Log("待機A");
                 // 待機aでの処理内容(毎フレーム)
                 flyFlag = flyFlagObj.GetComponent<ArmAngle>().flyFlag;
                 Debug.Log("flyflag:" + flyFlag);
@@ -100,7 +106,7 @@ public class gameManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Return) || flyFlag == true) // 腕の振りを検出
                 {
                     // Enterキーが押されたら、次のゲーム状態
-                    flyFlagObj.GetComponent<ArmAngle>().flyFlag = false; //flagを戻す
+                    flyFlagObj.GetComponent<ArmAngle>().flyFlag = false; //flyflag初期化
                     callOnceFlag = false; // 
                     gameSceneState = 2; // 
                 }
