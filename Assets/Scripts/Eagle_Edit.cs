@@ -7,7 +7,7 @@ using Debug = UnityEngine.Debug;
 public class Eagle_Edit : MonoBehaviour
 {
     private Animator eagle;
-    public GameObject MainCamera;
+    //public GameObject MainCamera;
     
     [Header("鷹の状態を表示")]
     [SerializeField] private EagleState _eagleState;
@@ -23,8 +23,8 @@ public class Eagle_Edit : MonoBehaviour
 
     }
 
-    [Header("鷹の状態を変えることで鷹を動かせる")]
-    public bool _isDebug;
+    //[Header("鷹の状態を変えることで鷹を動かせる")]
+    private bool _isDebug=true;
     public enum EagleState
     {
         Idle,Takeoff,TurnR,TurnL,Lauding,Walk,Walkend,Glide,Attack,Hunt,Fly,nothing,
