@@ -18,7 +18,7 @@ void setup() {
   Serial.begin(9600);
   delay(1000);
   _myServo.attach(PIN_Servo);
-  _myServo.write(0);
+  _myServo.write(180);
 }
 
 void loop() {
