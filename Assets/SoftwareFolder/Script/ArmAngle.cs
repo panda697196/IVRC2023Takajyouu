@@ -32,7 +32,7 @@ public class ArmAngle : MonoBehaviour
 
     private void Start()
     {
-        sceneTarans = gameManager.GetComponent<gameManager>().gameSceneState;
+        sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState();
 
         prevPosition1 = tracker1.position;
         prevPosition2 = tracker2.position;
@@ -44,7 +44,7 @@ public class ArmAngle : MonoBehaviour
 
     private void Update()
     {
-        sceneTarans = gameManager.GetComponent<gameManager>().gameSceneState;
+        sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState();
         Debug.Log(sceneTarans);
         if (sceneTarans == 1 || sceneTarans == 5)
         {
