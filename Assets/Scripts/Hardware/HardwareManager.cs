@@ -213,8 +213,6 @@ public class HardwareManager : MonoBehaviour
     
     public IEnumerator StandbyRope()
     {
-        //Debug.Log("Debug");
-        StartCoroutine(StandbyWeight());
         //_ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
         _ropeSender.DataSend("C\n" + _ropeSpeedFast.ToString() + "\n"); // 紐を張る
         _isRopeTight = true;
