@@ -14463,6 +14463,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Struct_WoodBoard_A
       objectReference: {fileID: 0}
+    - target: {fileID: 104646, guid: 6d668391662efbf43ac29d9224a0b6d9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 415982, guid: 6d668391662efbf43ac29d9224a0b6d9, type: 3}
       propertyPath: m_RootOrder
       value: 12
@@ -22664,6 +22668,8 @@ MonoBehaviour:
   _flyState: 2
   _radius: 3
   _height: 2
+  xzMargin: 2
+  yMargin: 1.5
   debug: {fileID: 609572336}
 --- !u!114 &1478839604
 MonoBehaviour:
