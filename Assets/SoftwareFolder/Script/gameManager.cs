@@ -15,18 +15,21 @@ public class gameManager : MonoBehaviour
     public TextMeshProUGUI titleLabel; //タイトル画面
     public TextMeshProUGUI instructionLabel; //instructionUI
     public TextMeshPro scoreText; // UI 得点を表示するためのテキスト要素
+    public TextMeshProUGUI thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
+    
     private int initialSpeed; // 初速
     private int initialSpeedFromCase2; // ケース2で得られた初速
-    private int crowCountFromCase2; // ケース2で得られたカラスの数
+    public int crowCountFromCase2; // ケース2で得られたカラスの数
     private int initialSpeedFromCase6; // ケース6で得られた初速
-    private int crowCountFromCase6; // ケース6で得られたカラスの数
+    public int crowCountFromCase6; // ケース6で得られたカラスの数
     private bool flyFlag; //とびたちフラグ
-    public TextMeshProUGUI thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
+    
     public Eagle_Edit eagleEdit;
     public Eagle_Navigation eagleNavigation;
     public GameObject flyFlagObj;
     public Transform rawfingerPos;
     private Vector3 fingerPos;
+    
 
     // Start is called before the first frame update
     void Awake()
