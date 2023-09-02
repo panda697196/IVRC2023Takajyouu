@@ -50,10 +50,10 @@ public class HardwareManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        _tightenSpeed = _ropeSpeedFast;
-        _weightSender.DataSend("S\n");
-        _ropeSender.DataSend("S\n");
-        //_freedomDropSender.DataSend("0\n");
+        //_tightenSpeed = _ropeSpeedFast;
+        //_weightSender.DataSend("S\n");
+        //_ropeSender.DataSend("S\n");
+        _freedomDropSender.DataSend("0\n");
     }
 
     // Update is called once per frame
@@ -127,18 +127,18 @@ public class HardwareManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.H))
             {
-                _weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
-                //_freedomDropSender.DataSend("30\n");
+                //_weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
+                _freedomDropSender.DataSend("0\n");
             }
             if (Input.GetKeyUp(KeyCode.H))
             {
-                _weightSender.DataSend("S\n");
-                //_freedomDropSender.DataSend("35\n");
+                //_weightSender.DataSend("S\n");
+                //_freedomDropSender.DataSend("65\n");
             }
             if (Input.GetKeyUp(KeyCode.F))
             {
-                StartCoroutine(AppearWind());
-                //_freedomDropSender.DataSend("20\n");
+                //StartCoroutine(AppearWind());
+                _freedomDropSender.DataSend("60\n");
             }
             if (Input.GetKeyUp(KeyCode.Space))
             {
@@ -152,6 +152,7 @@ public class HardwareManager : MonoBehaviour
     {
         _weightSender.DataSend("S\n");
         _ropeSender.DataSend("S\n");
+        _freedomDropSender.DataSend("0\n");
     }
 
     /*
