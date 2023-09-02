@@ -42,6 +42,8 @@ public class HardwareManager : MonoBehaviour
     private bool _isRopeTight = false; // ロープが動いているがどうか
     private bool _isRopeLoose = false;
 
+    private bool _isStandbyFinished = false;
+
     private float _timeToUpdate;
     private int _tightenSpeed;
     private float _timeFromTighten = 0;
@@ -96,12 +98,22 @@ public class HardwareManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Comma))
             {
                 //StartCoroutine(Disappear());
-                Disappear();
+                StandbyDisappear();
             }
             if (Input.GetKeyDown(KeyCode.Period))
             {
                 //StartCoroutine(Disappear());
-                StandbyDisappear();
+                Disappear();
+                //_freedomDropSender.DataSend("0\n");
+            }
+
+            if (Input.GetKeyDown(KeyCode.O))
+            {
+                _freedomDropSender.DataSend(_angleOfStopper + "\n");
+            }
+            if (Input.GetKeyDown(KeyCode.K))
+            {
+                _freedomDropSender.DataSend("0\n");
             }
 
             if (Input.GetKeyDown(KeyCode.I))
@@ -131,18 +143,16 @@ public class HardwareManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.H))
             {
-                //_weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
-                _freedomDropSender.DataSend("0\n");
+                _weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
             }
             if (Input.GetKeyUp(KeyCode.H))
             {
-                //_weightSender.DataSend("S\n");
-                //_freedomDropSender.DataSend("65\n");
+                _weightSender.DataSend("S\n");
             }
             if (Input.GetKeyUp(KeyCode.F))
             {
-                //StartCoroutine(AppearWind());
-                _freedomDropSender.DataSend("60\n");
+                StartCoroutine(AppearWind());
+                //_freedomDropSender.DataSend("65\n");
             }
             if (Input.GetKeyUp(KeyCode.Space))
             {
@@ -154,6 +164,7 @@ public class HardwareManager : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        //ゲーム終了時にすべてのモータを停止する
         _weightSender.DataSend("S\n");
         _ropeSender.DataSend("S\n");
         _freedomDropSender.DataSend("0\n");
@@ -187,7 +198,8 @@ public class HardwareManager : MonoBehaviour
 
     public void StandbyComeHawk()// 鷹が腕に留まる前に　紐を張るなど準備をする
     {
-        StartCoroutine(StandbyShock());
+        StartCoroutine(StandbyRope());
+        StartCoroutine(StandbyWeight());
         //GameManagerに処理が終了したことの報告
     }
 
@@ -268,9 +280,10 @@ public class HardwareManager : MonoBehaviour
     }
     */
 
-    public IEnumerator StandbyShock()
+    public IEnumerator StandbyRope()
     {
-        Debug.Log("Debug");
+        //Debug.Log("Debug");
+        StartCoroutine(StandbyWeight());
         //_ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
         _ropeSender.DataSend("C\n" + _ropeSpeedFast.ToString() + "\n"); // 紐を張る
         _isRopeTight = true;
@@ -281,33 +294,39 @@ public class HardwareManager : MonoBehaviour
         yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true); // 紐が張ったことを確認できるまで待機
         _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
         _isRopeTight = false;
-        
+        _isStandbyFinished = true;
+    }
+
+    public IEnumerator StandbyWeight()
+    {
         //TODO:落下開始
-        /*
+        ///*
         //紐を抑える
         _freedomDropSender.DataSend(_angleOfStopper.ToString() + "\n");
-        yield return new WaitForSeconds(0.1f);
+        yield return new WaitForSeconds(0.5f);
         //紐を下ろす
         _weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
         _isWeightDown = true;
         yield return new WaitForSeconds(_weightDropTime);
         _weightSender.DataSend("S\n"); // 重りが落ちたらモータを止める
         _isWeightDown = false;
-        */
+        //*/
     }
 
     public IEnumerator Stimulate()
     {
+        /*
         _weightSender.DataSend("C\n" + _weightDropSpeed.ToString() + "\n"); // 重りを落とし始める
         _isWeightDown = true;
         yield return new WaitForSeconds(_weightDropTime);
         _weightSender.DataSend("S\n"); // 重りが落ちたらモータを止める
         _isWeightDown = false;
-        //TODO:紐を離す
-        /*
-        _freedomDropSender.DataSend("0\n");
-        yield return new WaitForSeconds(0.5f);
         */
+        //TODO:紐を離す
+        ///*
+        _freedomDropSender.DataSend("0\n");
+        yield return new WaitForSeconds(1f);
+        //*/
         
         _ropeSender.DataSend("R\n" + _ropeLooseSpeed.ToString() + "\n"); // 紐を緩める
         _isRopeLoose = true;
@@ -318,6 +337,7 @@ public class HardwareManager : MonoBehaviour
         //yield return new WaitForSeconds(_ropeTimeR);
         _ropeSender.DataSend("S\n");
         _isRopeLoose = false;
+        _isStandbyFinished = false;
     }
 
     public IEnumerator StandbyDisappearShock()
