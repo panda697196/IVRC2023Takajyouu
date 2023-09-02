@@ -22,12 +22,11 @@ public class HardwareManager : MonoBehaviour
     [SerializeField] private int _weightLiftSpeed = 255;
     // モータを止めるまでの時間[s]，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータを止めるまでの時間[s]")]
-    [SerializeField] private float _ropeTightTime = 5;
-    [SerializeField] private float _ropeLooseTime = 5;
     [SerializeField] private float _ropeTimeFast = 5f;
     [SerializeField] private float _ropeTimeMiddle = 5f;
     [SerializeField] private float _weightDropTime = 2f;
     [SerializeField] private float _weightLiftTime = 2f;
+    [SerializeField] private float _weightLiftStandbyTime = 1.5f;
     [Header("ファン稼働時間[s]")]
     [SerializeField] private float _fanTimeOfCome = 1.5f;
     [SerializeField] private float _fanTimeOfGo = 2f;
@@ -98,6 +97,11 @@ public class HardwareManager : MonoBehaviour
             {
                 //StartCoroutine(Disappear());
                 Disappear();
+            }
+            if (Input.GetKeyDown(KeyCode.Period))
+            {
+                //StartCoroutine(Disappear());
+                StandbyDisappear();
             }
 
             if (Input.GetKeyDown(KeyCode.I))
@@ -219,6 +223,10 @@ public class HardwareManager : MonoBehaviour
     }
     */
 
+    public void StandbyDisappear()
+    {
+        StartCoroutine(StandbyDisappearShock());
+    }
     public void Disappear() // 鷹が飛び立つときの関数
     {
         StartCoroutine(DisappearShock());
@@ -312,6 +320,14 @@ public class HardwareManager : MonoBehaviour
         _isRopeLoose = false;
     }
 
+    public IEnumerator StandbyDisappearShock()
+    {
+        _weightSender.DataSend("R\n" + _weightLiftSpeed.ToString() + "\n");
+        _isWeightUp = true;
+        yield return new WaitForSeconds(_weightLiftStandbyTime);
+        _weightSender.DataSend("S\n");
+        _isWeightUp = false;
+    }
     public IEnumerator DisappearShock() // 鷹が飛び立つときの衝撃提示の関数
     {
         _weightSender.DataSend("R\n" + _weightLiftSpeed.ToString() + "\n");

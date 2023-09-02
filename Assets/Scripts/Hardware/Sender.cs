@@ -7,7 +7,6 @@ public class Sender : MonoBehaviour
     [SerializeReference] private INexusRobotSend _sender;
     [SerializeField] private PullInspector _pullInspector;
     [SerializeField] private MySerialHandler mySerialHandler;
-    public bool _afterstop = false;
 
     // Start is called before the first frame update
     void Start()
@@ -21,16 +20,7 @@ public class Sender : MonoBehaviour
         if(mySerialHandler._isNewMessageReceived)
         {
             if (mySerialHandler._message == "AS")
-            {
-                DataSend("S\n");
-                _afterstop = true;
-                
                 _pullInspector.DetectPull();
-            }
-            if (mySerialHandler._message == "BS")
-            {
-                _afterstop = false;
-            }
         }
     }
 
