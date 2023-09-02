@@ -725,7 +725,7 @@ MonoBehaviour:
   _isNewMessageReceived: 0
   _message: 
   _bandRate: 115200
-  _portName: COM32
+  _portName: COM33
 --- !u!114 &2131658863
 MonoBehaviour:
   m_ObjectHideFlags: 0

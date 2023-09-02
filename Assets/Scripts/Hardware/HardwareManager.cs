@@ -135,7 +135,7 @@ public class HardwareManager : MonoBehaviour
             }
             if (Input.GetKeyDown(KeyCode.U))
             {
-                _weightSender.DataSend("R\n" + _weightLiftSpeed.ToString() + "\n");
+                _weightSender.DataSend("R\n" + _weightLiftSpeed.ToString() + "\n"); // 重りを上げ始める
             }
             if (Input.GetKeyUp(KeyCode.U))
             {
