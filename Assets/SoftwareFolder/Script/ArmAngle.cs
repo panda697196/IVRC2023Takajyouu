@@ -44,11 +44,11 @@ public class ArmAngle : MonoBehaviour
 
     private void Update()
     {
+        Debug.Log("Pre;"+prevPosition1+"now"+tracker1.position);
         sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState();
         Debug.Log(sceneTarans);
-        if (sceneTarans == 1 || sceneTarans == 5)
-        {
-            delta += Time.deltaTime;
+        // if (sceneTarans == 2 || sceneTarans == 5)
+        delta += Time.deltaTime;
             if (delta > span)
             {
                 // トラッカーの現在の位置情報を取得
@@ -77,7 +77,7 @@ public class ArmAngle : MonoBehaviour
         
                 // 条件をチェックしてデバッグメッセージを表示
                 // if (Mathf.Abs(angle) >= 30f && Time.deltaTime <= 0.01f)
-                if (Mathf.Abs(angle) >= baseAngle)
+                if (Mathf.Abs(angle) >= baseAngle && (sceneTarans == 2 || sceneTarans == 5))
                 {
                     flyFlag = true;
                     Debug.Log("fly");
@@ -95,7 +95,6 @@ public class ArmAngle : MonoBehaviour
             
                 this.delta = 0; //deltaの初期化
             }
-        }
     }
 
     private void setGoal(Vector3 tmpGoalPos)

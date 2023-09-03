@@ -121,6 +121,10 @@
             {
                "output" : "/actions/default/in/pose",
                "path" : "/user/shoulder/left/pose/raw"
+            },
+            {
+               "output" : "/actions/default/in/pose",
+               "path" : "/devices/htc/vive_trackerLHR-601CE6D9/pose/raw"
             }
          ],
          "skeleton" : [

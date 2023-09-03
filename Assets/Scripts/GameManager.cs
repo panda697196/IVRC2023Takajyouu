@@ -23,12 +23,13 @@ public class GameManager : MonoBehaviour
     [SerializeField] private TextMeshPro scoreText; // UI 得点を表示するためのテキスト要素
     [SerializeField] private TextMeshProUGUI thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
     
-    [SerializeField] private Eagle_Edit eagleEdit;//鷹の状態用スクリプト
-    [SerializeField] private Eagle_Navigation eagleNavigation;//鷹の移動を管理するスクリプト
+    // [SerializeField] private Eagle_Edit eagleEdit;//鷹の状態用スクリプト
+    // [SerializeField] private Eagle_Navigation eagleNavigation;//鷹の移動を管理するスクリプト
+    [SerializeField] private EagleManager eagleManager;//鷹の移動を管理するスクリプト
     [SerializeField] private ArmAngle flyFlagObj;//飛び立ちフラグを管理するスクリプト
     // [SerializeField] private hogehoge hogehoge_hardware; //ハードウェア班からのスクリプト
     [SerializeField] private Transform rawfingerPos;//左手の親指の位置
-    [SerializeField] private Transform eagleTarget;//鷹の飛行すべき目標位置
+    [SerializeField] private GameObject eagleTarget;//鷹の飛行すべき目標位置
     
     [SerializeField] private bool hardwareFlag; //ハードウェアと鷹との連携に使用する
     [SerializeField] private bool eagleWaitFlag; //ハードウェアと鷹との連携に使用する
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
 
         fingerPos = rawfingerPos.position;//左手の座標の取得かつ初期化
 
-        eagleTargetPos = eagleTarget.position;//鷹のターゲットの位置を初期化
+        // eagleTargetPos = eagleTarget.position;//鷹のターゲットの位置を初期化
     }
 
     void Update()
@@ -140,6 +141,7 @@ public class GameManager : MonoBehaviour
             case 2:// 待機a
                 // ---------------------------待機aでの処理内容(毎フレーム)---------------------------------------------------------
                 flyFlag = flyFlagObj.flyFlag; //Flyflagの監視
+                Debug.Log(flyFlag);
 
                 
                 
@@ -154,57 +156,63 @@ public class GameManager : MonoBehaviour
                 // if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出
                 if (Input.GetKeyDown(KeyCode.Return) || flyFlag == true) // シーン遷移処理（腕の振りを検出）
                 {
-                    flyFlagObj.flyFlag = false; //flyFlag初期化
+                    // flyFlagObj.flyFlag = false; //flyFlag初期化
                     callOnceFlag = false; // 1回フラグの初期化
                     gameSceneState = 3; // 飛び立ちシーン（case3）へ
                 }
                 break;
             case 3:// 飛び立ちaシーン
-                // -----------------------------------飛び立ちaシーンにおける処理(毎フレーム)-----------------------------------------------------
-                
-                //hardwareFlag = hoge.flag://ハードウェアからのフラグを監視
-                // eagleWaitFlag = taka.flag;//鷹からの待機状態のフラグを監視
-
-                if (hardwareFlag == true && eagleWaitFlag == true)
-                {
-                    huntFinFlag = true;//ハードと鷹が帰還準備完了であることを記録
-                }
-                
-                
-                //-----------------------------------------------------------------------------------------------------
+               
                 if (callOnceFlag == false)//1回だけの処理
                 {
                     
                     Debug.Log("飛び立ちA");
                     callOnceFlag = true;
 
-                  
-                   // Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
-                   //float flightSpeed = GetFlightSpeed(); // 飛行速度を得る（現状不要）
+                    eagleManager.EagleTarget2Around(eagleTarget);
+
+
+                    // Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
+                    //float flightSpeed = GetFlightSpeed(); // 飛行速度を得る（現状不要）
 
                     //initialSpeedFromCase2 = flightSpeed;
 
-                    
 
-                    if (eagleEdit != null && eagleNavigation != null)
-                    {
-                        // Eagle_Editスクリプトを使用したターゲットの場所の設定
-                        eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
 
-                        // フライトの開始
-                       // eagleEdit.TakeOff(targetPosition);
-                       eagleGetOnArm = false;
-
-                       // Eagle_Navigationで目標位置と飛行速度を設定する
-                       // eagleNavigation.SetTarget(targetPosition);
-                       // eagleNavigation.SetSpeed(flightSpeed);
-                    }
+                    // if (eagleEdit != null && eagleNavigation != null)
+                    // {
+                    //     // Eagle_Editスクリプトを使用したターゲットの場所の設定
+                    //     eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
+                    //
+                    //     // フライトの開始
+                    //    // eagleEdit.TakeOff(targetPosition);
+                    //    eagleGetOnArm = false;
+                    //
+                    //    // Eagle_Navigationで目標位置と飛行速度を設定する
+                    //    // eagleNavigation.SetTarget(targetPosition);
+                    //    // eagleNavigation.SetSpeed(flightSpeed);
+                    // }
                     //カラス？？
                     // crowCountFromCase2 = 38;//殺したカラス
                 }
+                // -----------------------------------飛び立ちaシーンにおける処理(毎フレーム)-----------------------------------------------------
+                
+                //hardwareFlag = hoge.flag://ハードウェアからのフラグを監視
+                // eagleWaitFlag = taka.flag;//鷹からの待機状態のフラグを監視
+
+                // if (hardwareFlag == true && eagleWaitFlag == true)
+                // {
+                //     huntFinFlag = true;//ハードと鷹が帰還準備完了であることを記録
+                // }
+                
+                eagleManager.EagleAround2GetOn(hardwareFlag);
+                
+                
+                //-----------------------------------------------------------------------------------------------------
+               
 
 
-                if (Input.GetKeyDown(KeyCode.Return) || huntFinFlag == true)//シーン遷移（ハードの準備と鷹の準備ができたら）
+                if (Input.GetKeyDown(KeyCode.Return) || hardwareFlag == true)//シーン遷移（ハードの準備と鷹の準備ができたら）
                 {
                     callOnceFlag = false;
                     huntFinFlag = false;//初期化
@@ -336,17 +344,17 @@ public class GameManager : MonoBehaviour
                     // トラッカーから提供されたプレーヤーの手の位置を取得する。
                     //Vector3 playerHandPosition = GetPlayerHandPosition();
 
-                    if (eagleEdit != null && eagleNavigation != null)
-                    {
-                        // Eagle_Editスクリプトを使用したターゲットの場所の設定
-                        eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
-
-                        // イーグルの目標位置をプレーヤーの手の位置に設定する。
-                       // eagleNavigation.SetTarget(playerHandPosition);
-
-                        // 必要に応じて飛行速度を設定する
-                       // eagleNavigation.SetSpeed(yourSpeedValue);
-                    }
+                    // if (eagleEdit != null && eagleNavigation != null)
+                    // {
+                    //     // Eagle_Editスクリプトを使用したターゲットの場所の設定
+                    //     eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
+                    //
+                    //     // イーグルの目標位置をプレーヤーの手の位置に設定する。
+                    //    // eagleNavigation.SetTarget(playerHandPosition);
+                    //
+                    //     // 必要に応じて飛行速度を設定する
+                    //    // eagleNavigation.SetSpeed(yourSpeedValue);
+                    // }
                 }
 
 

@@ -101,7 +101,7 @@ public class Eagle_Navigation : MonoBehaviour
                 // }
                 var hand2eagle = gameObject.transform.position - _hand.transform.position;
                 //var hand2eagle = gameObject.transform.position;
-                Debug.Log("hand2eagle.magnitude"+hand2eagle.magnitude);
+                //Debug.Log("hand2eagle.magnitude"+hand2eagle.magnitude);
                 if (hand2eagle.magnitude < 0.7f &&!_isOnHand)
                 {
                     // _handAdjust = hand2eagle;
