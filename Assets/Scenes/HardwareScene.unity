@@ -168,7 +168,7 @@ MonoBehaviour:
   _ropeTimeFast: 1
   _ropeTimeMiddle: 2
   _weightDropTime: 3
-  _weightLiftTime: 3
+  _weightLiftTime: 2.2
   _weightLiftStandbyTime: 1
   _fanTimeOfCome: 1.5
   _fanTimeOfGo: 1.7
