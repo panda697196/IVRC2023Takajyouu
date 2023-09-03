@@ -210,6 +210,7 @@ public class HardwareManager : MonoBehaviour
         _tightenSpeed = _ropeSpeedFast;
 
         yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true); // 紐が張ったことを確認できるまで待機
+        yield return new WaitForSeconds(0.5f); // 紐を張るための猶予
         _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
         _isRopeTight = false;
         _isStandbyFinished = true;

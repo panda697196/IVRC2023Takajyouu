@@ -168,7 +168,7 @@ MonoBehaviour:
   _ropeTimeFast: 1
   _ropeTimeMiddle: 2
   _weightDropTime: 3
-  _weightLiftTime: 2
+  _weightLiftTime: 3
   _weightLiftStandbyTime: 1
   _fanTimeOfCome: 1.5
   _fanTimeOfGo: 1.7
@@ -309,7 +309,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &619462541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -379,7 +379,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &744667497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -449,7 +449,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &879138560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -695,7 +695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2131658861
 Transform:
   m_ObjectHideFlags: 0
