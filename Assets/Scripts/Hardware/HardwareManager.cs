@@ -94,24 +94,19 @@ public class HardwareManager : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.P))
             {
-                // StartCoroutine(StandbyComeHawk());
                 StandbyComeHawk();
             }
             if (Input.GetKeyDown(KeyCode.L))
             {
-                //StartCoroutine(ComeHawk());
                 ComeHawk();
             }
             if (Input.GetKeyDown(KeyCode.Comma))
             {
-                //StartCoroutine(Disappear());
                 StandbyDisappear();
             }
             if (Input.GetKeyDown(KeyCode.Period))
             {
-                //StartCoroutine(Disappear());
                 Disappear();
-                //_freedomDropSender.DataSend("0\n");
             }
 
             if (Input.GetKeyDown(KeyCode.O))
@@ -159,7 +154,6 @@ public class HardwareManager : MonoBehaviour
             if (Input.GetKeyUp(KeyCode.F))
             {
                 StartCoroutine(AppearWind());
-                //_freedomDropSender.DataSend("65\n");
             }
             if (Input.GetKeyDown(KeyCode.G))
             {
@@ -189,14 +183,12 @@ public class HardwareManager : MonoBehaviour
     {
         StartCoroutine(StandbyRope());
         StartCoroutine(StandbyWeight());
-        //GameManagerに処理が終了したことの報告
     }
     public void ComeHawk()// 鷹が腕に留まる瞬間
     {
         StartCoroutine(Stimulate());
         StartCoroutine(AppearWind());
         StartCoroutine(PressByHawk());
-        //GameManagerに処理が終了したことの報告
     }
 
     public void StandbyDisappear()
@@ -208,18 +200,15 @@ public class HardwareManager : MonoBehaviour
         StartCoroutine(DisappearShock());
         StartCoroutine(DisappearWind());
         StartCoroutine(UnpressByHawk());
-        //GameManagerに処理が終了したことの報告
     }
     
     public IEnumerator StandbyRope()
     {
-        //_ropeSender.DataSend("C\n" + _ropeSpeedC.ToString() + "\n"); // 紐を張る
         _ropeSender.DataSend("C\n" + _ropeSpeedFast.ToString() + "\n"); // 紐を張る
         _isRopeTight = true;
         _timeFromTighten = 0;
         _tightenSpeed = _ropeSpeedFast;
 
-        //yield return new WaitUntil(() => _pressSender._afterstop == true); // 紐が張ったことを確認できるまで待機
         yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true); // 紐が張ったことを確認できるまで待機
         _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
         _isRopeTight = false;
@@ -258,7 +247,6 @@ public class HardwareManager : MonoBehaviour
         float _looseTime = CalcLoosenTime();
         Debug.Log("Loose time = " + _looseTime);
         yield return new WaitForSeconds(_looseTime);
-        //yield return new WaitForSeconds(_ropeTimeR);
         _ropeSender.DataSend("S\n");
         _isRopeLoose = false;
         _isStandbyFinished = false;
@@ -323,6 +311,7 @@ public class HardwareManager : MonoBehaviour
         yield return new WaitForSeconds(0.5f);//飛び立ちから離すまで，時間を遅らせる
         _pressSender.DataSend("180\n");
     }
+    
     public IEnumerator AppearWind() // 鷹が腕に止まるときの風提示の関数
     {
         _windSender.DataSend("S\n");
