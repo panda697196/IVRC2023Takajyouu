@@ -177,6 +177,7 @@ MonoBehaviour:
   _ropeSec: 0
   _ropePosition: 0
   _angleOfStopper: 65
+  _angleOfGrab: 0
 --- !u!4 &389080396
 Transform:
   m_ObjectHideFlags: 0
@@ -308,7 +309,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &619462541
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -378,7 +379,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &744667497
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,7 +449,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &879138560
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -694,7 +695,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &2131658861
 Transform:
   m_ObjectHideFlags: 0
