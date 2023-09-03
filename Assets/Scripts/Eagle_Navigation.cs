@@ -43,7 +43,14 @@ public class Eagle_Navigation : MonoBehaviour
     [Header("円運動の速さ")] public float _rotationSpeed=4.1f;
     private  float _totalTime;
 
-    [Header("ユーザの手オブジェクトの目標地点")]public GameObject _hand;
+    [Header("ユーザの手のオブジェクト目標地点")] public GameObject _hand;
+    private GameObject _handPosition;
+
+    public void SetHandPosition(GameObject a)
+    {
+        _handPosition=a;
+    }
+    
     private bool _isOnHand;
 
     private GameObject _eaglePositionChange;
@@ -67,11 +74,12 @@ public class Eagle_Navigation : MonoBehaviour
     public bool _isOn;
 
     private bool _isAroundOver;
-    [SerializeField] private GameObject debug;
+    [SerializeField] private GameObject _debug;
     //public bool GetIsAroundOver => _isAroundOver;
     void Start()
     {
         _edit = gameObject.GetComponent<Eagle_Edit>();
+        //_handPosition = _hand.transform.GetChild(0).gameObject;
         //_eaglePositionChange = gameObject.transform.parent.gameObject;
     }
     
@@ -92,13 +100,15 @@ public class Eagle_Navigation : MonoBehaviour
                 //     FlyTo(_target.transform,_flyState.ToString());
                 // }
                 var hand2eagle = gameObject.transform.position - _hand.transform.position;
+                //var hand2eagle = gameObject.transform.position;
+                Debug.Log("hand2eagle.magnitude"+hand2eagle.magnitude);
                 if (hand2eagle.magnitude < 0.7f &&!_isOnHand)
                 {
                     // _handAdjust = hand2eagle;
                     
                     _isOnHand = true;
                     gameObject.GetComponent<Animator>().applyRootMotion=false;
-                    transform.parent = _hand.transform;
+                    transform.parent = _handPosition.transform;
                 }
                
                 break;
@@ -166,7 +176,7 @@ public class Eagle_Navigation : MonoBehaviour
                 var nextPos = Vector3.Slerp(_slerpStart, arrangeTarget, Mathf.Min(1.0f,_flyTime / _limitTime));
                
 
-                //debug.transform.position = nextPos;
+                //_debug.transform.position = nextPos;
         
                 // 向かせる
                 gameObject.transform.LookAt(nextPos);
@@ -193,7 +203,7 @@ public class Eagle_Navigation : MonoBehaviour
                
                 // 向かせる
                 gameObject.transform.LookAt(_targetAroundNew);
-                //debug.transform.position = _targetAroundNew;
+                //_debug.transform.position = _targetAroundNew;
                 if ((_targetAroundNew - gameObject.transform.position).magnitude < 2f)
                 {
                     _isTargetCalcOnce = false;
@@ -207,15 +217,15 @@ public class Eagle_Navigation : MonoBehaviour
               // Debug.Log("targetAround");
                 //ターゲットの周りを周回させる
                 gameObject.transform.LookAt(CalcRotationPosition(target));
-                //debug.transform.position = CalcRotationPosition(target);
-                //Debug.Log(Vector3.Angle(_hand.transform.position-gameObject.transform.position,_eagle2target));
+                //_debug.transform.position = CalcRotationPosition(target);
+                //_debug.Log(Vector3.Angle(_hand.transform.position-gameObject.transform.position,_eagle2target));
                 //xz平面でベクトルを計算
                 var eagle2handxz=new Vector2(_hand.transform.position.x - gameObject.transform.position.x,_hand.transform.position.z - gameObject.transform.position.z);
                 var eagle2targetxz = new Vector2(_eagle2target.x, _eagle2target.z);
                 //　もともとの鷹の位置のベクトルと，今の鷹と次の手の補正位置へのベクトルの角度が一定以上の時に，腕の着地用ステイトに切り替え
                 if (_isOn &&Vector2.Angle(eagle2handxz, eagle2targetxz) > 172f && _isAroundOver)
                 {
-                    _target = _hand;
+                    _target = _handPosition;
                     _flyFirst = true;
                     _flyState = _flyState = FlyState.getOnArm;
                 }
@@ -239,9 +249,9 @@ public class Eagle_Navigation : MonoBehaviour
                 _flyTime += Time.deltaTime;
                 var nextPos = Vector3.Slerp(_slerpStart, target.transform.position, Mathf.Min(1.0f,_flyTime*4 / _limitTime));
                 //デバッグ用．　目的地の位置にオブジェクトを置き合っているか確認している．
-                //debug.transform.position = nextPos;
+                //_debug.transform.position = nextPos;
                 // 向かせる
-                //近すぎると挙動が変になるので，距離が2センチより遠かったら実行
+                //近すぎると挙動が変になるので，距離が4センチより遠かったら実行
                 if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) > 0.4f)
                 {
                     //Debug.Log("LookAt");
@@ -253,8 +263,11 @@ public class Eagle_Navigation : MonoBehaviour
                     //人間の手の上面を取得
                     var ArmTopAjust = yMargin;
                     //人間の手の位置に向くように修正
-                    gameObject.transform.LookAt(new Vector3(target.transform.parent.transform.position.x,target.transform.parent.transform.position.y+ArmTopAjust,target.transform.parent.transform.position.z));
-                    //Debug.Log(new Vector3(target.transform.parent.transform.position.x,target.transform.parent.transform.position.y+ArmTopAjust,target.transform.parent.transform.position.z));                
+                    gameObject.transform.LookAt(new Vector3(target.transform.parent.transform.position.x,
+                        gameObject.transform.position.y,target.transform.parent.transform.position.z));
+                    _debug.transform.position = new Vector3(target.transform.parent.transform.position.x,
+                        gameObject.transform.position.y, target.transform.parent.transform.position.z);
+                    //_debug.Log(new Vector3(target.transform.parent.transform.position.x,target.transform.parent.transform.position.y+ArmTopAjust,target.transform.parent.transform.position.z));                
                                 //着地モーション再生
                     _edit.SetEagleState(Eagle_Edit.EagleState.Lauding);
                     VariablesReset();
@@ -267,7 +280,7 @@ public class Eagle_Navigation : MonoBehaviour
             case "onlyTarget":
             {
                 gameObject.transform.LookAt(target);
-                //debug.transform.position = _targetAroundNew;
+                //_debug.transform.position = _targetAroundNew;
                 break;
             }
         }
@@ -281,7 +294,11 @@ public class Eagle_Navigation : MonoBehaviour
     void Land(Transform target)
     {
         var ArmTopAdjust = yMargin;
-        gameObject.transform.LookAt(new Vector3(target.transform.parent.transform.position.x,target.transform.parent.transform.position.y+ArmTopAdjust,target.transform.parent.transform.position.z));
+        var eagle2hand = target.transform.parent.transform.position - gameObject.transform.position;
+        var handLaudPoint = eagle2hand + gameObject.transform.position;
+        handLaudPoint.y = gameObject.transform.position.y;
+        //_debug.transform.position = handLaudPoint;
+        //gameObject.transform.LookAt(handLaudPoint);
         //Debug.Log(new Vector3(target.transform.parent.transform.position.x,target.transform.parent.transform.position.y+ArmTopAdjust,target.transform.parent.transform.position.z));                
 
         //_isFly = false;
@@ -304,7 +321,7 @@ public class Eagle_Navigation : MonoBehaviour
         }
         // ゲームオブジェクトの位置を設定.中心となるオブジェクトから半径分の円運動をする．高さは中心物体の高さ＋_height
         Vector3 pos = new Vector3(initPos.x+ xPos, initPos.y +_height,initPos.z + zPos);
-        debug.transform.position = pos;
+        //_debug.transform.position = pos;
         return (pos);
     }
 
