@@ -9,6 +9,7 @@ using static UnityEngine.GraphicsBuffer;
 public class CrowGenerater : MonoBehaviour
 {
     private GameObject _crow;
+    private GameObject _sphere;
 
     public GameObject _crowStorage;
     public int _crowMaxNumber;
@@ -56,7 +57,8 @@ public class CrowGenerater : MonoBehaviour
     void Start()
     {
         _crow = (GameObject)Resources.Load("lb_crow_target");
-        _crowStorage=GameObject.Find("CrowStorage");
+        _sphere = (GameObject)Resources.Load("Sphere");
+        _crowStorage =GameObject.Find("CrowStorage");
         SumOfWeight();
         HaveWeightLsit();
     }
@@ -105,6 +107,9 @@ public class CrowGenerater : MonoBehaviour
             _point2 = _popUpPlaceList2W[_chooseNum].transform.position;
             Vector3 popLine = _point1 - _point2;
             float r = Random.Range(0, 1.0f);
+            //Debug用
+            /*GameObject newSphere = Instantiate(_sphere, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
+            GameObject newCrow = Instantiate(_crow, newSphere.transform.position, newSphere.transform.rotation);*/
             //カラスをインスタンス生成
             GameObject newCrow=Instantiate(_crow, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
             lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
