@@ -52,7 +52,7 @@ public class Eagle_Navigation : MonoBehaviour
     }
     
     private bool _isOnHand;
-
+    public bool GetIsOnHand => _isOnHand;
     private GameObject _eaglePositionChange;
     //[Header("GameManagerにアクセス")] public GameManager _gameManager;
     //private ステイと　_gameState;
@@ -75,6 +75,8 @@ public class Eagle_Navigation : MonoBehaviour
 
     private bool _isAroundOver;
     [SerializeField] private GameObject _debug;
+
+    public float eagleHandTH;
     //public bool GetIsAroundOver => _isAroundOver;
     void Start()
     {
@@ -102,7 +104,7 @@ public class Eagle_Navigation : MonoBehaviour
                 var hand2eagle = gameObject.transform.position - _hand.transform.position;
                 //var hand2eagle = gameObject.transform.position;
                 //Debug.Log("hand2eagle.magnitude"+hand2eagle.magnitude);
-                if (hand2eagle.magnitude < 0.7f &&!_isOnHand)
+                if (hand2eagle.magnitude < eagleHandTH &&!_isOnHand)
                 {
                     // _handAdjust = hand2eagle;
                     
@@ -258,15 +260,17 @@ public class Eagle_Navigation : MonoBehaviour
                     gameObject.transform.LookAt(nextPos);
                 }
 
-                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.1f)
+                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.5f)
                 {
                     //人間の手の上面を取得
                     var ArmTopAjust = yMargin;
+                    
+                    Debug.Log("ターゲットに着地"+Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude));
                     //人間の手の位置に向くように修正
                     gameObject.transform.LookAt(new Vector3(target.transform.parent.transform.position.x,
                         gameObject.transform.position.y,target.transform.parent.transform.position.z));
-                    _debug.transform.position = new Vector3(target.transform.parent.transform.position.x,
-                        gameObject.transform.position.y, target.transform.parent.transform.position.z);
+                   //_debug.transform.position = new Vector3(target.transform.parent.transform.position.x,
+                        // gameObject.transform.position.y, target.transform.parent.transform.position.z);
                     //_debug.Log(new Vector3(target.transform.parent.transform.position.x,target.transform.parent.transform.position.y+ArmTopAjust,target.transform.parent.transform.position.z));                
                                 //着地モーション再生
                     _edit.SetEagleState(Eagle_Edit.EagleState.Lauding);

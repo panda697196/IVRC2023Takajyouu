@@ -11,25 +11,27 @@ public class EagleManager : MonoBehaviour
     public GameObject _target;
     public GameObject _userHand;
     private bool _isHardOK =false;
-    private GameObject _handTargetPosition;
+    [SerializeField]private GameObject _handTargetPosition;
     public GameObject GetHandTargetPosition =>_handTargetPosition;
     void Start()
     {
         _edit = gameObject.GetComponent<Eagle_Edit>();
         _navi = gameObject.GetComponent<Eagle_Navigation>();
         //カラスの移動先となるオブジェクトを生成
-         _handTargetPosition = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        // //移動先オブジェクトのコライダーとメッシュレンダラーをオフに
-         _handTargetPosition.GetComponent<BoxCollider>().enabled=false;
-         //_handTargetPosition.GetComponent<MeshRenderer>().enabled = false;
-        // //生成してオブジェクトをまず手の位置と同期
-         _handTargetPosition.transform.position = _userHand.transform.position;
-        // //生成したオブジェクトを手のターゲット位置に配置
-         _handTargetPosition.transform.parent = _userHand.transform;   
-        // //ターゲット位置をローカル座標をずらして設定
-         _handTargetPosition.transform.Translate(0,1,1.5f);
+        //  _handTargetPosition = GameObject.CreatePrimitive(PrimitiveType.Cube);
+        // // //移動先オブジェクトのコライダーとメッシュレンダラーをオフに
+        //  _handTargetPosition.GetComponent<BoxCollider>().enabled=false;
+        //  //_handTargetPosition.GetComponent<MeshRenderer>().enabled = false;
+        // // //生成してオブジェクトをまず手の位置と同期
+        //  _handTargetPosition.transform.position = _userHand.transform.position;
+        // // //生成したオブジェクトを手のターゲット位置に配置
+        //  _handTargetPosition.transform.parent = _userHand.transform;   
+        // // //ターゲット位置をローカル座標をずらして設定
+        //  _handTargetPosition.transform.Translate(0,1,1.5f);
         //
-        // _navi.SetHandPosition(_handTargetPosition);
+        
+        //_handTargetPosition=
+        _navi.SetHandPosition(_handTargetPosition);
     }
 
     // Update is called once per frame
@@ -82,5 +84,10 @@ public class EagleManager : MonoBehaviour
         {
             _navi._isOn=true;
         }
+    }
+
+    public bool EagleOnHand()
+    {
+        return _navi.GetIsOnHand;
     }
 }

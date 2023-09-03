@@ -156,7 +156,8 @@ public class GameManager : MonoBehaviour
                 // if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出
                 if (Input.GetKeyDown(KeyCode.Return) || flyFlag == true) // シーン遷移処理（腕の振りを検出）
                 {
-                    // flyFlagObj.flyFlag = false; //flyFlag初期化
+                    flyFlagObj.flyFlag = false; //flyFlag初期化
+                    flyFlag = false; //GameManagerのフライフラフ初期化
                     callOnceFlag = false; // 1回フラグの初期化
                     gameSceneState = 3; // 飛び立ちシーン（case3）へ
                 }
@@ -216,6 +217,7 @@ public class GameManager : MonoBehaviour
                 {
                     callOnceFlag = false;
                     huntFinFlag = false;//初期化
+                    hardwareFlag = false;
                     gameSceneState = 4;
                 }
 
@@ -224,6 +226,7 @@ public class GameManager : MonoBehaviour
                 // -----------------------------------一回目の帰還における処理(毎フレーム)-----------------------------------------------------
                 
                 //鷹がうでに止まったかどうかを監視
+                eagleGetOnArm = eagleManager.EagleOnHand();
                 
                 
                 
@@ -279,6 +282,8 @@ public class GameManager : MonoBehaviour
                     callOnceFlag = false; // 一回だけフラグの初期化
                     
                     flyFlagObj.flyFlag = false; //flyFlag初期化
+                    flyFlag = false; //GameManagerのフライフラフ初期化
+
 
                     gameSceneState = 6; // 二回目の飛び立ちシーンへ
                 }
@@ -297,6 +302,9 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("飛び立ちB");
                     callOnceFlag = true;
+                    
+                    eagleManager.EagleTarget2Around(eagleTarget);
+
 
 
                    // Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
@@ -305,22 +313,9 @@ public class GameManager : MonoBehaviour
                     //initialSpeedFromCase6 = flightSpeed;
 
                     // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
-                 
-                    Eagle_Edit eagleEdit = GetComponent<Eagle_Edit>();
-                    Eagle_Navigation eagleNavigation = GetComponent<Eagle_Navigation>();
+                    
 
-                    if (eagleEdit != null && eagleNavigation != null)
-                    {
-                        // Eagle_Editスクリプトを使用したターゲットの場所の設定
-                        eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
-
-                        // フライトの開始
-                       // eagleEdit.TakeOff(targetPosition);
-
-                        // Eagle_Navigationで目標位置と飛行速度を設定する
-                      //  eagleNavigation.SetTarget(targetPosition);
-                       // eagleNavigation.SetSpeed(flightSpeed);
-                    }
+                    
                 }
 
                 if (Input.GetKeyDown(KeyCode.Return) || eargleHasScorebord == true)//シーン遷移処理(鷹がカラスを追い払い終わり、スコアボードを持ったら？)
