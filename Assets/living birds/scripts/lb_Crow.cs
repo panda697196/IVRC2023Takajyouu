@@ -12,6 +12,7 @@ public class lb_Crow : MonoBehaviour
 {
     public GameObject MainCamera;
     Animator anim;
+    public float _idleAgitated;
 
     [Header("ÉJÉâÉXÇÃèÛë‘Çï\é¶")]
     [SerializeField] private birdBehaviors _crowState;
@@ -109,8 +110,8 @@ public class lb_Crow : MonoBehaviour
                 anim.SetBool("idle", true);
                 anim.SetBool("landing", false);
                 anim.SetBool("flying", false);
-                float i = Random.Range(0, 1);
-                anim.SetFloat("IdleAgitated",i);
+                //float i = Random.Range(0, 1.0f);
+                //anim.SetFloat("IdleAgitated",i);
                 _hight2 = 0.5f;
                 break;
             case birdBehaviors.flyToTarget:
@@ -128,8 +129,8 @@ public class lb_Crow : MonoBehaviour
                         anim.SetBool("idle", true);
                         anim.SetBool("landing", false);
                         anim.SetBool("flying", false);
-                        float j = Random.Range(0, 1);
-                        anim.SetFloat("IdleAgitated", j);
+                        /*float j = Random.Range(0, 1.0f);
+                        anim.SetFloat("IdleAgitated", j);*/
                         _crowState = birdBehaviors.idle;
                     }
                     else
@@ -323,6 +324,7 @@ public class lb_Crow : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+        anim.SetFloat("IdleAgitated", _idleAgitated);
     }
 
     void Update()

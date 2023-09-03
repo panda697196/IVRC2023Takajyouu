@@ -4,6 +4,7 @@ using System.Runtime.Serialization.Json;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static lb_Crow;
+using static UnityEngine.GraphicsBuffer;
 
 public class CrowGenerater : MonoBehaviour
 {
@@ -99,13 +100,16 @@ public class CrowGenerater : MonoBehaviour
         {
             //カラスの出現場所のリストの番号をランダムで選択
             _chooseNum = Random.Range(0, _totalWeight-1);
-            UnityEngine.Debug.Log(_popUpPlaceList1W[_chooseNum].name);
+            //UnityEngine.Debug.Log(_popUpPlaceList1W[_chooseNum].name);
             _point1 = _popUpPlaceList1W[_chooseNum].transform.position;
             _point2 = _popUpPlaceList2W[_chooseNum].transform.position;
             Vector3 popLine = _point1 - _point2;
             float r = Random.Range(0, 1.0f);
             //カラスをインスタンス生成
-            GameObject newCrow=Instantiate(_crow, (_point2 + popLine * r), Quaternion.identity);
+            GameObject newCrow=Instantiate(_crow, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
+            lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
+            lbCrow._idleAgitated = r;
+            Debug.Log(lbCrow._idleAgitated);
             //見やすいように生成したカラスをCrowStorageに格納
             newCrow.transform.parent = _crowStorage.transform;
             //生成したカラスをリストに追加
