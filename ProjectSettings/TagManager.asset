@@ -8,6 +8,7 @@ TagManager:
   - FxTemporaire
   - lb_bird
   - eagle
+  - handTarget
   layers:
   - Default
   - TransparentFX
