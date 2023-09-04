@@ -127,7 +127,7 @@ public class HardwareManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.I))
             {
-                _ropeSender.DataSend("C\n" + _ropeTightSpeed.ToString() + "\n"); // 紐を張る
+                _ropeSender.DataSend("R\n" + _ropeTightSpeed.ToString() + "\n"); // 紐を張る
             }
             if (Input.GetKeyUp(KeyCode.I))
             {
@@ -136,7 +136,7 @@ public class HardwareManager : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.J))
             {
-                _ropeSender.DataSend("R\n" + _ropeLooseSpeed.ToString() + "\n"); // 紐を緩める
+                _ropeSender.DataSend("C\n" + _ropeLooseSpeed.ToString() + "\n"); // 紐を緩める
             }
             if (Input.GetKeyUp(KeyCode.J))
             {
@@ -211,7 +211,7 @@ public class HardwareManager : MonoBehaviour
     
     public IEnumerator StandbyRope()
     {
-        _ropeSender.DataSend("C\n" + _ropeSpeedFast.ToString() + "\n"); // 紐を張る
+        _ropeSender.DataSend("R\n" + _ropeSpeedFast.ToString() + "\n"); // 紐を張る
         _isRopeTight = true;
         _timeFromTighten = 0;
         _tightenSpeed = _ropeSpeedFast;
@@ -249,7 +249,7 @@ public class HardwareManager : MonoBehaviour
         _freedomDropSender.DataSend("0\n");
         yield return new WaitForSeconds(1f);
         
-        _ropeSender.DataSend("R\n" + _ropeLooseSpeed.ToString() + "\n"); // 紐を緩める
+        _ropeSender.DataSend("C\n" + _ropeLooseSpeed.ToString() + "\n"); // 紐を緩める
         _isRopeLoose = true;
         _pullInspector.OffPullStatus();
         float _looseTime = CalcLoosenTime();
@@ -282,12 +282,12 @@ public class HardwareManager : MonoBehaviour
         if (_timeFromTighten > _ropeTimeFast && (_timeFromTighten - _timeToUpdate) <= _ropeTimeFast)
         {
             _tightenSpeed = _ropeSpeedMiddle;
-            _ropeSender.DataSend("C\n" + _tightenSpeed.ToString() + "\n"); // 紐を張る
+            _ropeSender.DataSend("R\n" + _tightenSpeed.ToString() + "\n"); // 紐を張る
         }
         else if (_timeFromTighten > (_ropeTimeFast + _ropeTimeMiddle) && (_timeFromTighten - _timeToUpdate) <= (_ropeTimeFast + _ropeTimeMiddle))
         {
             _tightenSpeed = _ropeSpeedLow;
-            _ropeSender.DataSend("C\n" + _tightenSpeed.ToString() + "\n"); // 紐を張る
+            _ropeSender.DataSend("R\n" + _tightenSpeed.ToString() + "\n"); // 紐を張る
         }
     }
 
