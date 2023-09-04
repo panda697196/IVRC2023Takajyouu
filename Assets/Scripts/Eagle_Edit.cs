@@ -1,11 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using UnityEngine;
+using Debug = UnityEngine.Debug;
 
 public class Eagle_Edit : MonoBehaviour
 {
     private Animator eagle;
-    public GameObject MainCamera;
+    //public GameObject MainCamera;
     
     [Header("鷹の状態を表示")]
     [SerializeField] private EagleState _eagleState;
@@ -21,40 +23,33 @@ public class Eagle_Edit : MonoBehaviour
 
     }
 
-    [Header("DebugMode 鷹の状態を変えることで鷹を動かせる")]
-    public bool _isDebug;
+    //[Header("鷹の状態を変えることで鷹を動かせる")]
+    private bool _isDebug=true;
     public enum EagleState
     {
-        Idle,Takeoff,TurnR,TurnL,Lauding,Walk,Walkend,Glide,Attack,Hunt
+        Idle,Takeoff,TurnR,TurnL,Lauding,Walk,Walkend,Glide,Attack,Hunt,Fly,nothing,
     }
+
+    private Eagle_Navigation _navi;
+    
 	void Start ()
     {
         eagle = GetComponent<Animator>();
-	}
+        _navi=gameObject.GetComponent<Eagle_Navigation>();
+    }
 	
 	void Update ()
     {
-        Debug.Log(EagleCurrentState);
+        //Debug.Log(EagleCurrentState);
         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("idle"))
              {
-                 
-                 //Debug.Log("Idle");
-                 //RootMotionOnOff(false);
                  eagle.SetBool("takeoff", false);
                  eagle.SetBool("fly", false);
                  eagle.SetBool("landing", false);
              }
-        else if(eagle.GetCurrentAnimatorStateInfo(0).IsName("fly"))
-        {
-            //Debug.Log("fly");
-            //RootMotionOnOff(false);
-        }
-        else
-        {
-            //Debug.Log("else");
-            //RootMotionOnOff(true);
-        }
+        
             
+        
         if (_isDebug)
         {
             if (_eagleState.ToString()=="Idle")
@@ -227,6 +222,30 @@ public class Eagle_Edit : MonoBehaviour
         }
     }
 
+    public EagleState GetEagleCurrentAnimState()
+    {
+        //今のアニメーションが何か調べます．使うIdle,takeoff,fly,Laudingのみです
+        if (eagle.GetCurrentAnimatorStateInfo(0).IsName("idle"))
+        {
+            return EagleState.Idle;
+        }
+         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("fly"))
+        {
+            return EagleState.Fly;
+        }
+
+         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("takeoff"))
+         {
+             return EagleState.Takeoff;
+         }
+
+         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("lauding"))
+         {
+             return EagleState.Lauding;
+         }
+
+         return EagleState.nothing;
+    }
     // public void ToFry()
     // {
     //     IdleFlyMode();

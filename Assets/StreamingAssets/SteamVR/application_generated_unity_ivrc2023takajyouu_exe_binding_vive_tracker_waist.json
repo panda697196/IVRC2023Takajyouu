@@ -14,6 +14,10 @@
             {
                "output" : "/actions/default/in/pose",
                "path" : "/user/waist/pose/raw"
+            },
+            {
+               "output" : "/actions/default/in/pose",
+               "path" : "/devices/htc/vive_trackerLHR-447AFD7B/pose/raw"
             }
          ],
          "skeleton" : [],

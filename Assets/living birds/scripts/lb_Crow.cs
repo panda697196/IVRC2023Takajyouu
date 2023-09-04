@@ -12,6 +12,8 @@ public class lb_Crow : MonoBehaviour
 {
     public GameObject MainCamera;
     Animator anim;
+    public float _idleAgitated;
+    private List<GameObject> _randomTargetList = new List<GameObject>(1);
 
     [Header("カラスの状態を表示")]
     [SerializeField] private birdBehaviors _crowState;
@@ -22,7 +24,12 @@ public class lb_Crow : MonoBehaviour
     {
         _target = newTarget;
     }
-    
+
+    public void SetTargetList(List<GameObject> randomTargetList)
+    {
+        _randomTargetList = randomTargetList;
+    }
+
     public void SetCrowState(birdBehaviors state)
     {
         _crowState = state;
@@ -39,7 +46,7 @@ public class lb_Crow : MonoBehaviour
 
     public enum birdBehaviors
     {
-        idle, flyToTarget, sing, /*preen, ruffle, peck,
+        idle, flyToTarget, flyToTarget2, randomFly, sing, /*preen, ruffle, peck,
         flyLeft, flyRight, flyStraight, landing,
         hopForward, hopBackward, hopLeft, hopRight,*/
     }
@@ -109,8 +116,8 @@ public class lb_Crow : MonoBehaviour
                 anim.SetBool("idle", true);
                 anim.SetBool("landing", false);
                 anim.SetBool("flying", false);
-                float i = Random.Range(0, 1);
-                anim.SetFloat("IdleAgitated",i);
+                //float i = Random.Range(0, 1.0f);
+                //anim.SetFloat("IdleAgitated",i);
                 _hight2 = 0.5f;
                 break;
             case birdBehaviors.flyToTarget:
@@ -128,8 +135,8 @@ public class lb_Crow : MonoBehaviour
                         anim.SetBool("idle", true);
                         anim.SetBool("landing", false);
                         anim.SetBool("flying", false);
-                        float j = Random.Range(0, 1);
-                        anim.SetFloat("IdleAgitated", j);
+                        /*float j = Random.Range(0, 1.0f);
+                        anim.SetFloat("IdleAgitated", j);*/
                         _crowState = birdBehaviors.idle;
                     }
                     else
@@ -138,6 +145,34 @@ public class lb_Crow : MonoBehaviour
                         anim.SetBool("flying", false);
                         Landtest(_target.transform);
                     }
+                }
+                break;
+            case birdBehaviors.flyToTarget2://targetに近づいてもずっと飛行状態
+                float dis3 = Vector3.SqrMagnitude(_target.transform.position - transform.position);
+                _speed2 = Random.Range(3.0f, 5.0f);
+                anim.SetBool("flying", true);
+                anim.SetBool("idle", false);
+                Flytest(_target.transform);
+                break;
+            case birdBehaviors.randomFly:
+                if (_target == null)
+                {
+                    _target = _randomTargetList[Random.Range(0, _randomTargetList.Count - 1)];
+                }
+                float dis2 = Vector3.SqrMagnitude(_target.transform.position - transform.position);
+                _speed2 = Random.Range(3.0f, 5.0f);
+                if (dis2 > 10f)
+                {
+                    anim.SetBool("flying", true);
+                    anim.SetBool("idle", false);
+                    Flytest(_target.transform);
+                }
+                else
+                {
+                    anim.SetBool("flying", true);
+                    anim.SetBool("idle", false);
+                    _target = _randomTargetList[Random.Range(0, _randomTargetList.Count - 1)];
+                    Flytest(_target.transform);
                 }
                 break;
                 /*case birdBehaviors.ruffle:
@@ -323,6 +358,7 @@ public class lb_Crow : MonoBehaviour
     void Start()
     {
         anim = GetComponent<Animator>();
+        anim.SetFloat("IdleAgitated", _idleAgitated);
     }
 
     void Update()
@@ -337,7 +373,15 @@ public class lb_Crow : MonoBehaviour
             {
                 DisplayBehavior(birdBehaviors.flyToTarget);
             }
-            if (_crowState.ToString() == "sing")
+            if (_crowState.ToString() == "flyToTarget2")
+            {
+                DisplayBehavior(birdBehaviors.flyToTarget2);
+            }
+            if (_crowState.ToString() == "randomFly")
+            {
+                DisplayBehavior(birdBehaviors.randomFly);
+            }
+                if (_crowState.ToString() == "sing")
             {
                 DisplayBehavior(birdBehaviors.sing);
             }

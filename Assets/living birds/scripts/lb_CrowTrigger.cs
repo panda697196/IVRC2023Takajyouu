@@ -18,6 +18,7 @@ public class  lb_CrowTrigger: MonoBehaviour
    private GameObject _crowTargetBox;
    private bool _isEagleScared;
    public bool IsEagleScared => _isEagleScared;
+   
     void Start()
     {
       
