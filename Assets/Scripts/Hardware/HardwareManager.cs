@@ -11,6 +11,7 @@ public class HardwareManager : MonoBehaviour
     [SerializeField] private Sender _windSender;
     [SerializeField] private Sender _freedomDropSender;
     [SerializeField] private PullInspector _pullInspector;
+    [SerializeField] private GameObject _weightObject;
     // モータの回転速度(0-255)，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータ速度")]
     [SerializeField] private int _ropeTightSpeed = 100;
@@ -62,6 +63,7 @@ public class HardwareManager : MonoBehaviour
         {
             Debug.LogWarning("重りの巻取りと緩めの時間が一致していません　_weightDropTime系を確認してください");
         }
+        _weightObject.SetActive(false);
     }
 
     // Update is called once per frame

@@ -158,18 +158,19 @@ MonoBehaviour:
   _windSender: {fileID: 744667497}
   _freedomDropSender: {fileID: 2131658863}
   _pullInspector: {fileID: 1227539147}
+  _weightObject: {fileID: 619462540}
   _ropeTightSpeed: 100
   _ropeLooseSpeed: 255
   _ropeSpeedFast: 200
-  _ropeSpeedMiddle: 100
-  _ropeSpeedLow: 50
+  _ropeSpeedMiddle: 120
+  _ropeSpeedLow: 80
   _weightDropSpeed: 255
   _weightLiftSpeed: 255
-  _ropeTimeFast: 1
+  _ropeTimeFast: 2
   _ropeTimeMiddle: 2
-  _weightDropTime: 3
-  _weightLiftTime: 2.2
-  _weightLiftStandbyTime: 1
+  _weightDropTime: 2.5
+  _weightLiftTime: 1.5
+  _weightLiftStandbyTime: 1.5
   _fanTimeOfCome: 1.5
   _fanTimeOfGo: 1.7
   _isDebug: 1

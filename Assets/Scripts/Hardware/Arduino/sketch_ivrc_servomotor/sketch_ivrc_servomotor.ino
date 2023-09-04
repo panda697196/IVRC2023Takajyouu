@@ -21,7 +21,7 @@ void setup() {
   _buttonState = digitalRead(PIN_BUTTON);
   
   _myServo.attach(PIN_Servo);
-  _myServo.write(0);
+  _myServo.write(180);
 }
 
 void loop() {
