@@ -17,20 +17,20 @@ public class HardwareManager : MonoBehaviour
     [SerializeField] private int _ropeTightSpeed = 100;
     [SerializeField] private int _ropeLooseSpeed = 255;
     [SerializeField] private int _ropeSpeedFast = 200;
-    [SerializeField] private int _ropeSpeedMiddle = 100;
-    [SerializeField] private int _ropeSpeedLow = 50;
+    [SerializeField] private int _ropeSpeedMiddle = 120;
+    [SerializeField] private int _ropeSpeedLow = 80;
     [SerializeField] private int _weightDropSpeed = 255;
     [SerializeField] private int _weightLiftSpeed = 255;
     // モータを止めるまでの時間[s]，接頭語はモータの種類，接尾語は順転か逆転か
     [Header("モータを止めるまでの時間[s]")]
-    [SerializeField] private float _ropeTimeFast = 5f;
-    [SerializeField] private float _ropeTimeMiddle = 5f;
-    [SerializeField] private float _weightDropTime = 2f;
-    [SerializeField] private float _weightLiftTime = 2f;
+    [SerializeField] private float _ropeTimeFast = 2f;
+    [SerializeField] private float _ropeTimeMiddle = 2f;
+    [SerializeField] private float _weightDropTime = 2.5f;
+    [SerializeField] private float _weightLiftTime = 1.5f;
     [SerializeField] private float _weightLiftStandbyTime = 1.5f;
     [Header("ファン稼働時間[s]")]
     [SerializeField] private float _fanTimeOfCome = 1.5f;
-    [SerializeField] private float _fanTimeOfGo = 2f;
+    [SerializeField] private float _fanTimeOfGo = 1.7f;
     [Header("デバック等")]
     public bool _isDebug = true;
     [SerializeField] private float _weightSec = 0;//おもりの位置　上が0で下げるほど＋
