@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     // [SerializeField] private Eagle_Navigation eagleNavigation;//鷹の移動を管理するスクリプト
     [SerializeField] private EagleManager eagleManager;//鷹の移動を管理するスクリプト
     [SerializeField] private ArmAngle flyFlagObj;//飛び立ちフラグを管理するスクリプト
-    // [SerializeField] private hogehoge hogehoge_hardware; //ハードウェア班からのスクリプト
+    [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
     [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject eagleTarget;//鷹の飛行すべき目標位置
     
@@ -50,10 +50,16 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool flyFlag; //飛び立ちフラグ
     private Vector3 fingerPos;//左手の親指の座標（transform.position）
     private Vector3 eagleTargetPos;//左手の親指の座標（transform.position）
-    
+
+    [SerializeField] private bool _withHardware = false;//ハードウェアを使わずにデバッグしたい場合はこれを切ってください
+
 
     void Awake()
     {
+        if (_withHardware)
+        {
+            _hardwareManager.NotUseHardware();
+        }
         gameSceneState = 0; //シーン遷移用変数の初期化
         gameScore = 0; //ゲームスコアの初期化
         
