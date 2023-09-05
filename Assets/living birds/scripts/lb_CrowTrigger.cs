@@ -74,7 +74,7 @@ public class  lb_CrowTrigger: MonoBehaviour
                 //適当に高さを増加 高さは適当です
                 float newTargety = _lbCrow.transform.position.y + Random.Range(5.0f, 14f);
                 //3次元データに変換
-                newTarget.transform.position = new Vector3(newTargetxz.x,newTargety, newTargetxz.y);
+                newTarget.transform.position = 100*new Vector3(newTargetxz.x,newTargety, newTargetxz.y);
                //計算した目的地をカラスのスクリプトに渡す
                 _lbCrow.SetTarget(newTarget);
             }
