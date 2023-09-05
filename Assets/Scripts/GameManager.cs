@@ -26,7 +26,7 @@ public class GameManager : MonoBehaviour
     // [SerializeField] private Eagle_Edit eagleEdit;//鷹の状態用スクリプト
     // [SerializeField] private Eagle_Navigation eagleNavigation;//鷹の移動を管理するスクリプト
     [SerializeField] private EagleManager eagleManager;//鷹の移動を管理するスクリプト
-    [SerializeField] private ArmAngle flyFlagObj;//飛び立ちフラグを管理するスクリプト
+    [SerializeField] private ArmAngle_v2 flyFlagObj;//飛び立ちフラグを管理するスクリプト
     [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
     [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject eagleTarget;//鷹の飛行すべき目標位置
