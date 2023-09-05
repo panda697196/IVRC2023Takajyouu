@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class EagleManager : MonoBehaviour
 {
-    [SerializeField] private ForTargetChanger ForTargetChanger;//あとでけす
+    // [SerializeField] private ForTargetChanger ForTargetChanger;//あとでけす
     // Start is called before the first frame update
     private Eagle_Navigation _navi;
     private Eagle_Edit _edit;
@@ -52,7 +52,7 @@ public class EagleManager : MonoBehaviour
         
         if (Input.GetKeyDown(KeyCode.D))
         {            
-            ForTargetChanger._isStart = true;//あとでけす
+            // ForTargetChanger._isStart = true;//あとでけす
             _navi.SetTarget(_target);
             _edit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
             _navi.SetFlyState(Eagle_Navigation.FlyState.onlyTarget); 
