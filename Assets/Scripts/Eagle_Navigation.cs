@@ -260,7 +260,7 @@ public class Eagle_Navigation : MonoBehaviour
                     gameObject.transform.LookAt(nextPos);
                 }
 
-                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.5f)
+                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.2f)
                 {
                     //人間の手の上面を取得
                     var ArmTopAjust = yMargin;
