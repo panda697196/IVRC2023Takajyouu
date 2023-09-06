@@ -12,10 +12,10 @@ public class ScoreCrow : MonoBehaviour
     private List<GameObject> _backCrowList = new List<GameObject>(1);
     private List<GameObject> _randomScoreTargetList = new List<GameObject>(1);
 
-    //oŒ»‰Â”\‚ÌêŠŒó•â
-    [SerializeField] private float radius; //ƒJƒ‰ƒX‚ªoŒ»‚·‚éƒGƒŠƒA‚Ì”¼Œa
-    [SerializeField] private int _comebackCrow; //‹A‚Á‚Ä—ˆ‚éƒJƒ‰ƒX‚Ì”
-    [SerializeField] private GameObject lookObject; //ƒJƒ‰ƒX‚ÌŒü‚­Œü‚«‚ğŒˆ‚ß‚éƒIƒuƒWƒFƒNƒg
+    //å‡ºç¾å¯èƒ½ã®å ´æ‰€å€™è£œ
+    [SerializeField] private float radius; //ã‚«ãƒ©ã‚¹ãŒå‡ºç¾ã™ã‚‹ã‚¨ãƒªã‚¢ã®åŠå¾„
+    [SerializeField] private int _comebackCrow; //å¸°ã£ã¦æ¥ã‚‹ã‚«ãƒ©ã‚¹ã®æ•°
+    [SerializeField] private GameObject lookObject; //ã‚«ãƒ©ã‚¹ã®å‘ãå‘ãã‚’æ±ºã‚ã‚‹ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆ
     private GameObject CrowManager;
     CrowGenerater Crowgene;
 
@@ -26,20 +26,18 @@ public class ScoreCrow : MonoBehaviour
         for (int i = 0; i < a; i++)
         {
             
-            // w’è‚³‚ê‚½”¼Œa‚Ì‰~“à‚Ìƒ‰ƒ“ƒ_ƒ€ˆÊ’u
+            // æŒ‡å®šã•ã‚ŒãŸåŠå¾„ã®å††å†…ã®ãƒ©ãƒ³ãƒ€ãƒ ä½ç½®
             var circlePos = radius * Random.insideUnitCircle;
-            // XZ•½–Ê‚Åw’è‚³‚ê‚½”¼ŒaA’†S“_‚Ì‰~“à‚Ìƒ‰ƒ“ƒ_ƒ€ˆÊ’u‚ğŒvZ
+            // XZå¹³é¢ã§æŒ‡å®šã•ã‚ŒãŸåŠå¾„ã€ä¸­å¿ƒç‚¹ã®å††å†…ã®ãƒ©ãƒ³ãƒ€ãƒ ä½ç½®ã‚’è¨ˆç®—
             var spawnPos = new Vector3(circlePos.x, 0, circlePos.y) + _spwanCenter;
-            // ƒ^[ƒQƒbƒg•ûŒü‚ÌƒxƒNƒgƒ‹‚ğæ“¾
+            // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—
             Vector3 relativePos = lookObject.transform.position - spawnPos;
-            // Prefab‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»‚·‚é
+            // Prefabã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã™ã‚‹
             GameObject newTarget = Instantiate(_randomScoreTarget, spawnPos, Quaternion.LookRotation(relativePos));
-            //Œ©‚â‚·‚¢‚æ‚¤‚É¶¬‚µ‚½Target‚ğRandomScoreTargetStorage‚ÉŠi”[
+            //è¦‹ã‚„ã™ã„ã‚ˆã†ã«ç”Ÿæˆã—ãŸTargetã‚’RandomScoreTargetStorageã«æ ¼ç´
             newTarget.transform.parent = _randomScoreTargetStorage.transform;
-            //¶¬‚µ‚½Target‚ğƒŠƒXƒg‚É’Ç‰Á
-            _randomScoreTargetList.Add(newTarget);
             lb_Crow lbCrow = _backCrowList[i].GetComponent<lb_Crow>();
-            lbCrow.SetTargetList(_randomScoreTargetList);
+            lbCrow.SetTarget(newTarget);
             lbCrow.SetCrowState(lb_Crow.birdBehaviors.flyToTarget);
         }
     }
@@ -47,9 +45,9 @@ public class ScoreCrow : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //Target‚ÌPregfab‚Ì“Ç‚İæ‚è
+        //Targetã®Pregfabã®èª­ã¿å–ã‚Š
         _randomScoreTarget = (GameObject)Resources.Load("Sphere");
-        //Traget‚ÌPregfab‚©‚ç¶¬‚µ‚½ƒIƒuƒWƒF‚ÌŠi”[
+        //Tragetã®Pregfabã‹ã‚‰ç”Ÿæˆã—ãŸã‚ªãƒ–ã‚¸ã‚§ã®æ ¼ç´
         _randomScoreTargetStorage = GameObject.Find("RandomScoreTargetStorage");
         CrowManager = GameObject.Find("CrowManager");
         lb_CrowTrigger lbTrigger = new lb_CrowTrigger();
@@ -67,7 +65,7 @@ public class ScoreCrow : MonoBehaviour
 
     }
 
-    //ƒJƒ‰ƒXƒŠƒXƒg“à‚É‚ ‚éC‘é‚É‚æ‚Á‚Ä”ò‚ñ‚¾ƒJƒ‰ƒX‚ğ”‚¦‚éƒƒ\ƒbƒh
+    //ã‚«ãƒ©ã‚¹ãƒªã‚¹ãƒˆå†…ã«ã‚ã‚‹ï¼Œé·¹ã«ã‚ˆã£ã¦é£›ã‚“ã ã‚«ãƒ©ã‚¹ã‚’æ•°ãˆã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
     public void ScaredCrowNumber()
     {
         int i = 0;
@@ -77,18 +75,18 @@ public class ScoreCrow : MonoBehaviour
         {
             if (crow.transform.GetChild(2).GetComponent<lb_CrowTrigger>().IsEagleScared)
             {
-                count++; //‘é‚É‚æ‚Á‚Ä”ò‚ñ‚¾ƒJƒ‰ƒX‚ğ”‚¦‚é
+                count++; //é·¹ã«ã‚ˆã£ã¦é£›ã‚“ã ã‚«ãƒ©ã‚¹ã‚’æ•°ãˆã‚‹
             }
             else
             {
-                _backCrowList.Add(_crowList[i]); //’Ç‚¢•¥‚¦‚È‚©‚Á‚½ƒJƒ‰ƒX‚ğŠi”[
+                _backCrowList.Add(_crowList[i]); //è¿½ã„æ‰•ãˆãªã‹ã£ãŸã‚«ãƒ©ã‚¹ã‚’æ ¼ç´
             }
             i++;
         }
         _comebackCrow = _backCrowList.Count;
     }
 
-    //ƒJƒ‰ƒX‚ğ_crowMaxNumber‚Ü‚Å¶¬‚·‚éƒƒ\ƒbƒh@ƒXƒ|[ƒ“‚ÍCenter‚ÌˆÊ’u‚ğ’†S‚É³•ûŒ`‚É¶¬
+    //ã‚«ãƒ©ã‚¹ã‚’_crowMaxNumberã¾ã§ç”Ÿæˆã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã€€ã‚¹ãƒãƒ¼ãƒ³ã¯Centerã®ä½ç½®ã‚’ä¸­å¿ƒã«æ­£æ–¹å½¢ã«ç”Ÿæˆ
     public void ScoreCrowPos()
     {
         RandomCirclePos(_comebackCrow);
