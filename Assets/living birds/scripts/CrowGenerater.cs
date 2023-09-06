@@ -69,7 +69,7 @@ public class CrowGenerater : MonoBehaviour
     {
         //カラスの出現場所のリストの番号をランダムで選択
         _chooseNum = Random.Range(0, _totalWeight - 1);
-        //UnityEngine.Debug.Log(_popUpPlaceList1W[_chooseNum].name);
+        UnityEngine.Debug.Log(_popUpPlaceList1W[_chooseNum].name);
         _point1 = _popUpPlaceList1W[_chooseNum].transform.position;
         _point2 = _popUpPlaceList2W[_chooseNum].transform.position;
         Vector3 popLine = _point1 - _point2;

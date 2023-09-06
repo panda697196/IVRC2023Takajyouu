@@ -4,7 +4,7 @@ using TMPro;
 
 public class GameControlScript : MonoBehaviour
 {
-    // UI Textw’è—p\
+    // UI Textï¿½wï¿½ï¿½p\
     public TextMeshPro resultText;
     public TextMeshPro playerScoreText;
     public TextMeshPro playerRankText;
@@ -12,7 +12,7 @@ public class GameControlScript : MonoBehaviour
     public TextMeshPro top3Text;
     public TextMeshPro commentText;
 
-    // •\¦‚·‚é•Ï”
+    // ï¿½\ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ïï¿½
     public int playerScore;
     public int playerRank;
     public int top1;
@@ -23,9 +23,9 @@ public class GameControlScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerScoreText.text = string.Format("Score:{0}", playerScore);
-        playerRankText.text = string.Format("Rank:{0}", playerRank);
-        top3Text.text = string.Format("1st {0}\n2nd {0}\n3rd {0}", top1, top2, top3);
+        playerScoreText.text = string.Format("å¾—ç‚¹:{0}", playerScore);
+        playerRankText.text = string.Format("é †ä½:{0}", playerRank);
+        top3Text.text = string.Format("1ä½ {0}\n2ä½ {1}\n3ä½ {2}", top1, top2, top3);
         commentText.text = string.Format(comment);
     }
 }

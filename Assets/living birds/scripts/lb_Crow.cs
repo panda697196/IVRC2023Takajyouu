@@ -15,11 +15,10 @@ public class lb_Crow : MonoBehaviour
     public float _idleAgitated;
     private List<GameObject> _randomTargetList = new List<GameObject>(1);
 
-    [Header("ƒJƒ‰ƒX‚Ìó‘Ô‚ğ•\¦")]
     [SerializeField] private birdBehaviors _crowState;
     //target
     [SerializeField] private GameObject _target;
-    //”Â‘q’Ç‰ÁƒZƒbƒg—v‘f 
+    //ï¿½Â‘qï¿½Ç‰ï¿½ï¿½Zï¿½bï¿½gï¿½vï¿½f 
     public void SetTarget(GameObject newTarget)
     {
         _target = newTarget;
@@ -36,7 +35,7 @@ public class lb_Crow : MonoBehaviour
     }
     public birdBehaviors CrowCurrentState => _crowState;
 
-    [Header("DebugMode ƒJƒ‰ƒX‚Ìó‘Ô‚ğ•Ï‚¦‚é‚±‚Æ‚ÅƒJƒ‰ƒX‚ğ“®‚©‚¹‚é")]
+    [Header("DebugMode ï¿½Jï¿½ï¿½ï¿½Xï¿½Ìï¿½Ô‚ï¿½Ï‚ï¿½ï¿½é‚±ï¿½Æ‚ÅƒJï¿½ï¿½ï¿½Xï¿½ğ“®‚ï¿½ï¿½ï¿½ï¿½ï¿½")]
     public bool _isDebug;
 
     public AudioClip song1;
@@ -59,11 +58,11 @@ public class lb_Crow : MonoBehaviour
     float agitationLevel = .5f;
     float Angle = 0.0f;
 
-    // ‰‘¬“x
+    // ï¿½ï¿½ï¿½ï¿½ï¿½x
     [SerializeField] private float _speed2 = 0.01f;
-    // Œ»İ‘¬“x
+    // ï¿½ï¿½ï¿½İ‘ï¿½ï¿½x
     private Vector3 _velocity = Vector3.zero;
-    // ‚‚³
+    // ï¿½ï¿½ï¿½ï¿½
     [SerializeField] private float _hight2 = 0;
 
     //hash variables for the animation states and animation properties
@@ -147,7 +146,7 @@ public class lb_Crow : MonoBehaviour
                     }
                 }
                 break;
-            case birdBehaviors.flyToTarget2://target‚É‹ß‚Ã‚¢‚Ä‚à‚¸‚Á‚Æ”òsó‘Ô
+            case birdBehaviors.flyToTarget2://targetï¿½É‹ß‚Ã‚ï¿½ï¿½Ä‚ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ”ï¿½sï¿½ï¿½ï¿½
                 float dis3 = Vector3.SqrMagnitude(_target.transform.position - transform.position);
                 _speed2 = Random.Range(3.0f, 5.0f);
                 anim.SetBool("flying", true);
@@ -267,7 +266,7 @@ public class lb_Crow : MonoBehaviour
     public void Flytest(Transform target)
     {
         _speed2 += 0.1f;
-        _speed2 = Mathf.Clamp(_speed2, 0, 10f);
+        _speed2 = Mathf.Clamp(_speed2, 0, 5f);
         transform.position = Vector3.MoveTowards(transform.position, target.position, _speed2 * Time.deltaTime);
         gameObject.transform.LookAt(target.transform);
         UnityEngine.Debug.Log("FlyTest");
@@ -282,10 +281,10 @@ public class lb_Crow : MonoBehaviour
         else
         {
             _speed2 -= 0.1f;
-            _speed2 = Mathf.Clamp(_speed2, 0.5f, 10f);
+            _speed2 = Mathf.Clamp(_speed2, 0.5f, 5f);
         }
         var direction = transform.forward;
-        // •ûŒü‚É‘¬“x‚ğŠ|‚¯‡‚í‚¹‚ÄˆÚ“®ƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+        // ï¿½ï¿½ï¿½ï¿½ï¿½É‘ï¿½ï¿½xï¿½ï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½í‚¹ï¿½ÄˆÚ“ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
         transform.position = Vector3.MoveTowards(transform.position, target.position, _speed2 * Time.deltaTime);
         gameObject.transform.LookAt(target.transform);
         UnityEngine.Debug.Log("LandTest");
@@ -302,13 +301,13 @@ public class lb_Crow : MonoBehaviour
             _hight2 = 0;
         }
         Angle = 60f * t;
-        // Šp“x‚ğƒ‰ƒWƒAƒ“‚É•ÏŠ·
+        // ï¿½pï¿½xï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½Aï¿½ï¿½ï¿½É•ÏŠï¿½
         float rad = Angle * Mathf.Deg2Rad;
         _speed2 += 10f;
         _speed2 = Mathf.Clamp(_speed2, 0, 500f);
-        // ƒ‰ƒWƒAƒ“‚©‚çis•ûŒü‚ğİ’è
+        // ï¿½ï¿½ï¿½Wï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½
         Vector3 direction = new Vector3(Mathf.Sin(rad), _hight2, Mathf.Cos(rad));
-        // •ûŒü‚É‘¬“x‚ğŠ|‚¯‡‚í‚¹‚ÄˆÚ“®ƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+        // ï¿½ï¿½ï¿½ï¿½ï¿½É‘ï¿½ï¿½xï¿½ï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½í‚¹ï¿½ÄˆÚ“ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
         _velocity = direction * _speed2 * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
         UnityEngine.Debug.Log(direction);
@@ -330,11 +329,11 @@ public class lb_Crow : MonoBehaviour
             _speed2 -= 0.1f;
             _speed2 = Mathf.Clamp(_speed2, 100f, 500f);
         }
-        // Šp“x‚ğƒ‰ƒWƒAƒ“‚É•ÏŠ·
+        // ï¿½pï¿½xï¿½ï¿½ï¿½ï¿½ï¿½Wï¿½Aï¿½ï¿½ï¿½É•ÏŠï¿½
         float rad = Angle * Mathf.Deg2Rad;
-        // ƒ‰ƒWƒAƒ“‚©‚çis•ûŒü‚ğİ’è
+        // ï¿½ï¿½ï¿½Wï¿½Aï¿½ï¿½ï¿½ï¿½ï¿½ï¿½iï¿½sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½İ’ï¿½
         Vector3 direction = new Vector3(Mathf.Sin(rad), _hight2, Mathf.Cos(rad));
-        // •ûŒü‚É‘¬“x‚ğŠ|‚¯‡‚í‚¹‚ÄˆÚ“®ƒxƒNƒgƒ‹‚ğ‹‚ß‚é
+        // ï¿½ï¿½ï¿½ï¿½ï¿½É‘ï¿½ï¿½xï¿½ï¿½ï¿½|ï¿½ï¿½ï¿½ï¿½ï¿½í‚¹ï¿½ÄˆÚ“ï¿½ï¿½xï¿½Nï¿½gï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß‚ï¿½
         _velocity = direction * _speed2 * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
         UnityEngine.Debug.Log(direction);

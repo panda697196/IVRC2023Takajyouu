@@ -6,6 +6,8 @@ using Debug = UnityEngine.Debug;
 
 public class Eagle_Edit : MonoBehaviour
 {
+    [SerializeField] private ForTargetChanger ForTargetChanger;//あとでけす
+    
     private Animator eagle;
     //public GameObject MainCamera;
     
@@ -62,8 +64,8 @@ public class Eagle_Edit : MonoBehaviour
             if (_eagleState.ToString()=="Takeoff")
             {
                 IdleFlyMode();
-                
-               // RootMotionOnOff(true);
+                // ForTargetChanger._isStart = true;//あとでけす
+                // RootMotionOnOff(true);
                 TakeOff();
                 
             }

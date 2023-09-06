@@ -19,7 +19,7 @@ public class trackerMiddlePoint : MonoBehaviour
     void Update()
     {
         UnityEngine.Vector3 middlePointPos = (trackerW.position + trackerS.position) / 2;
-        Debug.Log("middle:" + middlePointPos);
+        // Debug.Log("middle:" + middlePointPos);
 
         this.transform.position = middlePointPos;
         this.transform.rotation = trackerW.rotation;

@@ -26,8 +26,8 @@ public class GameManager : MonoBehaviour
     // [SerializeField] private Eagle_Edit eagleEdit;//鷹の状態用スクリプト
     // [SerializeField] private Eagle_Navigation eagleNavigation;//鷹の移動を管理するスクリプト
     [SerializeField] private EagleManager eagleManager;//鷹の移動を管理するスクリプト
-    [SerializeField] private ArmAngle flyFlagObj;//飛び立ちフラグを管理するスクリプト
-    // [SerializeField] private hogehoge hogehoge_hardware; //ハードウェア班からのスクリプト
+    [SerializeField] private ArmAngle_v2 flyFlagObj;//飛び立ちフラグを管理するスクリプト
+    [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
     [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject eagleTarget;//鷹の飛行すべき目標位置
     
@@ -38,7 +38,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private int crowCountFromCase6; // ケース6で追い払ったカラスの数
     [SerializeField] private bool playerReady; //プレイヤーが準備完了したかどうかのフラグ
     [SerializeField] private bool eagleGetOnArm;//鷹がうでにとまった状態であるかどうかのフラグ
-    [SerializeField] private bool huntFinFlag; //飛び立ち時ハードウェアと鷹の準備が完了したかどうかのフラグ
+    [SerializeField] private bool huntFinFlag; //飛び時ハードウェアと鷹の準備が完了したかどうかのフラグ
     [SerializeField] private bool eargleHasScorebord;//スコアボードを鷹が持ったかどうか
     [SerializeField] private bool putScorebord;//スコアボードを地面に置いたことを判定する
     
@@ -47,13 +47,20 @@ public class GameManager : MonoBehaviour
     // private int initialSpeed; // 初速（現状不要）
     // private int initialSpeedFromCase2; // ケース2で得られた初速（現状不要）
     // private int initialSpeedFromCase6; // ケース6で得られた初速（現状不要）
+    [SerializeField] private bool IsFirstReadyOfPlayerArm;
     [SerializeField] private bool flyFlag; //飛び立ちフラグ
     private Vector3 fingerPos;//左手の親指の座標（transform.position）
     private Vector3 eagleTargetPos;//左手の親指の座標（transform.position）
-    
+
+    [SerializeField] private bool _withHardware = false;//ハードウェアを使わずにデバッグしたい場合はこれを切ってください
+
 
     void Awake()
     {
+        if (_withHardware)
+        {
+            _hardwareManager.NotUseHardware();
+        }
         gameSceneState = 0; //シーン遷移用変数の初期化
         gameScore = 0; //ゲームスコアの初期化
         
@@ -69,7 +76,7 @@ public class GameManager : MonoBehaviour
         titleLabel.gameObject.SetActive(false);// titleLabelの初期化
         instructionLabel.gameObject.SetActive(false);//インストラクションの初期化
         
-        flyFlag = flyFlagObj.flyFlag;//flyFlagの取得かつ初期化
+        flyFlag = flyFlagObj.GetFlyFlag();//flyFlagの取得かつ初期化
 
         fingerPos = rawfingerPos.position;//左手の座標の取得かつ初期化
 
@@ -140,15 +147,14 @@ public class GameManager : MonoBehaviour
                 break;
             case 2:// 待機a
                 // ---------------------------待機aでの処理内容(毎フレーム)---------------------------------------------------------
-                flyFlag = flyFlagObj.flyFlag; //Flyflagの監視
-                Debug.Log(flyFlag);
+                IsFirstReadyOfPlayerArm = flyFlagObj.GetIsFirstReadyOfArm(); //うでの最初の準備完了状態の監視
+                flyFlag = flyFlagObj.GetFlyFlag(); //うでの振り速度の閾値越えの監視
+                Debug.Log("flyflag:"+flyFlag);
 
-                
-                
+
                 //-------------------------------------------------------------------------------------------------------------
                 if (callOnceFlag == false)//1回だけの処理
                 {
-                    
                     Debug.Log("待機A");
                     callOnceFlag = true;
                 }
@@ -265,9 +271,9 @@ public class GameManager : MonoBehaviour
             case 5://二回目の待機シーン（待機b）(case５)
 
                 // -------------------------------二回目の待機での処理内容(毎フレーム)-----------------------------------------------------
-                flyFlag = flyFlagObj.flyFlag; //Flyflagの監視
-
-
+                IsFirstReadyOfPlayerArm = flyFlagObj.GetIsFirstReadyOfArm(); //うでの最初の準備完了状態の監視
+                flyFlag = flyFlagObj.GetFlyFlag(); //うでの振り速度の閾値越えの監視
+                Debug.Log("flyflag:"+flyFlag);
 
 
                 //-------------------------------------------------------------------------------------------------------------
