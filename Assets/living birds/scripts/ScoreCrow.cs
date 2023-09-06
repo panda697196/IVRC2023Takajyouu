@@ -48,7 +48,12 @@ public class ScoreCrow : MonoBehaviour
             GameObject newTarget = Instantiate(_randomScoreTarget, spawnPos, Quaternion.LookRotation(relativePos));
             //見やすいように生成したTargetをRandomScoreTargetStorageに格納
             newTarget.transform.parent = _randomScoreTargetStorage.transform;
-            lb_Crow lbCrow = _backCrowList[i].GetComponent<lb_Crow>();
+            GameObject newCrow = _backCrowList[i];
+            var CrowRigidbody = newCrow.GetComponent<Rigidbody>();
+            CrowRigidbody.useGravity= false;
+            var CrowCollider = newCrow.GetComponent<BoxCollider>();
+            //CrowCollider.isTrigger = true;
+            lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
             lbCrow.SetTarget(newTarget);
             lbCrow.SetCrowState(lb_Crow.birdBehaviors.flyToTarget);
         }

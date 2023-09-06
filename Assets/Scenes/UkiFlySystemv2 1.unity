@@ -1564,7 +1564,7 @@ MonoBehaviour:
   _radiusMax: 5
   _radiusMin: 2
   _comebackCrow: 10
-  lookObject: {fileID: 708559737}
+  lookObject: {fileID: 1402771293}
   _scoreBoard: {fileID: 548009570}
   _eagle: {fileID: 431753548}
   _toTakeScore: {fileID: 1788313156}
@@ -13370,8 +13370,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1255422540}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 54.499992, y: 121.8, z: 264.5}
-  m_LocalScale: {x: 80, y: 6, z: 80}
+  m_LocalPosition: {x: 132.6, y: 92.2, z: 264.5}
+  m_LocalScale: {x: 80, y: 40, z: 80}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 793952693}
@@ -17865,12 +17865,8 @@ MonoBehaviour:
   _crowState: 0
   _target: {fileID: 63863541}
   _isDebug: 1
-  song1: {fileID: 8300000, guid: e2622b95524aab94b9a0448a1a4c6fc8, type: 3}
-  song2: {fileID: 8300000, guid: aa29893140715234fa4c6f0f17bc3d88, type: 3}
-  flyAway1: {fileID: 8300000, guid: 9dabaef0cd2ecb241956e3db52d3bc8d, type: 3}
-  flyAway2: {fileID: 8300000, guid: ae13220b2fee67344b8b455414c59ff4, type: 3}
-  _speed2: 0.01
-  _hight2: 0
+  _speed: 0.01
+  _hight: 0
 --- !u!1 &1740194408
 GameObject:
   m_ObjectHideFlags: 0
