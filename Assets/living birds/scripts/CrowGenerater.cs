@@ -19,6 +19,8 @@ public class CrowGenerater : MonoBehaviour
     public int _crowMinNumber;
 
     private List<GameObject> _crowList = new List<GameObject>(1);
+    public List<GameObject> CrowList => _crowList;
+
     private List<GameObject> _randomTargetList = new List<GameObject>(1);
 
     //出現可能の場所候補
@@ -31,12 +33,6 @@ public class CrowGenerater : MonoBehaviour
     //重みを含めたリスト
     private List<GameObject> _popUpPlaceList1W = new List<GameObject>(1);
     private List<GameObject> _popUpPlaceList2W = new List<GameObject>(1);
-
-    [SerializeField] private int _scaredCrow;
-    private List<GameObject> _backCrowList = new List<GameObject>(1);
-    public int ScaredCrow => _scaredCrow;
-    public List<GameObject> BackCrowList => _backCrowList;
-
 
     private int _chooseNum;
     private Vector3 _point1;
@@ -171,31 +167,6 @@ public class CrowGenerater : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.G))
         {
             CrowGenerator();
-        }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            ScaredCrowNumber();
-        }
-        
-    }
-
-    //カラスリスト内にある，鷹によって飛んだカラスを数えるメソッド
-    public void ScaredCrowNumber()
-    {
-        int i = 0;
-        int count = 0;
-        foreach(GameObject crow in _crowList)
-        {
-            if (crow.transform.GetChild(2).GetComponent<lb_CrowTrigger>().IsEagleScared)
-            {
-                count++; //鷹によって飛んだカラスを数える
-            }
-            else
-            {
-                _backCrowList.Add(_crowList[i]); //飛ばなかった帰ってくるカラスを格納
-            }
-            i++;
         }
     }
 
