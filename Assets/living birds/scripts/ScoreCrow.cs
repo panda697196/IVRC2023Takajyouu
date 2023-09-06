@@ -2,34 +2,29 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class ScoreGene : MonoBehaviour
+public class ScoreCrow : MonoBehaviour
 {
     private GameObject _crow;
     private GameObject _randomTarget;
-    
-    //debugç”¨
-    //private GameObject _sphere;
 
     public GameObject _crowStorage;
     public GameObject _targetStorage;
-    public int _crowMaxNumber;
-    public int _crowMinNumber;
     public Vector3 _spwanCenter;
 
     private List<GameObject> _crowList = new List<GameObject>(1);
     private List<GameObject> _randomTargetList = new List<GameObject>(1);
 
-    //å‡ºç¾å¯èƒ½ã®å ´æ‰€å€™è£œ
+    //oŒ»‰Â”\‚ÌêŠŒó•â
     [SerializeField] private float radius;
-    [SerializeField] private GameObject _scoreArea; //ã‚«ãƒ©ã‚¹ã‚’å‡ºç¾ã•ã›ã‚‹ã‚¨ãƒªã‚¢
-    [SerializeField] private GameObject lookObject; // æ³¨è¦–ã—ãŸã„ã‚ªãƒ–ã‚¸ã‚§ã‚¯ãƒˆã‚’Inspectorã‹ã‚‰å…¥ã‚Œã¦ãŠã
+    [SerializeField] private GameObject _scoreArea; //ƒJƒ‰ƒX‚ğoŒ»‚³‚¹‚éƒGƒŠƒA
+    [SerializeField] private GameObject lookObject; // ’‹‚µ‚½‚¢ƒIƒuƒWƒFƒNƒg‚ğInspector‚©‚ç“ü‚ê‚Ä‚¨‚­
 
     private Vector3 _areaSize;
     private Vector3 _offset;
     private float _areaMin = -0.5f;
     private float _areaMax = 0.5f;
 
-    
+
 
     void RandomCirclePos(int a)
     {
@@ -43,34 +38,34 @@ public class ScoreGene : MonoBehaviour
             float zPos = randomRangeZ * _areaSize.z;
             Vector3 position = new Vector3(xPos, yPos, zPos) + _offset;*/
 
-            // æŒ‡å®šã•ã‚ŒãŸåŠå¾„ã®å††å†…ã®ãƒ©ãƒ³ãƒ€ãƒ ä½ç½®
+            // w’è‚³‚ê‚½”¼Œa‚Ì‰~“à‚Ìƒ‰ƒ“ƒ_ƒ€ˆÊ’u
             var circlePos = radius * Random.insideUnitCircle;
-            // XZå¹³é¢ã§æŒ‡å®šã•ã‚ŒãŸåŠå¾„ã€ä¸­å¿ƒç‚¹ã®å††å†…ã®ãƒ©ãƒ³ãƒ€ãƒ ä½ç½®ã‚’è¨ˆç®—
+            // XZ•½–Ê‚Åw’è‚³‚ê‚½”¼ŒaA’†S“_‚Ì‰~“à‚Ìƒ‰ƒ“ƒ_ƒ€ˆÊ’u‚ğŒvZ
             var spawnPos = new Vector3(circlePos.x, 0, circlePos.y) + _spwanCenter;
-            // ã‚¿ãƒ¼ã‚²ãƒƒãƒˆæ–¹å‘ã®ãƒ™ã‚¯ãƒˆãƒ«ã‚’å–å¾—
+            // ƒ^[ƒQƒbƒg•ûŒü‚ÌƒxƒNƒgƒ‹‚ğæ“¾
             Vector3 relativePos = lookObject.transform.position - spawnPos;
-            // Prefabã‚’ã‚¤ãƒ³ã‚¹ã‚¿ãƒ³ã‚¹åŒ–ã™ã‚‹
-            GameObject newCrow = Instantiate(_crow, spawnPos, Quaternion.LookRotation (relativePos));
+            // Prefab‚ğƒCƒ“ƒXƒ^ƒ“ƒX‰»‚·‚é
+            GameObject newCrow = Instantiate(_crow, spawnPos, Quaternion.LookRotation(relativePos));
             lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
-            //è¦‹ã‚„ã™ã„ã‚ˆã†ã«ç”Ÿæˆã—ãŸã‚«ãƒ©ã‚¹ã‚’CrowStorageã«æ ¼ç´
+            //Œ©‚â‚·‚¢‚æ‚¤‚É¶¬‚µ‚½ƒJƒ‰ƒX‚ğCrowStorage‚ÉŠi”[
             newCrow.transform.parent = _crowStorage.transform;
-            //ç”Ÿæˆã—ãŸã‚«ãƒ©ã‚¹ã‚’ãƒªã‚¹ãƒˆã«è¿½åŠ 
+            //¶¬‚µ‚½ƒJƒ‰ƒX‚ğƒŠƒXƒg‚É’Ç‰Á
             _crowList.Add(newCrow);
             lbCrow.SetTargetList(_randomTargetList);
             lbCrow.SetCrowState(lb_Crow.birdBehaviors.sing);
         }
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {
-        //ã‚«ãƒ©ã‚¹ã®Pregfabã®èª­ã¿å–ã‚Š
+        //ƒJƒ‰ƒX‚ÌPregfab‚Ì“Ç‚İæ‚è
         _crow = (GameObject)Resources.Load("lb_crow_target");
-        //Targetã®Pregfabã®èª­ã¿å–ã‚Š
+        //Target‚ÌPregfab‚Ì“Ç‚İæ‚è
         _randomTarget = (GameObject)Resources.Load("Sphere");
-        //ã‚«ãƒ©ã‚¹ã®Pregfabã‹ã‚‰ç”Ÿæˆã—ãŸã‚ªãƒ–ã‚¸ã‚§ã®æ ¼ç´
+        //ƒJƒ‰ƒX‚ÌPregfab‚©‚ç¶¬‚µ‚½ƒIƒuƒWƒF‚ÌŠi”[
         _crowStorage = GameObject.Find("CrowStorage");
-        //Tragetã®Pregfabã‹ã‚‰ç”Ÿæˆã—ãŸã‚ªãƒ–ã‚¸ã‚§ã®æ ¼ç´
+        //Traget‚ÌPregfab‚©‚ç¶¬‚µ‚½ƒIƒuƒWƒF‚ÌŠi”[
         _targetStorage = GameObject.Find("TargetStorage");
         _areaSize = _scoreArea.transform.localScale;
         _offset = _scoreArea.transform.position;
@@ -86,18 +81,18 @@ public class ScoreGene : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            int flyCrow=ScaredCrowNumber();
+            int flyCrow = ScaredCrowNumber();
 
-            Debug.Log("é£›ã‚“ã ã‚«ãƒ©ã‚¹"+flyCrow);
+            Debug.Log("”ò‚ñ‚¾ƒJƒ‰ƒX" + flyCrow);
         }
-        
+
     }
 
-    //ã‚«ãƒ©ã‚¹ãƒªã‚¹ãƒˆå†…ã«ã‚ã‚‹ï¼Œé·¹ã«ã‚ˆã£ã¦é£›ã‚“ã ã‚«ãƒ©ã‚¹ã‚’æ•°ãˆã‚‹ãƒ¡ã‚½ãƒƒãƒ‰
+    //ƒJƒ‰ƒXƒŠƒXƒg“à‚É‚ ‚éC‘é‚É‚æ‚Á‚Ä”ò‚ñ‚¾ƒJƒ‰ƒX‚ğ”‚¦‚éƒƒ\ƒbƒh
     public int ScaredCrowNumber()
     {
         int count = 0;
-        foreach(GameObject crow in _crowList)
+        foreach (GameObject crow in _crowList)
         {
             if (crow.transform.GetChild(2).GetComponent<lb_CrowTrigger>().IsEagleScared)
             {
@@ -108,7 +103,7 @@ public class ScoreGene : MonoBehaviour
         return count;
     }
 
-    //ã‚«ãƒ©ã‚¹ã‚’_crowMaxNumberã¾ã§ç”Ÿæˆã™ã‚‹ãƒ¡ã‚½ãƒƒãƒ‰ã€€ã‚¹ãƒãƒ¼ãƒ³ã¯Centerã®ä½ç½®ã‚’ä¸­å¿ƒã«æ­£æ–¹å½¢ã«ç”Ÿæˆ
+    //ƒJƒ‰ƒX‚ğ_crowMaxNumber‚Ü‚Å¶¬‚·‚éƒƒ\ƒbƒh@ƒXƒ|[ƒ“‚ÍCenter‚ÌˆÊ’u‚ğ’†S‚É³•ûŒ`‚É¶¬
     public void CrowGenerator()
     {
         RandomCirclePos(_crowMaxNumber);

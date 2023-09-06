@@ -3275,7 +3275,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfe698e01dd89a04b8fd3015d66ceeab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ForTargetChanger: {fileID: 416836306}
   _target: {fileID: 650102535}
   _userHand: {fileID: 716753146}
   _handTargetPosition: {fileID: 189434436}
@@ -3430,7 +3429,8 @@ MonoBehaviour:
   scoreText: {fileID: 1904304391}
   thankYouText: {fileID: 458668589}
   eagleManager: {fileID: 431753551}
-  flyFlagObj: {fileID: 2065635389}
+  flyFlagObj: {fileID: 0}
+  _hardwareManager: {fileID: 0}
   rawfingerPos: {fileID: 940044491154012515}
   eagleTarget: {fileID: 1910683028}
   hardwareFlag: 0
@@ -3443,7 +3443,9 @@ MonoBehaviour:
   huntFinFlag: 0
   eargleHasScorebord: 0
   putScorebord: 0
+  IsFirstReadyOfPlayerArm: 0
   flyFlag: 0
+  _withHardware: 0
 --- !u!1 &441830006
 GameObject:
   m_ObjectHideFlags: 0
@@ -3884,7 +3886,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &476851900
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -3913,7 +3915,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 476851899}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -22026,6 +22028,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gameManager: {fileID: 441714081}
+  _flyArmReadyDetection: {fileID: 0}
   tracker1: {fileID: 1677404941}
   tracker2: {fileID: 474274099}
   baseAngle: 65
@@ -22033,7 +22036,10 @@ MonoBehaviour:
   goalPosition: {fileID: 1910683032}
   inputGoalPosition: {x: 0, y: 0, z: 0}
   tmpGoalPosObj: {fileID: 1065883928}
+  _isFirstReadyOfArmForFlyFlag: 0
   flyFlag: 0
+  FlyAngle: 70
+  DeleyTime: 0
 --- !u!4 &2065635390
 Transform:
   m_ObjectHideFlags: 0
@@ -22730,8 +22736,9 @@ MonoBehaviour:
   _targetStorage: {fileID: 0}
   _crowMaxNumber: 10
   _crowMinNumber: 10
-  _SpwanCenter: {x: 0, y: 0, z: 0}
-  _flyArea: {fileID: 476851899}
+  _spwanCenter: {x: 0, y: 0, z: 0}
+  radius: 0
+  _scoreArea: {fileID: 0}
   lookObject: {fileID: 708559737}
 --- !u!1 &2121228314
 GameObject:
