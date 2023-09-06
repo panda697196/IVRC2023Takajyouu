@@ -121,7 +121,7 @@ public class lb_Crow : MonoBehaviour
                 break;
             case birdBehaviors.flyToTarget:
                 float dis = Vector3.SqrMagnitude(_target.transform.position - transform.position);
-                if(dis > 10f)
+                if(dis > 49f)
                 {
                     anim.SetBool("flying", true);
                     anim.SetBool("idle", false);
@@ -129,13 +129,11 @@ public class lb_Crow : MonoBehaviour
                 }
                 else
                 {
-                    if (dis < 0.01f)
+                    if (dis < 25f)
                     {
                         anim.SetBool("idle", true);
                         anim.SetBool("landing", false);
                         anim.SetBool("flying", false);
-                        /*float j = Random.Range(0, 1.0f);
-                        anim.SetFloat("IdleAgitated", j);*/
                         _crowState = birdBehaviors.idle;
                     }
                     else
@@ -260,13 +258,13 @@ public class lb_Crow : MonoBehaviour
                     anim.SetFloat("IdleAgitated", j);
                 }
                 break;*/
+                }
         }
-    }
 
     public void Flytest(Transform target)
     {
         _speed2 += 0.1f;
-        _speed2 = Mathf.Clamp(_speed2, 0, 5f);
+        _speed2 = Mathf.Clamp(_speed2, 0, 3f);
         transform.position = Vector3.MoveTowards(transform.position, target.position, _speed2 * Time.deltaTime);
         gameObject.transform.LookAt(target.transform);
         UnityEngine.Debug.Log("FlyTest");
@@ -274,14 +272,14 @@ public class lb_Crow : MonoBehaviour
 
     void Landtest(Transform target)
     {
-        if (transform.position.y == target.position.y)
+        if (transform.position.y <= target.position.y + 2f)
         {
             _speed2 = 0;
         }
         else
         {
             _speed2 -= 0.1f;
-            _speed2 = Mathf.Clamp(_speed2, 0.5f, 5f);
+            _speed2 = Mathf.Clamp(_speed2, 0.5f, 3f);
         }
         var direction = transform.forward;
         // �����ɑ��x���|�����킹�Ĉړ��x�N�g�������߂�
@@ -304,7 +302,7 @@ public class lb_Crow : MonoBehaviour
         // �p�x�����W�A���ɕϊ�
         float rad = Angle * Mathf.Deg2Rad;
         _speed2 += 10f;
-        _speed2 = Mathf.Clamp(_speed2, 0, 500f);
+        _speed2 = Mathf.Clamp(_speed2, 0, 50f);
         // ���W�A������i�s������ݒ�
         Vector3 direction = new Vector3(Mathf.Sin(rad), _hight2, Mathf.Cos(rad));
         // �����ɑ��x���|�����킹�Ĉړ��x�N�g�������߂�
@@ -327,7 +325,7 @@ public class lb_Crow : MonoBehaviour
             _hight2 = Mathf.Clamp(_hight2, -0.5f, 0.1f);
             _hight2 += Random.Range(0.000001f, 0.00001f);
             _speed2 -= 0.1f;
-            _speed2 = Mathf.Clamp(_speed2, 100f, 500f);
+            _speed2 = Mathf.Clamp(_speed2, 10f, 50f);
         }
         // �p�x�����W�A���ɕϊ�
         float rad = Angle * Mathf.Deg2Rad;

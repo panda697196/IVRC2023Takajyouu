@@ -9,7 +9,6 @@ public class ScoreCrow : MonoBehaviour
     private GameObject _randomScoreTarget;
 
     public GameObject _randomScoreTargetStorage;
-    public Vector3 _spwanCenter;
 
     private List<GameObject> _backCrowList = new List<GameObject>(1);
     private List<GameObject> _randomScoreTargetList = new List<GameObject>(1);
@@ -17,7 +16,8 @@ public class ScoreCrow : MonoBehaviour
     [SerializeField] private int _scaredCrow; //逃げたカラスの数
     public int ScaredCrow => _scaredCrow;
 
-    [SerializeField] private float radius; //カラスが出現するエリアの半径
+    [SerializeField] private float _radiusMax; //カラスが出現するエリアの最大半径
+    [SerializeField] private float _radiusMin; //カラスが出現するエリアの最小半径
     [SerializeField] private int _comebackCrow; //帰って来るカラスの数
     
     [SerializeField] private GameObject lookObject; //カラスの向く向きを決めるオブジェクト
@@ -25,7 +25,8 @@ public class ScoreCrow : MonoBehaviour
     [SerializeField] private GameObject _eagle; //鷹
     [SerializeField] private GameObject _toTakeScore; //スコアボードを取りに行く振りのためのTarget
     [SerializeField] private GameObject _showScore; //スコアボードを配置する場所
-    [SerializeField] private GameObject _eagleIdle;
+    [SerializeField] private GameObject _eagleIdle; //鷹の最終停止位置
+    [SerializeField] private GameObject _crowBackCenter;
     private GameObject CrowManager;
     CrowGenerater Crowgene;
 
@@ -35,11 +36,12 @@ public class ScoreCrow : MonoBehaviour
     {
         for (int i = 0; i < a; i++)
         {
-            
-            // 指定された半径の円内のランダム位置
-            var circlePos = radius * Random.insideUnitCircle;
-            // XZ平面で指定された半径、中心点の円内のランダム位置を計算
-            var spawnPos = new Vector3(circlePos.x, 0, circlePos.y) + _spwanCenter;
+            var radius = Random.Range(_radiusMin, _radiusMax);
+            var angle = Random.Range(0, 360);
+            var rad = angle * Mathf.Deg2Rad;
+            var px = Mathf.Cos(rad) * radius;
+            var py = Mathf.Sin(rad) * radius;
+            var spawnPos = new Vector3(px, 0, py) + _crowBackCenter.transform.position;
             // ターゲット方向のベクトルを取得
             Vector3 relativePos = lookObject.transform.position - spawnPos;
             // Prefabをインスタンス化する
@@ -89,13 +91,15 @@ public class ScoreCrow : MonoBehaviour
         {
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
             float dis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
-            if (dis<5f)
+            if (dis<2f)
             {
                 DropScoreBoard();
                 EagleNavi.SetTarget(_eagleIdle);
                 var EagleEdit = _eagle.GetComponent<Eagle_Edit>();
                 EagleNavi.SetFlyState(Eagle_Navigation.FlyState.targetAround);
+                Invoke(nameof(ChangeGravity), 4f);
                 Invoke(nameof(WaitFly), 5f);
+                Invoke(nameof(WaitRotation), 7f);
             }
         }
     }
@@ -105,6 +109,11 @@ public class ScoreCrow : MonoBehaviour
         var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
         EagleNavi.SetTarget(_eagleIdle);
         EagleNavi.SetFlyState(Eagle_Navigation.FlyState.laud);
+    }
+
+    public void WaitRotation()
+    {
+        _eagle.transform.rotation = Quaternion.Euler(_scoreBoard.transform.rotation.z, _scoreBoard.transform.rotation.y, _scoreBoard.transform.rotation.x);
     }
 
     //カラスリスト内にある，鷹によって飛んだカラスを数えるメソッド
@@ -162,5 +171,13 @@ public class ScoreCrow : MonoBehaviour
         BoardCollider.enabled = true;
         var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
         BoardRigidbody.useGravity = true;
+    }
+
+    public void ChangeGravity()
+    {
+        var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
+        BoardRigidbody.useGravity = false;
+        var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
+        BoardCollider.enabled = false;
     }
 }
