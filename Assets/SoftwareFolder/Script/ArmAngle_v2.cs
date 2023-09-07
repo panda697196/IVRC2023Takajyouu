@@ -6,249 +6,173 @@ using UnityEngine;
 public class ArmAngle_v2 : MonoBehaviour
 {
     public GameManager gameManager;
-    // [SerializeField] private GameObject CanFlyArea;
 
     public FlyArmReadyDetection _flyArmReadyDetection;
     [SerializeField] private ArmCollisionDetection _armCollisionDetection; 
     
     public Transform trackerWaist; // トラッカー1のTransformコンポーネント
-    // public Transform tracker2; // トラッカー2のTransformコンポーネント
 
-    public float baseAngle = 65f;
     public float span = 0.01f;
 
     public Transform goalPosition;
-    public Vector3 inputGoalPosition;
     public Transform tmpGoalPosObj;
 
-    private Vector3 prevPosition1;
-    // private Vector3 prevPosition2;
-    // private Vector3 prevDiffLine;
+    private Vector3 _prevPositionWaist;
     private float angle;
 
     private bool _isFirstReadyOfArm;
     [SerializeField] private bool _isFirstReadyOfArmForFlyFlag;
 
-    private int sceneTarans;
+    private int _sceneTarans;
 
-    private float delta = 0;
+    private float _delta = 0;
 
-    public bool flyFlag = false;
-
-    private bool resetFlyFlag;
-
+    public bool flyFlag = false;　//飛び立ちフラグ
+    
     //改良版製作用変数
-    [SerializeField] private float FlyAngle = 70; //とびたちの角度
-    private float kakeru; //spanにかける数
-    [SerializeField] private float DeleyTime; //フライフラグをだす遅延時間
+    [SerializeField] private float DeleyTime = 1.0f; //フライフラグをだす遅延時間
 
     //改良版2
     [SerializeField] private float TrackerSpeed;
-    private List<float> queueArray = new List<float>();
-    [SerializeField] private int maxSize = 10;//キューの最大サイズ
-    [SerializeField] private float BaseSpeed = 0.8f;
-    [SerializeField] private float AvarageSpeed;
-    private bool IsInFlyArea;
-    private bool IsCanFlyAreaOn = false;
-    // [SerializeField] private Collider CanFlyAreaCllider;
-    [SerializeField] private Transform NewParentsObj;
-    [SerializeField] private Vector3 localOffset = new Vector3(0.180000007f,0,1.39999998f);
-
-    [SerializeField] private float DeleyTimeForMan = 1.5f;
-
+    private List<float> _queueArray = new List<float>();
+    [SerializeField] private int _listMaxSize = 5;//キューの最大サイズ
+    [SerializeField] private float BaseSpeed = 0.8f;//基準となるスピード
+    [SerializeField] private float _averageSpeed;//トラッカーの平均変化量
 
 
     private void Start()
     {
-        sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState();
-
-        prevPosition1 = trackerWaist.position;
-        // prevPosition2 = tracker2.position;
-        // prevDiffLine = prevPosition2 - prevPosition1;
-        // inputGoalPosition = new Vector3(0.0f, 0.0f, 0.0f);
-        // goalPosition.position = inputGoalPosition;
-        flyFlag = false;
-        _isFirstReadyOfArmForFlyFlag = false;
+        _sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState(); //scene遷移の初期化
+        _prevPositionWaist = trackerWaist.position;//trackerの過去の位置初期化
+        _isFirstReadyOfArmForFlyFlag = false;//_isFirstReadyOfArmForFlyFlag
     }
 
     private void Update()
     {
-        _isFirstReadyOfArm = _flyArmReadyDetection.GetIsFirstReadyOfArm();
+        _isFirstReadyOfArm = _flyArmReadyDetection.GetIsFirstReadyOfArm();//コライダーと腕との接触位置判定をする
+        
+        _sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState();//シーンの遷移を取得する
+        
+        this.Set_isFirstReadyOfArmForFlyFlag(); //flyflagように腕の接触を保存する
 
-        if ((sceneTarans == 2 || sceneTarans == 5) && _isFirstReadyOfArm == true)
-        {
-            _isFirstReadyOfArmForFlyFlag = true;
-        }
         // Debug.Log("Pre;"+prevPosition1+"now"+tracker1.position); //Debug用
-        sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState();
-        Debug.Log(sceneTarans);
-        // if (sceneTarans == 2 || sceneTarans == 5)
-        delta += Time.deltaTime;
-        if (delta > span)
+        // Debug.Log(_sceneTarans); //Debug用シーン遷移の確認
+        
+        if (_delta > span)//spanの時間間隔
         {
-            // トラッカーの現在の位置情報を取得
-            Vector3 currentPosition1 = trackerWaist.position;
-            // Vector3 currentPosition2 = tracker2.position;
-
-            // 前フレームからの位置変化を計算
-            Vector3 positionDiff1 = (currentPosition1 - prevPosition1) / span;
+            Vector3 currentPosition1 = trackerWaist.position;// トラッカーの現在の位置情報を取得
+            
+            Vector3 positionDiff1 = (currentPosition1 - _prevPositionWaist) / span;// 前フレームからの位置変化を計算
 
             TrackerSpeed = positionDiff1.magnitude;
             
-            // Debug.Log(TrackerSpeed);
+            // Debug.Log(TrackerSpeed); //debug:trackerのスピード
             
-            Enqueue(TrackerSpeed);
-            // Debug.Log("きゅーのかず："+queueArray.Count);
+            Enqueue(TrackerSpeed);//トラッカーの差分をインキュー(Maxを超えるとデキュー)
+            // Debug.Log("きゅーのかず："+queueArray.Count);//debug:現在のキューの数
 
-            if (queueArray.Count >= maxSize)
+            _averageSpeed = GetAverage();
+            Debug.Log("平均スピード："+_averageSpeed);//Debug:平均スピード
+
+            //条件が揃ったらフライフラグを立て,ゴールをセットする
+            if (_averageSpeed >= BaseSpeed && (_sceneTarans == 2 || _sceneTarans == 5) && _isFirstReadyOfArmForFlyFlag == true)
             {
-                // Debug.Log("ok?");
-                float tmpSum = 0.0f;
-                
-                for (int i = 0; i < maxSize; i++)
-                {
-                    tmpSum += queueArray[i];
-                }
-
-                AvarageSpeed = tmpSum / maxSize;
-                Debug.Log("AvarageSpeed : " + AvarageSpeed);
+                flyFlag = true;//フライフラグを立てる
+                Invoke(nameof(SetGoal), DeleyTime);//deley後にゴールをセットする
+                _isFirstReadyOfArmForFlyFlag = false;//腕位置検知のフラグを戻す
             }
-
-            if ((sceneTarans == 2 || sceneTarans == 5) && _isFirstReadyOfArmForFlyFlag == true && IsCanFlyAreaOn == false)
-            {
-                // CanFlyArea.transform.parent = null;
-                // CanFlyArea.SetActive(true);
-                IsCanFlyAreaOn = true;
-            }
-            
-            // if (CanFlyAreaCllider.bounds.Contains(trackerWaist.position)) //FlyAreaにいるならばTrue
-            // {
-            //     IsInFlyArea = true;
-            //     Debug.Log("InFlyArea");
-            // }
-            // else
-            // {
-            //     IsInFlyArea = false;
-            // }
-            
-            // if (AvarageSpeed >= BaseSpeed && (sceneTarans == 2 || sceneTarans == 5) && _isFirstReadyOfArmForFlyFlag == true && 
-                // IsInFlyArea)
-            if (AvarageSpeed >= BaseSpeed && (sceneTarans == 2 || sceneTarans == 5) && _isFirstReadyOfArmForFlyFlag == true)
-            {
-                // StartCoroutine(WaitTime(DeleyTimeForMan));
-                flyFlag = true;
-                Invoke(nameof(SetGoal), 1f);
-                _isFirstReadyOfArmForFlyFlag = false;
-                // CanFlyArea.SetActive(false);
-                // CanFlyArea.transform.SetParent(NewParentsObj);
-                // CanFlyArea.transform.localPosition = localOffset;
-            }
-
-            // Vector3 positionDiff2 = currentPosition2 - prevPosition2;
-            // Vector3 axisLineDirection = positionDiff2 - positionDiff1;
-        
-                    
-        
-            // Vector3 currrentDiffLine = currentPosition1 - currentPosition2;
-        
-
-            // 2点を結ぶ直線の向きベクトルを計算
-            // Vector3 lineDirection = currentPosition2 - currentPosition1;
-
-            // 直線の角速度を計算
-            // float angle = Vector3.SignedAngle(positionDiff1, positionDiff2, lineDirection) / delta;
-            // angle = Vector3.SignedAngle(prevDiffLine, currrentDiffLine, axisLineDirection);
-
-            // Debug.Log(Vector3.SignedAngle(prevDiffLine, currrentDiffLine, axisLineDirection));//Debug用
-            // Debug.Log("angle:"+angle);//Debug用
-    
-            // 条件をチェックしてデバッグメッセージを表示
-            // if (Mathf.Abs(angle) >= 30f && Time.deltaTime <= 0.01f)
-            //-----------------------------------------------------------------------
-            // if (Mathf.Abs(angle) >= baseAngle && (sceneTarans == 2 || sceneTarans == 5) && _isFirstReadyOfArmForFlyFlag)
-            // {
-            //     Debug.Log("fly   angle:"+Mathf.Abs(angle));
-            //     // inputGoalPosition = new Vector3(0.0f, 10.0f, -10.0f); //テスト用仮ゴール座標
-            //     // goalPosition.position = inputGoalPosition;//テスト用のゴール位置設定
-            //     // Vector3 tmpGoalPos = tmpGoalPosObj.position;//一時ゴール（赤の球）の位置を変数に代入
-            //
-            //     kakeru = FlyAngle / Mathf.Abs(angle);
-            //     DeleyTime = span * kakeru - span;
-            //     flyFlag = true;
-            //     setGoal();//ゴール位置を変更するメソッドに一時ゴール位置を与える
-            //     _isFirstReadyOfArmForFlyFlag = false;
-            // }
-            //----------------------------------------------------------------------------------
 
             // 現在の位置情報を保存
-            prevPosition1 = currentPosition1;
-            // prevPosition2 = currentPosition2;
-            // prevDiffLine = currrentDiffLine;
-        
-        
-            this.delta = 0; //deltaの初期化
-        }
-    }
-    
-    private void SetGoal()
-    {
-        //StartCoroutine(WaitForPointTwoSeconds());//何秒か待つ
-        gameManager.SetEagleTarget(tmpGoalPosObj.position);
-        //goalPosition.position = tmpGoalPosObj.position;//EagleTargetの位置を変更
-        Debug.Log("一時ゴールの位置："+tmpGoalPosObj.position);
-    }
-    
-    private IEnumerator WaitForPointTwoSeconds()
-    {
-        // deley待機
-        if (DeleyTime > 0)
-        {
-            yield return new WaitForSeconds(DeleyTime);
-            Debug.Log(DeleyTime+"秒が経過しました。");
-        }
-        else
-        {
-            Debug.Log("はやくふりましたね");
-        }
-        // 時間経過後実行したいコードをここに追加
-    }
-    
+            _prevPositionWaist = currentPosition1;
 
-    public bool GetIsFirstReadyOfArm()
+            this._delta = 0; //deltaの初期化
+        }
+        
+        _delta += Time.deltaTime;
+    }
+    
+    public bool GetIsFirstReadyOfArm()//飛ばす準備ができた
     {
         return _isFirstReadyOfArm;
     }
 
-    public bool GetFlyFlag()
+    public bool GetFlyFlag()//フライフラグの取得
     {
         return flyFlag;
     }
-    
-    public void Enqueue(float item)//キューに追加するメソッド
-    {
-        // Debug.Log("院キュー:"+item);
-        queueArray.Add(item);
 
-        // キューの最大サイズを超えた場合、古い要素を削除
-        if (queueArray.Count > maxSize)
+    public void RsetFlyFlag() //フライフラグを初期化
+    {
+        flyFlag = false;
+    }
+    
+    private void SetGoal()//鷹のターゲットの位置をセットする
+    {
+        gameManager.SetEagleTarget(tmpGoalPosObj.position);
+        Debug.Log("一時ゴールの位置："+tmpGoalPosObj.position);
+    }
+    
+    
+    private void Enqueue(float item)//キューに追加する（インキュー相当）
+    {
+        // Debug.Log("インキュー:"+item);
+        _queueArray.Add(item);
+
+        // キューの最大サイズを超えた場合、デキューを実行
+        if (_queueArray.Count > _listMaxSize)
         {
             Dequeue();
         }
     }
 
-    // 先頭の要素を取り出すメソッド（Dequeue相当）
-    public float Dequeue()
+    // 先頭の要素を取り出す（Dequeue相当）
+    private float Dequeue()
     {
         // Debug.Log("deキュー:");
-        if (queueArray.Count == 0)
+        if (_queueArray.Count == 0)
         {
             Debug.LogWarning("キューが空です。");
             return -1; // エラー値またはデフォルト値を返す
         }
 
-        var item = queueArray[0];
-        queueArray.RemoveAt(0);
+        var item = _queueArray[0];
+        _queueArray.RemoveAt(0);
         return item;
+    }
+    
+    //_isFirstReadyOfArmForFlyFlagをセットする
+    private void Set_isFirstReadyOfArmForFlyFlag()
+    {
+        if ((_sceneTarans == 2 || _sceneTarans == 5) && _isFirstReadyOfArm == true)
+        {
+            _isFirstReadyOfArmForFlyFlag = true;
+        }
+    }
+    
+    //キューの指定サイズをもとに平均をだす
+    private float GetAverage()
+    {
+        float average = 0.0f;
+        if (_queueArray.Count >= _listMaxSize)//キューに格納されている値がMaxSizeで分あれば平均を出す
+        {
+            float sum = 0.0f;//キューの中の値の合計値
+                
+            for (int i = 0; i < _listMaxSize; i++)//合計を求めるループ
+            {
+                sum += _queueArray[i];
+            }
+
+            average = sum / _listMaxSize;//合計の計算
+            // Debug.Log("Average: " + average);//Debug:平均スピードの計算
+        }
+
+        return average;
+    }
+    
+    //仮のゴールをセットする
+    private void SetPlaceholderGoal(Vector3 tmpGoalPos)
+    {
+        gameManager.SetEagleTarget(tmpGoalPos);
     }
     
 
