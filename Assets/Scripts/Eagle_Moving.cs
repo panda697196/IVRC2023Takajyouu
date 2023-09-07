@@ -76,7 +76,7 @@ public class Eagle_Moving : MonoBehaviour
         if (_isLaudingAssist)
         {
             //_eagleAnimator.applyRootMotion=false; s
-            _eagleEdit.Lauding();
+            _eagleEdit.Landing();
             _eagle.transform.position = _laudingSpot.transform.position +  new Vector3(0,0.5f,0);
             _eagle.transform.rotation = Quaternion.Euler(0, 0, 0); 
         }

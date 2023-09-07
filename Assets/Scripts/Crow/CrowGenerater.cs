@@ -16,8 +16,8 @@ public class CrowGenerater : MonoBehaviour
 
     public GameObject _crowStorage;
     public GameObject _targetStorage;
-    public int _crowMaxNumber;
-    public int _crowMinNumber;
+                                    //public int _crowMaxNumber;
+    //public int _crowMinNumber;
 
     private List<GameObject> _crowList = new List<GameObject>(1);
     public List<GameObject> CrowList => _crowList;
@@ -46,6 +46,7 @@ public class CrowGenerater : MonoBehaviour
     private Vector3 _offset;
     private float _areaMin = -0.5f;
     private float _areaMax = 0.5f;
+    private bool _popReady;
 
     void SumOfWeight()
     {
@@ -253,11 +254,12 @@ public class CrowGenerater : MonoBehaviour
         {
             RandomFlyToPopIdleCrow();
         }
+
+        _popReady = true;
     }
 
     public void CrowGenerator2()
     {
-        DestoryCrowAndTarget();
         SumOfWeight();
         HaveWeightLsit();
         int num = 8 * _crowNum2 / 10;
@@ -273,10 +275,14 @@ public class CrowGenerater : MonoBehaviour
                 RandomFlyToPopIdleCrow();
             }
         }
+
+        _popReady = true;
     }
 
     public void DestoryCrowAndTarget()
     {
+        _crowList.Clear();
+        _randomTargetList.Clear();
         foreach (Transform child in _crowStorage.transform)
         {
             Destroy(child.gameObject);

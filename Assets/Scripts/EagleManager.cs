@@ -38,6 +38,9 @@ public class EagleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        
+        // Debug.Log(IsEagleHandLauding());
+        // Debug.Log(_edit.GetEagleCurrentAnimState().ToString());
         if (Input.GetKeyDown(KeyCode.A))
         {
 
@@ -110,7 +113,8 @@ public class EagleManager : MonoBehaviour
 
     public bool IsEagleHandLauding()
     {
-        if (_edit.EagleCurrentState == Eagle_Edit.EagleState.Lauding)
+        
+        if (_edit.GetEagleCurrentAnimState().ToString() == "Landing")
         {
             return true;
         }
@@ -119,7 +123,7 @@ public class EagleManager : MonoBehaviour
 
     public bool IsEagleTakeOff()
     {
-        if (_edit.EagleCurrentState == Eagle_Edit.EagleState.Takeoff)
+        if (_edit.GetEagleCurrentAnimState().ToString() == "Takeoff")
         {
             return true;
         }

@@ -20,6 +20,11 @@ public class ScoreManager : MonoBehaviour
     private int _top3;
     private string _comment;
 
+    private void Start()
+    {
+        _comment = "わーーー";
+    }
+
     private void WriteScore()
     {
         playerScoreText.text = string.Format("　得点:{0}", _playerScore);

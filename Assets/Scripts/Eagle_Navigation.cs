@@ -111,7 +111,7 @@ public class Eagle_Navigation : MonoBehaviour
                     //鷹のアニメーターのルートモーションをオフにする これで鷹が手に乗るようになる．
                     _animator.applyRootMotion=false;
                     //鷹を手の子オブジェクトにし，手の動きを反映できるようにする．
-                    transform.parent = _handPosition.transform;
+                    transform.parent = _hand.transform;
                 }
                
                 break;
@@ -138,7 +138,7 @@ public class Eagle_Navigation : MonoBehaviour
                 FlyTo(_target.transform,_flyState.ToString());
                 break;
             }
-            case Eagle_Edit.EagleState.Lauding:
+            case Eagle_Edit.EagleState.Landing:
                 Land(_target.transform);
                 break;
  
@@ -163,7 +163,7 @@ public class Eagle_Navigation : MonoBehaviour
             case "laud":
             {
                 //ターゲットオブジェクトの着地面を補正
-                var objectTop = target.transform.position.y+target.localScale.y/2;
+                var objectTop = target.transform.position.y;
         
                 var arrangeTarget = target.position + (gameObject.transform.position - target.position).normalized * xzMargin;
                 arrangeTarget.y = objectTop + yMargin ;
@@ -186,7 +186,7 @@ public class Eagle_Navigation : MonoBehaviour
                 if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 1f)
                 {
                     gameObject.transform.LookAt(new Vector3(target.transform.position.x,arrangeTarget.y,target.transform.position.z));
-                    _edit.SetEagleState(Eagle_Edit.EagleState.Lauding);
+                    _edit.SetEagleState(Eagle_Edit.EagleState.Landing);
                 }
                 
                 break;
@@ -264,7 +264,7 @@ public class Eagle_Navigation : MonoBehaviour
                     gameObject.transform.LookAt(new Vector3(target.transform.parent.transform.position.x,
                         gameObject.transform.position.y,target.transform.parent.transform.position.z));
                     //着地モーション再生
-                    _edit.SetEagleState(Eagle_Edit.EagleState.Lauding);
+                    _edit.SetEagleState(Eagle_Edit.EagleState.Landing);
                     VariablesReset();
                 }
                 

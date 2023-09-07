@@ -82,15 +82,7 @@ public class ScoreCrow : MonoBehaviour
     {
         if (_gameManager.GetgameSceneState()==7)
         {
-            //逃げたカラスを数え，残ったカラスを記録する
-            ScaredCrowNumber();
-            //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ
-            var EagleCharacterController = _eagle.GetComponent<CharacterController>();
-            EagleCharacterController.enabled = false;
-            //残ったカラスをスコアボード近くに飛ばす
-            ScoreCrowPos();
-            //鷹がボードを持ってくる
-            EagleAndBoard();
+            Invoke(nameof(ReadyToShow),3f);
         }
 
         if (_scoreBoard.activeInHierarchy)
@@ -108,6 +100,19 @@ public class ScoreCrow : MonoBehaviour
                 Invoke(nameof(WaitRotation), 7f);
             }
         }
+    }
+
+    public void ReadyToShow()
+    {
+        //逃げたカラスを数え，残ったカラスを記録する
+        ScaredCrowNumber();
+        //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ
+        var EagleCharacterController = _eagle.GetComponent<CharacterController>();
+        EagleCharacterController.enabled = false;
+        //残ったカラスをスコアボード近くに飛ばす
+        ScoreCrowPos();
+        //鷹がボードを持ってくる
+        EagleAndBoard();
     }
 
     public void WaitFly()
@@ -128,6 +133,7 @@ public class ScoreCrow : MonoBehaviour
         int i = 0;
         _scaredCrow = 0;
         List<GameObject> _crowList = Crowgene.CrowList;
+        
         foreach (GameObject crow in _crowList)
         {
             if (crow.transform.GetChild(2).GetComponent<lb_CrowTrigger>().IsEagleScared)
