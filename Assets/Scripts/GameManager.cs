@@ -20,22 +20,21 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] private TextMeshProUGUI titleLabel; //タイトル画面
     [SerializeField] private TextMeshProUGUI instructionLabel; //instructionUI
-    [SerializeField] private TextMeshPro scoreText; // UI 得点を表示するためのテキスト要素
-    [SerializeField] private TextMeshProUGUI thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
     
     // [SerializeField] private Eagle_Edit eagleEdit;//鷹の状態用スクリプト
     // [SerializeField] private Eagle_Navigation eagleNavigation;//鷹の移動を管理するスクリプト
     [SerializeField] private EagleManager eagleManager;//鷹の移動を管理するスクリプト
     [SerializeField] private ArmAngle_v2 flyFlagObj;//飛び立ちフラグを管理するスクリプト
     [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
+    [SerializeField] private ScoreReceiver _scoreReceiver;
     [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject eagleTarget;//鷹の飛行すべき目標位置
     
     [SerializeField] private bool hardwareFlag; //ハードウェアと鷹との連携に使用する
     [SerializeField] private bool eagleWaitFlag; //ハードウェアと鷹との連携に使用する
     [SerializeField] private int gameScore; //スコアを入れる変数
-    [SerializeField] private int crowCountFromCase2; // ケース2で追い払ったカラスの数
-    [SerializeField] private int crowCountFromCase6; // ケース6で追い払ったカラスの数
+    [SerializeField] private int _crowCount1stTry; // ケース2で追い払ったカラスの数
+    [SerializeField] private int _crowCount2ndTry; // ケース6で追い払ったカラスの数
     [SerializeField] private bool playerReady; //プレイヤーが準備完了したかどうかのフラグ
     [SerializeField] private bool eagleGetOnArm;//鷹がうでにとまった状態であるかどうかのフラグ
     [SerializeField] private bool huntFinFlag; //飛び時ハードウェアと鷹の準備が完了したかどうかのフラグ
@@ -103,8 +102,8 @@ public class GameManager : MonoBehaviour
                     titleLabel.gameObject.SetActive(true);
                     instructionLabel.gameObject.SetActive(true);
 
-                    titleLabel.text = "Takasyo"; //タイトル
-                    instructionLabel.text = "Please press enter key"; // プロンプトテキストの設定
+                    //titleLabel.text = "Takasyo"; //タイトル
+                    //instructionLabel.text = "Please press enter key"; // プロンプトテキストの設定
 
                     callOnceFlag = true;
                 }
@@ -207,7 +206,8 @@ public class GameManager : MonoBehaviour
                     //    // eagleNavigation.SetSpeed(flightSpeed);
                     // }
                     //カラス？？
-                    // crowCountFromCase2 = 38;//殺したカラス
+                    //TODO:ここでカラスの数を受け取る
+                    _crowCount1stTry = 38;//殺したカラス
                     
                     //TODO:鷹が折り返し，腕を固定し出したタイミングで以下を実行
                     _hardwareManager.StandbyComeHawk();
@@ -371,6 +371,8 @@ public class GameManager : MonoBehaviour
                     //
                     //     // 必要に応じて飛行速度を設定する
                     //    // eagleNavigation.SetSpeed(yourSpeedValue);
+                    // TODO:カラスの数の取得
+                    _crowCount2ndTry = 22;
                     // }
                 }
 
@@ -398,12 +400,9 @@ public class GameManager : MonoBehaviour
 
                     // ケース6で計算した初速とカラスの数を用いてスコアを計算する
                     // int finalScore = initialSpeedFromCase6 + crowCountFromCase6;（現状不要）
+                    //TODO:スコアの算出と伝達
+                    _scoreReceiver.GetScore(_crowCount1stTry + _crowCount2ndTry);
 
-                    // UI Text要素にスコアを表示する（べつスクリプトで行う可能性あり）
-                    if (scoreText != null)
-                    {
-                        // scoreText.text = "スコア: " + finalScore.ToString();
-                    }
                 }
 
                 if (Input.GetKeyDown(KeyCode.Return))//シーンの移行処理(EnterKeyを押す)
@@ -468,16 +467,6 @@ public class GameManager : MonoBehaviour
     public int GetgameScore()//ゲームのスコアを取得
     {
         return gameScore;
-    }
-
-    public int GetcrowCountFromCase2()//一回目のカラスの撃退数を取得
-    {
-        return crowCountFromCase2;
-    }
-
-    public int GetcrowCountFromCase6()//二回目のカラスの撃退数を取得
-    {
-        return crowCountFromCase6;
     }
 
     public Vector3 GeteagleTargetPos()//カラス目標とするターゲットの座標を取得

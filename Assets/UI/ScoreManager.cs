@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class GameControlScript : MonoBehaviour
+public class ScoreManager : MonoBehaviour
 {
     // UI Text�w��p\
     public TextMeshPro resultText;
@@ -28,4 +28,16 @@ public class GameControlScript : MonoBehaviour
         top3Text.text = string.Format("1位 {0}\n2位 {1}\n3位 {2}", top1, top2, top3);
         commentText.text = string.Format(comment);
     }
+    
+    private void WriteScore()
+    {
+        
+    }
+
+    public void GetScoreData()
+    {
+        //TODO:スコア受け取り
+        WriteScore();
+    }
+
 }
