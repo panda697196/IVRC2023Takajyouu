@@ -28,9 +28,6 @@ public class ArmAngle_v2 : MonoBehaviour
     private float _delta = 0; //フレームのトータル時間(span秒ごとに初期化)
 
     public bool flyFlag = false;　//飛び立ちフラグ
-    
-    //改良版製作用変数
-    [SerializeField] private float DeleyTime = 1.0f; //フライフラグをだす遅延時間
 
     //改良版2
     [SerializeField] private float TrackerSpeed;
