@@ -37,6 +37,9 @@ public class HardwareManager : MonoBehaviour
     [Header("ファン稼働時間[s]")]
     [SerializeField] private float _fanTimeOfCome = 1.5f;
     [SerializeField] private float _fanTimeOfGo = 1.7f;
+    [Header("待ち時間[s]")]
+    [SerializeField] private float _timeToWaitDisappear = 0.5f; //鷹の着地アニメーションを待つ時間
+    [SerializeField] private float _timeToStretchRope = 0.2f; // 糸を張る猶予時間
     [Header("デバック等")]
     public bool _isDebug = true;
     [SerializeField] private float _weightSec = 0;//おもりの位置　上が0で下げるほど＋
@@ -196,21 +199,26 @@ public class HardwareManager : MonoBehaviour
         StartCoroutine(Stimulate());
         StartCoroutine(AppearWind());
         StartCoroutine(PressByHawk());
-        //TODO:_isEagleGetOnArm = true;
     }
-    public void ComeHawkToSecond(float second)
+    public IEnumerator ComeHawkToSecond(float second)
     {
-
-        //TODO:_isEagleをtrueにする
+        yield return new WaitForSeconds(second);
+        ComeHawk();
     }
 
     public void StandbyDisappear()
     {
         StartCoroutine(StandbyDisappearShock());
     }
+
     public void Disappear() // 鷹が飛び立つときの関数
     {
-        //TODO:早すぎるのでタイミング調整
+        StartCoroutine(WaitDisappear());
+    }
+
+    public IEnumerator WaitDisappear() // 鷹が飛び立つときの関数
+    {
+        yield return new WaitForSeconds(_timeToWaitDisappear);
         StartCoroutine(DisappearShock());
         StartCoroutine(DisappearWind());
         StartCoroutine(UnpressByHawk());
@@ -224,7 +232,7 @@ public class HardwareManager : MonoBehaviour
         _tightenSpeed = _ropeSpeedFast;
 
         yield return new WaitUntil(() => _pullInspector.GetPullStatus() == true); // 紐が張ったことを確認できるまで待機
-        yield return new WaitForSeconds(0.2f); // 紐を張るための猶予
+        yield return new WaitForSeconds(_timeToStretchRope); // 紐を張るための猶予
         _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
         _isRopeTight = false;
         //_isStandbyFinished = true;
@@ -267,6 +275,7 @@ public class HardwareManager : MonoBehaviour
         _isRopeLoose = false;
         //_isStandbyFinished = false;
         _gameManager.SetHardwareFlag(false);
+        _gameManager._isEagleGetOnArm = true;
     }
 
     public IEnumerator StandbyDisappearShock()
