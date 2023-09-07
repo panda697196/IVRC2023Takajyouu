@@ -7,14 +7,12 @@ public class ArmAngle_v2 : MonoBehaviour
 {
     public GameManager gameManager;
 
-    public FlyArmReadyDetection _flyArmReadyDetection;
     [SerializeField] private ArmCollisionDetection _armCollisionDetection; 
     
     public Transform trackerWaist; // トラッカー1のTransformコンポーネント
 
     public float span = 0.01f;
 
-    public Transform goalPosition;
     public Transform tmpGoalPosObj;
 
     private Vector3 _prevPositionWaist;
@@ -23,9 +21,11 @@ public class ArmAngle_v2 : MonoBehaviour
     private bool _isFirstReadyOfArm;
     [SerializeField] private bool _isFirstReadyOfArmForFlyFlag;
 
-    private int _sceneTarans;
+    private int _scene;//シーンの遷移
 
-    private float _delta = 0;
+    private bool _isMonitoringArm; //腕を監視するかどうか
+
+    private float _delta = 0; //フレームのトータル時間(span秒ごとに初期化)
 
     public bool flyFlag = false;　//飛び立ちフラグ
     
@@ -38,22 +38,29 @@ public class ArmAngle_v2 : MonoBehaviour
     [SerializeField] private int _listMaxSize = 5;//キューの最大サイズ
     [SerializeField] private float BaseSpeed = 0.8f;//基準となるスピード
     [SerializeField] private float _averageSpeed;//トラッカーの平均変化量
+    [SerializeField] private Collider _hmdSideCollider;
+    
+    [Header("仮のEagleTarget")]
+    [SerializeField] private Vector3 _placeholderEagleTarget =new Vector3(0.0f,0.0f,0.0f); //仮のEagleTargetの位置座標
 
 
     private void Start()
     {
-        _sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState(); //scene遷移の初期化
+        _scene = gameManager.GetComponent<GameManager>().GetgameSceneState(); //scene遷移の初期化
         _prevPositionWaist = trackerWaist.position;//trackerの過去の位置初期化
         _isFirstReadyOfArmForFlyFlag = false;//_isFirstReadyOfArmForFlyFlag
     }
 
     private void Update()
     {
-        _isFirstReadyOfArm = _flyArmReadyDetection.GetIsFirstReadyOfArm();//コライダーと腕との接触位置判定をする
         
-        _sceneTarans = gameManager.GetComponent<GameManager>().GetgameSceneState();//シーンの遷移を取得する
         
-        this.Set_isFirstReadyOfArmForFlyFlag(); //flyflagように腕の接触を保存する
+        _isFirstReadyOfArm = _armCollisionDetection.isArmCllisionDetection(trackerWaist,_hmdSideCollider);//コライダーと腕との接触位置判定をする
+        // Debug.Log("HMDSideColliderDetection:"+_isFirstReadyOfArm);//debug:HMDSideColliderの腕検知
+        
+        _scene = gameManager.GetComponent<GameManager>().GetgameSceneState();//シーンの遷移を取得する
+        
+        this.Set_isFirstReadyOfArmForFlyFlag(); //flyflag用に腕の接触を保存する
 
         // Debug.Log("Pre;"+prevPosition1+"now"+tracker1.position); //Debug用
         // Debug.Log(_sceneTarans); //Debug用シーン遷移の確認
@@ -75,11 +82,11 @@ public class ArmAngle_v2 : MonoBehaviour
             Debug.Log("平均スピード："+_averageSpeed);//Debug:平均スピード
 
             //条件が揃ったらフライフラグを立て,ゴールをセットする
-            if (_averageSpeed >= BaseSpeed && (_sceneTarans == 2 || _sceneTarans == 5) && _isFirstReadyOfArmForFlyFlag == true)
+            if (_averageSpeed >= BaseSpeed && (_scene == 2 || _scene == 5) && _isFirstReadyOfArmForFlyFlag == true)
             {
                 flyFlag = true;//フライフラグを立てる
-                Invoke(nameof(SetGoal), DeleyTime);//deley後にゴールをセットする
-                _isFirstReadyOfArmForFlyFlag = false;//腕位置検知のフラグを戻す
+                // Invoke(nameof(SetGoal), DeleyTime);//deley後にゴールをセットする
+                _isFirstReadyOfArmForFlyFlag = false;//FlyFlag用の腕位置検知のフラグを初期化
             }
 
             // 現在の位置情報を保存
@@ -106,13 +113,17 @@ public class ArmAngle_v2 : MonoBehaviour
         flyFlag = false;
     }
     
-    private void SetGoal()//鷹のターゲットの位置をセットする
+    // private void GetEagleTargetPos()//鷹のターゲットの位置をセットする
+    // {
+    //     gameManager.SetEagleTarget(tmpGoalPosObj.position);
+    //     
+    //     Debug.Log("一時ゴールの位置："+tmpGoalPosObj.position);
+    // }
+    public Vector3 GetEagleTargetFromSwing()//鷹のターゲットの位置を取得する(GameManagerがEagleTargetの位置を動かす)
     {
-        gameManager.SetEagleTarget(tmpGoalPosObj.position);
-        Debug.Log("一時ゴールの位置："+tmpGoalPosObj.position);
+        return tmpGoalPosObj.position;
     }
-    
-    
+
     private void Enqueue(float item)//キューに追加する（インキュー相当）
     {
         // Debug.Log("インキュー:"+item);
@@ -143,7 +154,8 @@ public class ArmAngle_v2 : MonoBehaviour
     //_isFirstReadyOfArmForFlyFlagをセットする
     private void Set_isFirstReadyOfArmForFlyFlag()
     {
-        if ((_sceneTarans == 2 || _sceneTarans == 5) && _isFirstReadyOfArm == true)
+        // if ((_sceneTarans == 2 || _sceneTarans == 5) && _isFirstReadyOfArm == true)
+        if (_isFirstReadyOfArm == true)
         {
             _isFirstReadyOfArmForFlyFlag = true;
         }
@@ -166,14 +178,16 @@ public class ArmAngle_v2 : MonoBehaviour
             // Debug.Log("Average: " + average);//Debug:平均スピードの計算
         }
 
-        return average;
+        return average;//平均を返す
     }
     
     //仮のゴールをセットする
-    private void SetPlaceholderGoal(Vector3 tmpGoalPos)
+    private Vector3 GetPlaceholderEagleTargetPos()//仮のEagleTargetの座標を取得(GameManagerがEagleTargetの位置を動かす)
     {
-        gameManager.SetEagleTarget(tmpGoalPos);
+        return _placeholderEagleTarget;
     }
+
+
     
 
 }
