@@ -28,8 +28,8 @@ public class ScoreCrow : MonoBehaviour
     [SerializeField] private GameObject _eagleIdle; //鷹の最終停止位置
     [SerializeField] private GameObject _crowBackCenter;
     private GameObject CrowManager;
-    private CrowGenerater Crowgene;
-    private GameManager _gameManager;
+    [SerializeField] private CrowGenerater Crowgene;
+    [SerializeField] private GameManager _gameManager;
 
 
 

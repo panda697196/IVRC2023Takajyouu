@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ArmAngle_v2 _armAngle_v2;//飛び立ちフラグを管理するスクリプト
     [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
     [SerializeField] private ScoreReceiver _scoreReceiver;
-    [SerializeField] private Transform rawfingerPos;//左手の親指の位置
+    // [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject _eagleTarget;//鷹の飛行すべき目標位置
     [SerializeField] private CrowGenerater _crowGenerater;
     
@@ -77,16 +77,16 @@ public class GameManager : MonoBehaviour
         _isArounding = false;
 
 
-        flyFlag = _armAngle_v2.GetFlyFlag();//flyFlagの取得かつ初期化
+        flyFlag = false;//flyFlagの初期化
 
-        fingerPos = rawfingerPos.position;//左手の座標の取得かつ初期化
+        // fingerPos = rawfingerPos.position;//左手の座標の取得かつ初期化
 
         // eagleTargetPos = eagleTarget.position;//鷹のターゲットの位置を初期化
     }
 
     void Update()
     {
-        fingerPos = rawfingerPos.position;//左手の座標の取得
+        // fingerPos = rawfingerPos.position;//左手の座標の取得
         
         
         switch (gameSceneState)
@@ -156,6 +156,8 @@ public class GameManager : MonoBehaviour
                     //TODO:カラス沸かせる1（少なめ，集中，固定）
                     _crowGenerater.CrowGenerator1();//カラスを沸かす、一回目
 
+                    SetEagleTarget(_armAngle_v2.GetPlaceholderEagleTargetPos());//仮のターゲットをセット
+
                 }
 
                 // ReadyToPop()により次への動作を取得，_hardwareManager.StandbyDisappear()も処理した．
@@ -164,13 +166,13 @@ public class GameManager : MonoBehaviour
                 // if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出
                 if (Input.GetKeyDown(KeyCode.Return) || (flyFlag == true  && _isReadyToPopCrow)) // シーン遷移処理（腕の振りを検出）
                 {
+                    //TODO:TakeOffアニメーション もしくは 適当なターゲットに飛ぶ（ソフトウェア）
                     //飛び立つ瞬間（飛んでない）
                     _hardwareManager.Disappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい　←よさそう
-                    //TODO:TakeOffアニメーション もしくは 適当なターゲットに飛ぶ（ソフトウェア）
-                    //_eagleTarget = （仮のターゲット指定）
+                    
                     // eagleManager.EagleTarget2Around(_eagleTarget);
-
-                    _armAngle_v2.flyFlag = false; //flyFlag初期化
+                    SetEagleTarget(_armAngle_v2.GetEagleTargetFromSwing());//真のターゲットをセット
+                    _armAngle_v2.RsetFlyFlag(); //flyFlag初期化
                     flyFlag = false; //GameManagerのフライフラフ初期化
                     callOnceFlag = false; // 1回フラグの初期化
                     gameSceneState = 3; // 飛び立ちシーン（case3）へ
@@ -283,6 +285,9 @@ public class GameManager : MonoBehaviour
                     //TODO：スカイボックスを変更し，カラスを飛び立たせる
                     //TODO:カラス沸かせる２（多め，バラバラ）
                     _crowGenerater.CrowGenerator2();//カラスを沸かす、二回目
+                    //TODO:TakeOffアニメーション もしくは 適当なターゲットに飛ぶ（ソフトウェア）
+                    //_eagleTarget = （仮のターゲット指定）
+                    SetEagleTarget(_armAngle_v2.GetPlaceholderEagleTargetPos());
                 }
 
                 // ReadyToPop()により次への動作を取得，_hardwareManager.StandbyDisappear()も処理した．
@@ -293,11 +298,9 @@ public class GameManager : MonoBehaviour
                 {
                     //飛び立つ瞬間（飛んでない）
                     _hardwareManager.Disappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい　←よさそう
-                    //TODO:TakeOffアニメーション もしくは 適当なターゲットに飛ぶ（ソフトウェア）
-                    //_eagleTarget = （仮のターゲット指定）
+                    SetEagleTarget(_armAngle_v2.GetEagleTargetFromSwing());//真のターゲットに設定
                     // eagleManager.EagleTarget2Around(_eagleTarget);
-
-                    _armAngle_v2.flyFlag = false; //flyFlag初期化
+                    _armAngle_v2.RsetFlyFlag(); //flyFlag初期化
                     flyFlag = false; //GameManagerのフライフラフ初期化
                     callOnceFlag = false; // 1回フラグの初期化
                     gameSceneState = 6; // 飛び立ちシーン（case3）へ

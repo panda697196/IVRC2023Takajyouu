@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class ArmAngle_v2 : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class ArmAngle_v2 : MonoBehaviour
 
     public float span = 0.01f;
 
-    public Transform tmpGoalPosObj;
+    [SerializeField] Transform _pointerPosition;
 
     private Vector3 _prevPositionWaist;
     private float angle;
@@ -76,7 +77,7 @@ public class ArmAngle_v2 : MonoBehaviour
             // Debug.Log("きゅーのかず："+queueArray.Count);//debug:現在のキューの数
 
             _averageSpeed = GetAverage();
-            Debug.Log("平均スピード："+_averageSpeed);//Debug:平均スピード
+            // Debug.Log("平均スピード："+_averageSpeed);//Debug:平均スピード
 
             //条件が揃ったらフライフラグを立て,ゴールをセットする
             if (_averageSpeed >= BaseSpeed && (_scene == 2 || _scene == 5) && _isFirstReadyOfArmForFlyFlag == true)
@@ -118,7 +119,7 @@ public class ArmAngle_v2 : MonoBehaviour
     // }
     public Vector3 GetEagleTargetFromSwing()//鷹のターゲットの位置を取得する(GameManagerがEagleTargetの位置を動かす)
     {
-        return tmpGoalPosObj.position;
+        return _pointerPosition.position;
     }
 
     private void Enqueue(float item)//キューに追加する（インキュー相当）
@@ -151,8 +152,7 @@ public class ArmAngle_v2 : MonoBehaviour
     //_isFirstReadyOfArmForFlyFlagをセットする
     private void Set_isFirstReadyOfArmForFlyFlag()
     {
-        // if ((_sceneTarans == 2 || _sceneTarans == 5) && _isFirstReadyOfArm == true)
-        if (_isFirstReadyOfArm == true)
+        if ((_scene == 2 || _scene == 5) && _isFirstReadyOfArm == true)
         {
             _isFirstReadyOfArmForFlyFlag = true;
         }
@@ -179,7 +179,7 @@ public class ArmAngle_v2 : MonoBehaviour
     }
     
     //仮のゴールをセットする
-    private Vector3 GetPlaceholderEagleTargetPos()//仮のEagleTargetの座標を取得(GameManagerがEagleTargetの位置を動かす)
+    public Vector3 GetPlaceholderEagleTargetPos()//仮のEagleTargetの座標を取得(GameManagerがEagleTargetの位置を動かす)
     {
         return _placeholderEagleTarget;
     }
