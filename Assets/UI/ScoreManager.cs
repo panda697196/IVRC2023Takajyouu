@@ -13,30 +13,28 @@ public class ScoreManager : MonoBehaviour
     public TextMeshPro commentText;
 
     // �\������ϐ�
-    public int playerScore;
-    public int playerRank;
-    public int top1;
-    public int top2;
-    public int top3;
-    public string comment;
+    private int _playerScore;
+    private string _playerRank;
+    private int _top1;
+    private int _top2;
+    private int _top3;
+    private string _comment;
 
-    // Update is called once per frame
-    void Update()
-    {
-        playerScoreText.text = string.Format("得点:{0}", playerScore);
-        playerRankText.text = string.Format("順位:{0}", playerRank);
-        top3Text.text = string.Format("1位 {0}\n2位 {1}\n3位 {2}", top1, top2, top3);
-        commentText.text = string.Format(comment);
-    }
-    
     private void WriteScore()
     {
-        
+        playerScoreText.text = string.Format("　得点:{0}", _playerScore);
+        playerRankText.text = string.Format("ランク:{0}", _playerRank);
+        top3Text.text = string.Format("1st {0}\n2nd {1}\n3rd {2}", _top1, _top2, _top3);
+        commentText.text = string.Format(_comment);
     }
 
-    public void GetScoreData()
+    public void GetScoreData(int score, string rank, int rank1st, int rank2nd, int rank3rd)
     {
-        //TODO:スコア受け取り
+        _playerScore = score;
+        _playerRank = rank;
+        _top1 = rank1st;
+        _top2 = rank2nd;
+        _top3 = rank3rd;
         WriteScore();
     }
 
