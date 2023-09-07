@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -22,7 +23,7 @@ public class GameManager : MonoBehaviour
     
     // [SerializeField] private Eagle_Edit eagleEdit;//鷹の状態用スクリプト
     // [SerializeField] private Eagle_Navigation eagleNavigation;//鷹の移動を管理するスクリプト
-    [SerializeField] private EagleManager eagleManager;//鷹の移動を管理するスクリプト
+    [SerializeField] private EagleManager _eagleManager;//鷹の移動を管理するスクリプト
     [SerializeField] private ArmAngle_v2 _armAngle_v2;//飛び立ちフラグを管理するスクリプト
     [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
     [SerializeField] private ScoreReceiver _scoreReceiver;
@@ -116,6 +117,7 @@ public class GameManager : MonoBehaviour
                 {
                     _hardwareManager.StandbyComeHawk();//鷹がくる準備　この後に3secくらいは欲しい
                     //TODO:鷹が腕に留まるまで
+                    _eagleManager.StartGetOnHand();
                     callOnceFlag = true;
                 }
 
@@ -200,10 +202,9 @@ public class GameManager : MonoBehaviour
                     //カラス？？
                 }
                 // -----------------------------------飛び立ちaシーンにおける処理(毎フレーム)-----------------------------------------------------
-                
-                //ハードウェアからのフラグを監視 - すでにSetHardwareFlagで実装済　消してもいい
-               
 
+
+                _isArounding = _eagleManager.IsEagleAround();
                 //アニメーションからのStandbyGoHome()によりUI表示
 
                 if (_isArounding)//TODO:旋回中　腕を固定したかの判定
@@ -219,7 +220,7 @@ public class GameManager : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Return) || hardwareFlag == true)//シーン遷移（ハードの準備と鷹の準備ができたら）
                 {
-                    eagleManager.EagleAround2GetOn(hardwareFlag);//関数にしてもいいよ
+                    _eagleManager.EagleAround2GetOn(hardwareFlag);//関数にしてもいいよ
 
                     callOnceFlag = false;
                     huntFinFlag = false;//初期化

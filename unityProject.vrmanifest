@@ -5,7 +5,7 @@
       "app_key": "application.generated.unity.ivrc2023takajyouu.exe",
       "launch_type": "url",
       "url": "steam://launch/",
-      "action_manifest_path": "C:\\Project\\IVRC2023Takajyouu\\Assets\\StreamingAssets\\SteamVR\\actions.json",
+      "action_manifest_path": "C:\\Users\\ABEmanato\\UnityProject\\IVRCPJ\\Assets\\StreamingAssets\\SteamVR\\actions.json",
       "strings": {
         "en_us": {
           "name": "IVRC2023Takajyouu [Testing]"
