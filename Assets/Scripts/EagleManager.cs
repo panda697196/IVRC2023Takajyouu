@@ -108,7 +108,7 @@ public class EagleManager : MonoBehaviour
         _navi.SetFlyState(Eagle_Navigation.FlyState.getOnArm);
     }
 
-    public bool IsEagleHandLanding()
+    public bool IsEagleHandLauding()
     {
         if (_edit.EagleCurrentState == Eagle_Edit.EagleState.Lauding)
         {

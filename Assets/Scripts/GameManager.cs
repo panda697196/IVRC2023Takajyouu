@@ -29,6 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ScoreReceiver _scoreReceiver;
     [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject _eagleTarget;//鷹の飛行すべき目標位置
+    [SerializeField] private CrowGenerater _crowGenerater;
     
     [SerializeField] private bool hardwareFlag; //ハードウェアと鷹との連携に使用する
     [SerializeField] private bool eagleWaitFlag; //ハードウェアと鷹との連携に使用する
@@ -38,9 +39,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool huntFinFlag; //飛び時ハードウェアと鷹の準備が完了したかどうかのフラグ
     [SerializeField] private bool eargleHasScorebord;//スコアボードを鷹が持ったかどうか
     [SerializeField] private bool putScorebord;//スコアボードを地面に置いたことを判定する
-    
+    [SerializeField] private bool _isComingEagle = false; //ComeHawkを一回するためのフラグ
 
-    
+
+
     // private int initialSpeed; // 初速（現状不要）
     // private int initialSpeedFromCase2; // ケース2で得られた初速（現状不要）
     // private int initialSpeedFromCase6; // ケース6で得られた初速（現状不要）
@@ -121,12 +123,18 @@ public class GameManager : MonoBehaviour
                     callOnceFlag = true;
                 }
 
-                //SetComeHawkSecond にてHardware（ComeHawk（））を動かす
+                if (_eagleManager.IsEagleHandLauding() && !_isComingEagle)
+                {
+                    _isComingEagle = true;
+                    //SetComeHawkSecond にてHardware（ComeHawk（））を動かす
+                }
+
 
                 if (Input.GetKeyDown(KeyCode.Return) || _isEagleGetOnArm == true) //シーン遷移処理（鷹がうでに止まる）
                 {
                     callOnceFlag = false; //一回フラグの初期化
                     _isEagleGetOnArm = false;
+                    _isComingEagle = false;
 
                     gameSceneState = 2;//待機シーン（case2）へ
                 }
@@ -146,6 +154,7 @@ public class GameManager : MonoBehaviour
                     callOnceFlag = true;
 
                     //TODO:カラス沸かせる1（少なめ，集中，固定）
+                    _crowGenerater.CrowGenerator1();//カラスを沸かす、一回目
 
                 }
 
@@ -232,7 +241,11 @@ public class GameManager : MonoBehaviour
 
             case 4:// 一回目の帰還シーン（帰還a）(case4)
                 // -----------------------------------一回目の帰還における処理(毎フレーム)-----------------------------------------------------
-                
+                if (_eagleManager.IsEagleHandLauding() && !_isComingEagle)
+                {
+                    _isComingEagle = true;
+                    //SetComeHawkSecond にてHardware（ComeHawk（））を動かす
+                }
                 
                 //-----------------------------------------------------------------------------------------------------
                 if (callOnceFlag == false)//１回だけの処理
@@ -242,11 +255,10 @@ public class GameManager : MonoBehaviour
 
                 }
 
-                //SetComeHawkSecond にてHardware（ComeHawk（））を動かす
-
                 if (Input.GetKeyDown(KeyCode.Return) || _isEagleGetOnArm == true)//シーン遷移(鷹がうでに止まる)
                 {
                     callOnceFlag = false;
+                    _isComingEagle = false;
                     _isEagleGetOnArm = false;
                     gameSceneState = 5;//二回目の待機シーンへ
                 }
@@ -266,9 +278,11 @@ public class GameManager : MonoBehaviour
                     callOnceFlag = true;
 
                     _crowCount1stTry = 38;//TODO:１回目のカラス取得
-
+                    
+                    _crowGenerater.DestoryCrowAndTarget();//カラスとターゲットを消す
                     //TODO：スカイボックスを変更し，カラスを飛び立たせる
                     //TODO:カラス沸かせる２（多め，バラバラ）
+                    _crowGenerater.CrowGenerator2();//カラスを沸かす、二回目
                 }
 
                 // ReadyToPop()により次への動作を取得，_hardwareManager.StandbyDisappear()も処理した．
