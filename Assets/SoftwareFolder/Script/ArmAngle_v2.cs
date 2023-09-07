@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class ArmAngle_v2 : MonoBehaviour
 {
-    public GameObject gameManager;
+    public GameManager gameManager;
     // [SerializeField] private GameObject CanFlyArea;
 
     public FlyArmReadyDetection _flyArmReadyDetection;
@@ -135,26 +135,9 @@ public class ArmAngle_v2 : MonoBehaviour
                 // IsInFlyArea)
             if (AvarageSpeed >= BaseSpeed && (sceneTarans == 2 || sceneTarans == 5) && _isFirstReadyOfArmForFlyFlag == true)
             {
-                Debug.Log("FLY");
-                if (AvarageSpeed >= 1.8f)
-                {
-                    DeleyTimeForMan = 0.0f;
-                }
-                else if (AvarageSpeed >= 1.5f)
-                {
-                    DeleyTimeForMan = 0.0f;
-                }
-                else if (AvarageSpeed >= 1.2f)
-                {
-                    DeleyTimeForMan = 0.0f;
-                }else if (AvarageSpeed >= 1.0f)
-                {
-                    DeleyTimeForMan = 0.0f;
-                }
                 // StartCoroutine(WaitTime(DeleyTimeForMan));
                 flyFlag = true;
-                StartCoroutine(WaitTime(1000.0f));
-                setGoal();//ゴール位置を変更するメソッドに一時ゴール位置を与える
+                Invoke(nameof(SetGoal), 1f);
                 _isFirstReadyOfArmForFlyFlag = false;
                 // CanFlyArea.SetActive(false);
                 // CanFlyArea.transform.SetParent(NewParentsObj);
@@ -207,10 +190,11 @@ public class ArmAngle_v2 : MonoBehaviour
         }
     }
     
-    private void setGoal()
+    private void SetGoal()
     {
         //StartCoroutine(WaitForPointTwoSeconds());//何秒か待つ
-        goalPosition.position = tmpGoalPosObj.position;//EagleTargetの位置を変更
+        gameManager.SetEagleTarget(tmpGoalPosObj.position);
+        //goalPosition.position = tmpGoalPosObj.position;//EagleTargetの位置を変更
         Debug.Log("一時ゴールの位置："+tmpGoalPosObj.position);
     }
     
@@ -229,20 +213,6 @@ public class ArmAngle_v2 : MonoBehaviour
         // 時間経過後実行したいコードをここに追加
     }
     
-    private IEnumerator WaitTime(float time)
-    {
-        // deley待機
-        if (time > 0)
-        {
-            yield return new WaitForSeconds(time);
-            Debug.Log(time+"秒が経過しました。");
-        }
-        else
-        {
-            Debug.Log("はやくふりましたね");
-        }
-        // 時間経過後実行したいコードをここに追加
-    }
 
     public bool GetIsFirstReadyOfArm()
     {

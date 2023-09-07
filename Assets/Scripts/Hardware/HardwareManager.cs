@@ -196,6 +196,12 @@ public class HardwareManager : MonoBehaviour
         StartCoroutine(Stimulate());
         StartCoroutine(AppearWind());
         StartCoroutine(PressByHawk());
+        //TODO:_isEagleGetOnArm = true;
+    }
+    public void ComeHawkToSecond(float second)
+    {
+
+        //TODO:_isEagleをtrueにする
     }
 
     public void StandbyDisappear()
@@ -204,6 +210,7 @@ public class HardwareManager : MonoBehaviour
     }
     public void Disappear() // 鷹が飛び立つときの関数
     {
+        //TODO:早すぎるのでタイミング調整
         StartCoroutine(DisappearShock());
         StartCoroutine(DisappearWind());
         StartCoroutine(UnpressByHawk());
