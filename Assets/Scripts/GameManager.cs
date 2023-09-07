@@ -416,6 +416,8 @@ public class GameManager : MonoBehaviour
         
     }
     
+    
+    
     public int GetgameSceneState()//ゲームシーン遷移を取得
     {
         return gameSceneState;

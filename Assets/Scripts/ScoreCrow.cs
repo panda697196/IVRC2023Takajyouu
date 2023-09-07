@@ -28,7 +28,8 @@ public class ScoreCrow : MonoBehaviour
     [SerializeField] private GameObject _eagleIdle; //鷹の最終停止位置
     [SerializeField] private GameObject _crowBackCenter;
     private GameObject CrowManager;
-    CrowGenerater Crowgene;
+    private CrowGenerater Crowgene;
+    private GameManager _gameManager;
 
 
 
@@ -79,7 +80,7 @@ public class ScoreCrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
+        if (_gameManager.GetgameSceneState()==7)
         {
             //逃げたカラスを数え，残ったカラスを記録する
             ScaredCrowNumber();
