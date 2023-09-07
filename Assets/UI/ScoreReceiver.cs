@@ -23,7 +23,7 @@ public class ScoreReceiver : MonoBehaviour
     private int[] _rankingScore = {0, 0, 0};
     
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         //ランキングデータの取得
         _rankingScore[0] = PlayerPrefs.GetInt("1stScore", 3);
@@ -51,7 +51,7 @@ public class ScoreReceiver : MonoBehaviour
         _score = score;
         ReloadRanking(score);
         string rank = DecideRank(score);
-        _scoreManager.GetScoreData();//スコア送信
+        _scoreManager.GetScoreData(score, rank, _rankingScore[0], _rankingScore[1], _rankingScore[2]);//スコア送信
     }
 
     public void ReloadRanking(int score) //ランキングの更新
@@ -79,5 +79,10 @@ public class ScoreReceiver : MonoBehaviour
         PlayerPrefs.SetInt("2ndScore", _rankingScore[1]);
         PlayerPrefs.SetInt("3rdScore", _rankingScore[2]);
         PlayerPrefs.Save();
+    }
+
+    public int GetRankingScore(int rank)
+    {
+        return _rankingScore[rank - 1];
     }
 }
