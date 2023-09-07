@@ -71,7 +71,7 @@ public class EagleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            EagleAround2GetOn(_isHardOK);
+            StartGetOnHand();
         }
 
     }
@@ -87,7 +87,7 @@ public class EagleManager : MonoBehaviour
     {
         if (hardok)
         {
-            _navi._isHardGetOnStanby=true;
+            _navi.SetIsHardGetOnStandby(true);
         }
     }
 
@@ -99,5 +99,12 @@ public class EagleManager : MonoBehaviour
     public bool IsEagleAround()
     {
         return _navi.IsRotating();
+    }
+
+    public void StartGetOnHand()
+    {
+        _navi.SetTarget(_handTargetPosition);
+        _edit.TakeOff();
+        _navi.SetFlyState(Eagle_Navigation.FlyState.getOnArm);
     }
 }

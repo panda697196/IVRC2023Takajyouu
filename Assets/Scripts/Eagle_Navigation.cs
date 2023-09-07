@@ -65,13 +65,19 @@ public class Eagle_Navigation : MonoBehaviour
     {
         _handAdjust = adjust;
     }
-
-    public bool _isTargetGet = false;
+    
     private bool _isTargetCalcOnce = false;
     private Vector3 _targetAroundNew;
 
     private Vector3 _eagle2target;
-    public bool _isHardGetOnStanby;
+    private bool _isHardGetOnStandby;
+
+    public void SetIsHardGetOnStandby(bool b)
+    {
+        _isHardGetOnStandby=b;
+    }
+
+
 
     private bool _isAroundOver;
     [SerializeField] private GameObject _debug;
@@ -79,21 +85,17 @@ public class Eagle_Navigation : MonoBehaviour
     public float eagleHandTH;
 
     public Animator _animator;
-    //public bool GetIsAroundOver => _isAroundOver;
     void Start()
     {
         _edit = gameObject.GetComponent<Eagle_Edit>();
         //Animator _animator = GetComponent<Animator>();
         _animator = GetComponent<Animator>();
-        //_handPosition = _hand.transform.GetChild(0).gameObject;
-        //_eaglePositionChange = gameObject.transform.parent.gameObject;
     }
     
     // Update is called once per frame
     void Update()
     {
-        Debug.Log(_flyState);
-        Debug.Log(IsRotating());
+       
        
         _animator.SetFloat("Speed", _speed);//アニメーターに再生速度を代入
         
@@ -175,8 +177,9 @@ public class Eagle_Navigation : MonoBehaviour
                 }
                 // 次の移動場所を計算する
                 _flyTime += Time.deltaTime;
-                var nextPos = Vector3.Slerp(_slerpStart, arrangeTarget, Mathf.Min(1.0f,_flyTime / _limitTime));
-
+                //_flyTimeにリミットタイムの20分/1をたしているのは，最初のスタート地点が同じ場所だと鷹の方向がおかしくなるため．
+                var nextPos = Vector3.Slerp(_slerpStart, arrangeTarget, Mathf.Min(1.0f,(_flyTime+_limitTime/20) / _limitTime));
+            
                 // 向かせる
                 gameObject.transform.LookAt(nextPos);
 
@@ -192,12 +195,12 @@ public class Eagle_Navigation : MonoBehaviour
             case "target":
             {
                 if (!_isTargetCalcOnce)
-               {
-                   //移動位置をターゲット座標から＋3mの位置にしている．そうすることで多少オーバーランしてから旋回軌道に入るようになっている．
-                   _eagle2target = (target.transform.position - gameObject.transform.position).normalized;
-                   _targetAroundNew = target.transform.position + _eagle2target * 3;
-                   _isTargetCalcOnce = true;
-               }
+                {
+                    //移動位置をターゲット座標から＋3mの位置にしている．そうすることで多少オーバーランしてから旋回軌道に入るようになっている．
+                    _eagle2target = (target.transform.position - gameObject.transform.position).normalized;
+                    _targetAroundNew = target.transform.position + _eagle2target * 3;
+                    _isTargetCalcOnce = true;
+                }
                
                 // 向かせる
                 gameObject.transform.LookAt(_targetAroundNew);
@@ -220,17 +223,18 @@ public class Eagle_Navigation : MonoBehaviour
                 var eagle2handxz=new Vector2(_hand.transform.position.x - gameObject.transform.position.x,_hand.transform.position.z - gameObject.transform.position.z);
                 var eagle2targetxz = new Vector2(_eagle2target.x, _eagle2target.z);
                 //　もともとの鷹の位置のベクトルと，今の鷹と次の手の補正位置へのベクトルの角度が一定以上の時に，腕の着地用ステイトに切り替え.なんとなく172度にしている．
-                //_isOnはハードウェアの条件が満たされた時．
-                if (_isHardGetOnStanby &&Vector2.Angle(eagle2handxz, eagle2targetxz) > 172f && _isAroundOver)
+                //_isHardGetOnStandbyはハードウェアの条件が満たされた時．
+                if (_isHardGetOnStandby &&Vector2.Angle(eagle2handxz, eagle2targetxz) > 172f && _isAroundOver)
                 {
                     _target = _handPosition;
                     _flyFirst = true;
-                    _flyState = _flyState = FlyState.getOnArm;
+                    _flyState = FlyState.getOnArm;
                 }
                 break;
             }
             case "getOnArm":
             {
+                
                 var arrangeTarget = target.position ;
                 
                 if (_flyFirst)
@@ -242,8 +246,9 @@ public class Eagle_Navigation : MonoBehaviour
                 
                 // 次の移動場所を計算する
                 _flyTime += Time.deltaTime;
-                var nextPos = Vector3.Slerp(_slerpStart, target.transform.position, Mathf.Min(1.0f,_flyTime*4 / _limitTime));
-         
+                //_flyTimeにリミットタイムの20分/1をたしているのは，最初のスタート地点が同じ場所だと鷹の方向がおかしくなるため．
+                var nextPos = Vector3.Slerp(_slerpStart, target.transform.position, Mathf.Min(1.0f,(_flyTime+_limitTime/20) / _limitTime));
+                _debug.transform.position=nextPos;
                 //近すぎると挙動が変になるので，距離が4センチより遠かったら実行
                 if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) > 0.4f)
                 {
@@ -269,6 +274,7 @@ public class Eagle_Navigation : MonoBehaviour
             case "onlyTarget":
             {
                 gameObject.transform.LookAt(target);
+
                 break;
             }
         }
@@ -328,12 +334,12 @@ public class Eagle_Navigation : MonoBehaviour
     {
         _totalTime = 0.0f;
         _isAroundOver = false;
-        _isHardGetOnStanby = false;
+        _isHardGetOnStandby = false;
     }
 
     public bool IsRotating()
     {
-        if(_flyState == FlyState.targetAround)
+        if(_flyState == FlyState.targetAround &&_isAroundOver)
         {
             return true;
         }
