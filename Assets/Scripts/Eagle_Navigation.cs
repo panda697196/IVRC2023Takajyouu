@@ -217,4 +217,9 @@ public class Eagle_Navigation : MonoBehaviour
         Vector3 pos = new Vector3(initPos.x+ xPos, initPos.y +_height,initPos.z + zPos);
         return (pos);
     }
+
+    public void ChangeTarget(GameObject target)
+    {
+        _target = target;
+    }
 }
