@@ -7850,15 +7850,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MainCamera: {fileID: 0}
+  _idleAgitated: 0
   _crowState: 0
   _target: {fileID: 609572336}
   _isDebug: 1
-  song1: {fileID: 8300000, guid: e2622b95524aab94b9a0448a1a4c6fc8, type: 3}
-  song2: {fileID: 8300000, guid: aa29893140715234fa4c6f0f17bc3d88, type: 3}
-  flyAway1: {fileID: 8300000, guid: 9dabaef0cd2ecb241956e3db52d3bc8d, type: 3}
-  flyAway2: {fileID: 8300000, guid: ae13220b2fee67344b8b455414c59ff4, type: 3}
-  _speed2: 0.01
-  _hight2: 0
+  _speed: 0.01
+  _hight: 0
 --- !u!4 &478087973 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3703409041644438921, guid: a7d4a7ff2205aa749bd53da3fa5c878f, type: 3}
@@ -10648,7 +10645,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!65 &609572337
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -22118,10 +22115,17 @@ MonoBehaviour:
   _target: {fileID: 632391729}
   _limitTime: 2
   _speed: 1.5
+  xzMargin: 2
+  yMargin: 1.5
   _flyState: 2
   _radius: 3
   _height: 2
-  debug: {fileID: 609572336}
+  _rotationSpeed: 4.1
+  _hand: {fileID: 0}
+  _isTargetGet: 0
+  _isOn: 0
+  _debug: {fileID: 0}
+  eagleHandTH: 0
 --- !u!114 &1478839604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22134,9 +22138,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc18067b958a56448830762c0a5d94b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainCamera: {fileID: 0}
+  ForTargetChanger: {fileID: 0}
   _eagleState: 0
-  _isDebug: 1
 --- !u!114 &1478839605
 MonoBehaviour:
   m_ObjectHideFlags: 0

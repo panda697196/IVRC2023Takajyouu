@@ -14,18 +14,16 @@ public class ScoreGene : MonoBehaviour
     public GameObject _targetStorage;
     public int _crowMaxNumber;
     public int _crowMinNumber;
-    public Vector3 _SpwanCenter;
+    public Vector3 _spwanCenter;
 
     private List<GameObject> _crowList = new List<GameObject>(1);
     private List<GameObject> _randomTargetList = new List<GameObject>(1);
 
     //出現可能の場所候補
-    [SerializeField] private GameObject _flyArea;
+    [SerializeField] private float radius;
+    [SerializeField] private GameObject _scoreArea; //カラスを出現させるエリア
     [SerializeField] private GameObject lookObject; // 注視したいオブジェクトをInspectorから入れておく
 
-    private int _chooseNum;
-    private Vector3 _point1;
-    private Vector3 _point2;
     private Vector3 _areaSize;
     private Vector3 _offset;
     private float _areaMin = -0.5f;
@@ -33,21 +31,26 @@ public class ScoreGene : MonoBehaviour
 
     
 
-    void RandomPositionTarget(int b)
+    void RandomCirclePos(int a)
     {
-        for (int i = 0; i <= b; i++)
+        for (int i = 0; i <= a; i++)
         {
-            float randomRangeX = Random.Range(_areaMin, _areaMax);
+            /*float randomRangeX = Random.Range(_areaMin, _areaMax);
             float randomRangeY = Random.Range(_areaMin, _areaMax);
             float randomRangeZ = Random.Range(_areaMin, _areaMax);
             float xPos = randomRangeX * _areaSize.x;
             float yPos = randomRangeY * _areaSize.y;
             float zPos = randomRangeZ * _areaSize.z;
-            Vector3 position = new Vector3(xPos, yPos, zPos) + _offset;
+            Vector3 position = new Vector3(xPos, yPos, zPos) + _offset;*/
+
+            // 指定された半径の円内のランダム位置
+            var circlePos = radius * Random.insideUnitCircle;
+            // XZ平面で指定された半径、中心点の円内のランダム位置を計算
+            var spawnPos = new Vector3(circlePos.x, 0, circlePos.y) + _spwanCenter;
             // ターゲット方向のベクトルを取得
-            Vector3 relativePos = lookObject.transform.position - position;
+            Vector3 relativePos = lookObject.transform.position - spawnPos;
             // Prefabをインスタンス化する
-            GameObject newCrow = Instantiate(_crow, position, Quaternion.LookRotation (relativePos));
+            GameObject newCrow = Instantiate(_crow, spawnPos, Quaternion.LookRotation (relativePos));
             lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
             //見やすいように生成したカラスをCrowStorageに格納
             newCrow.transform.parent = _crowStorage.transform;
@@ -61,12 +64,16 @@ public class ScoreGene : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        //カラスのPregfabの読み取り
         _crow = (GameObject)Resources.Load("lb_crow_target");
+        //TargetのPregfabの読み取り
         _randomTarget = (GameObject)Resources.Load("Sphere");
-        _crowStorage =GameObject.Find("CrowStorage");
+        //カラスのPregfabから生成したオブジェの格納
+        _crowStorage = GameObject.Find("CrowStorage");
+        //TragetのPregfabから生成したオブジェの格納
         _targetStorage = GameObject.Find("TargetStorage");
-        _areaSize = _flyArea.transform.localScale;
-        _offset = _flyArea.transform.position;
+        _areaSize = _scoreArea.transform.localScale;
+        _offset = _scoreArea.transform.position;
     }
 
     // Update is called once per frame
@@ -104,6 +111,6 @@ public class ScoreGene : MonoBehaviour
     //カラスを_crowMaxNumberまで生成するメソッド　スポーンはCenterの位置を中心に正方形に生成
     public void CrowGenerator()
     {
-        RandomPositionTarget(_crowMaxNumber);
+        RandomCirclePos(_crowMaxNumber);
     }
 }

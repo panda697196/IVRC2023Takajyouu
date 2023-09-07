@@ -50,7 +50,7 @@ public class HardwareManager : MonoBehaviour
     private bool _isRopeTight = false; // ロープが動いているがどうか
     private bool _isRopeLoose = false;
 
-    private bool _isStandbyFinished = false;
+    //private bool _isStandbyFinished = false;
 
     private float _timeToUpdate;
     private int _tightenSpeed;
@@ -220,7 +220,8 @@ public class HardwareManager : MonoBehaviour
         yield return new WaitForSeconds(0.2f); // 紐を張るための猶予
         _ropeSender.DataSend("S\n"); // 紐の巻き取り停止
         _isRopeTight = false;
-        _isStandbyFinished = true;
+        //_isStandbyFinished = true;
+        _gameManager.SetHardwareFlag(true);
     }
 
     public IEnumerator StandbyWeight()
@@ -257,7 +258,8 @@ public class HardwareManager : MonoBehaviour
         yield return new WaitForSeconds(_looseTime);
         _ropeSender.DataSend("S\n");
         _isRopeLoose = false;
-        _isStandbyFinished = false;
+        //_isStandbyFinished = false;
+        _gameManager.SetHardwareFlag(false);
     }
 
     public IEnumerator StandbyDisappearShock()
@@ -336,10 +338,10 @@ public class HardwareManager : MonoBehaviour
 
     public void NotUseHardware() // ハードウェアを切る
     {
-        _weightObject.SetActive(true);
-        _ropeObject.SetActive(true);
-        _pressObject.SetActive(true);
-        _windObject.SetActive(true);
-        _freedomDropObject.SetActive(true);
+        _weightObject.SetActive(false);
+        _ropeObject.SetActive(false);
+        _pressObject.SetActive(false);
+        _windObject.SetActive(false);
+        _freedomDropObject.SetActive(false);
     }
 }

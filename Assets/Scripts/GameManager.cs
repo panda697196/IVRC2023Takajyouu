@@ -52,12 +52,12 @@ public class GameManager : MonoBehaviour
     private Vector3 fingerPos;//左手の親指の座標（transform.position）
     private Vector3 eagleTargetPos;//左手の親指の座標（transform.position）
 
-    [SerializeField] private bool _withHardware = false;//ハードウェアを使わずにデバッグしたい場合はこれを切ってください
+    [SerializeField] private bool _isUseHardware = false;//ハードウェアを使わずにデバッグしたい場合はこれを切ってください
 
 
     void Awake()
     {
-        if (_withHardware)
+        if (_isUseHardware)
         {
             _hardwareManager.NotUseHardware();
         }
@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
                 
                 if (callOnceFlag == false) //一回だけ実行(if文の中)
                 {
-                    
+                    _hardwareManager.StandbyComeHawk();//鷹がくる準備　この後に3secくらいは欲しい
                     
                     callOnceFlag = true;
                     
@@ -140,6 +140,7 @@ public class GameManager : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Return) || eagleGetOnArm == true) //シーン遷移処理（鷹がうでに止まる）
                 {
+                    _hardwareManager.ComeHawk();//鷹がくる刺激の提示
                     callOnceFlag = false; //一回フラグの初期化
                     
                     gameSceneState = 2;//待機シーン（case2）へ
@@ -157,11 +158,17 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("待機A");
                     callOnceFlag = true;
+                    
+                    //TODO:腕を振る少し前に以下の関数を実行．UI表示とともにかな．
+                    _hardwareManager.StandbyDisappear();
                 }
+                
+                
 
                 // if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出
                 if (Input.GetKeyDown(KeyCode.Return) || flyFlag == true) // シーン遷移処理（腕の振りを検出）
                 {
+                    _hardwareManager.StandbyDisappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい
                     flyFlagObj.flyFlag = false; //flyFlag初期化
                     flyFlag = false; //GameManagerのフライフラフ初期化
                     callOnceFlag = false; // 1回フラグの初期化
@@ -201,10 +208,13 @@ public class GameManager : MonoBehaviour
                     // }
                     //カラス？？
                     // crowCountFromCase2 = 38;//殺したカラス
+                    
+                    //TODO:鷹が折り返し，腕を固定し出したタイミングで以下を実行
+                    _hardwareManager.StandbyComeHawk();
                 }
                 // -----------------------------------飛び立ちaシーンにおける処理(毎フレーム)-----------------------------------------------------
                 
-                //hardwareFlag = hoge.flag://ハードウェアからのフラグを監視
+                //hardwareFlag = hoge.flag://ハードウェアからのフラグを監視 - すでにSetHardwareFlagで実装済　消してもいい
                 // eagleWaitFlag = taka.flag;//鷹からの待機状態のフラグを監視
 
                 // if (hardwareFlag == true && eagleWaitFlag == true)
@@ -221,6 +231,7 @@ public class GameManager : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Return) || hardwareFlag == true)//シーン遷移（ハードの準備と鷹の準備ができたら）
                 {
+                    _hardwareManager.ComeHawk();
                     callOnceFlag = false;
                     huntFinFlag = false;//初期化
                     hardwareFlag = false;
@@ -281,10 +292,15 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("待機B");
                     callOnceFlag = true;
+                    
+                    //TODO:鷹が折り返し，腕を固定し出したタイミングで以下を実行
+                    _hardwareManager.StandbyComeHawk();
                 }
 
                 if (Input.GetKeyDown(KeyCode.Return)　|| flyFlag == true) // シーン遷移（うでの振り検知）
                 {
+                    _hardwareManager.StandbyDisappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい
+                    
                     callOnceFlag = false; // 一回だけフラグの初期化
                     
                     flyFlagObj.flyFlag = false; //flyFlag初期化
@@ -472,5 +488,10 @@ public class GameManager : MonoBehaviour
     public Vector3 GetFingerPos() //鷹が止まる場所の位置座標の取得
     {
         return fingerPos;
+    }
+
+    public void SetHardwareFlag (bool isHardwareStandby)
+    {
+        hardwareFlag = isHardwareStandby;
     }
 }

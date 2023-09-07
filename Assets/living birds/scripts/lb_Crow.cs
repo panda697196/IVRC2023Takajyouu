@@ -18,7 +18,7 @@ public class lb_Crow : MonoBehaviour
     [SerializeField] private birdBehaviors _crowState;
     //target
     [SerializeField] private GameObject _target;
-    //�q�ǉ��Z�b�g�v�f 
+
     public void SetTarget(GameObject newTarget)
     {
         _target = newTarget;
@@ -35,19 +35,12 @@ public class lb_Crow : MonoBehaviour
     }
     public birdBehaviors CrowCurrentState => _crowState;
 
-    [Header("DebugMode �J���X�̏�Ԃ�ς��邱�ƂŃJ���X�𓮂�����")]
+    [Header("DebugMode カラスの状態を変えることでカラスを動かせる")]
     public bool _isDebug;
-
-    public AudioClip song1;
-    public AudioClip song2;
-    public AudioClip flyAway1;
-    public AudioClip flyAway2;
 
     public enum birdBehaviors
     {
-        idle, flyToTarget, flyToTarget2, randomFly, sing, /*preen, ruffle, peck,
-        flyLeft, flyRight, flyStraight, landing,
-        hopForward, hopBackward, hopLeft, hopRight,*/
+        idle, flyToTarget, flyToTarget2, randomFly, sing,
     }
 
     BoxCollider birdCollider;
@@ -59,11 +52,11 @@ public class lb_Crow : MonoBehaviour
     float Angle = 0.0f;
 
     // �����x
-    [SerializeField] private float _speed2 = 0.01f;
+    [SerializeField] private float _speed = 0.01f;
     // ���ݑ��x
     private Vector3 _velocity = Vector3.zero;
     // ����
-    [SerializeField] private float _hight2 = 0;
+    [SerializeField] private float _hight = 0;
 
     //hash variables for the animation states and animation properties
     int idleAnimationHash;
@@ -92,15 +85,10 @@ public class lb_Crow : MonoBehaviour
     {
         idleAnimationHash = Animator.StringToHash("Base Layer.Idle");
         flyAnimationHash = Animator.StringToHash("Base Layer.fly");
-        hopIntHash = Animator.StringToHash("hop");
         flyingBoolHash = Animator.StringToHash("flying");
-        peckBoolHash = Animator.StringToHash("peck");
-        ruffleBoolHash = Animator.StringToHash("ruffle");
-        preenBoolHash = Animator.StringToHash("preen");
         landingBoolHash = Animator.StringToHash("landing");
         singTriggerHash = Animator.StringToHash("sing");
         flyingDirectionHash = Animator.StringToHash("flyingDirectionX");
-        dieTriggerHash = Animator.StringToHash("die");
     }
     void DisplayBehavior(birdBehaviors behavior)
     {
@@ -109,7 +97,6 @@ public class lb_Crow : MonoBehaviour
             case birdBehaviors.sing:
                 anim.SetBool("idle", false);
                 anim.SetTrigger(singTriggerHash);
-                PlaySong();
                 break;
             case birdBehaviors.idle:
                 anim.SetBool("idle", true);
@@ -117,11 +104,11 @@ public class lb_Crow : MonoBehaviour
                 anim.SetBool("flying", false);
                 //float i = Random.Range(0, 1.0f);
                 //anim.SetFloat("IdleAgitated",i);
-                _hight2 = 0.5f;
+                _hight = 0.5f;
                 break;
             case birdBehaviors.flyToTarget:
                 float dis = Vector3.SqrMagnitude(_target.transform.position - transform.position);
-                if(dis > 10f)
+                if (dis > 10f)
                 {
                     anim.SetBool("flying", true);
                     anim.SetBool("idle", false);
@@ -134,8 +121,8 @@ public class lb_Crow : MonoBehaviour
                         anim.SetBool("idle", true);
                         anim.SetBool("landing", false);
                         anim.SetBool("flying", false);
-                        /*float j = Random.Range(0, 1.0f);
-                        anim.SetFloat("IdleAgitated", j);*/
+                        float j = Random.Range(0, 1);
+                        anim.SetFloat("IdleAgitated", j);
                         _crowState = birdBehaviors.idle;
                     }
                     else
@@ -148,7 +135,7 @@ public class lb_Crow : MonoBehaviour
                 break;
             case birdBehaviors.flyToTarget2://target�ɋ߂Â��Ă������Ɣ�s���
                 float dis3 = Vector3.SqrMagnitude(_target.transform.position - transform.position);
-                _speed2 = Random.Range(3.0f, 5.0f);
+                _speed = Random.Range(3.0f, 5.0f);
                 anim.SetBool("flying", true);
                 anim.SetBool("idle", false);
                 Flytest(_target.transform);
@@ -159,7 +146,7 @@ public class lb_Crow : MonoBehaviour
                     _target = _randomTargetList[Random.Range(0, _randomTargetList.Count - 1)];
                 }
                 float dis2 = Vector3.SqrMagnitude(_target.transform.position - transform.position);
-                _speed2 = Random.Range(3.0f, 5.0f);
+                _speed = Random.Range(3.0f, 5.0f);
                 if (dis2 > 10f)
                 {
                     anim.SetBool("flying", true);
@@ -174,141 +161,55 @@ public class lb_Crow : MonoBehaviour
                     Flytest(_target.transform);
                 }
                 break;
-                /*case birdBehaviors.ruffle:
-                anim.SetBool("idle", false);
-                anim.SetTrigger(ruffleBoolHash);
-                break;
-            case birdBehaviors.preen:
-                anim.SetBool("idle", false);
-                anim.SetTrigger(preenBoolHash);
-                break;
-            case birdBehaviors.peck:
-                anim.SetBool("idle", false);
-                anim.SetTrigger(peckBoolHash);
-                break;
-            case birdBehaviors.hopForward:
-                anim.SetBool("idle", false);
-                anim.SetInteger(hopIntHash, 1);
-                break;
-            case birdBehaviors.hopLeft:
-                anim.SetBool("idle", false);
-                anim.SetInteger(hopIntHash, -2);
-                break;
-            case birdBehaviors.hopRight:
-                anim.SetBool("idle", false);
-                anim.SetInteger(hopIntHash, 2);
-                break;
-            case birdBehaviors.hopBackward:
-                anim.SetBool("idle", false);
-                anim.SetInteger(hopIntHash, -1);
-                break;
-            case birdBehaviors.flyLeft:
-                anim.SetBool("flying", true);
-                anim.SetBool("idle", false);
-                float l = anim.GetFloat("flyingDirectionX");
-                if (l > -0.5f)
-                {
-                    l -= 0.01f;
-                    anim.SetFloat("flyingDirectionX", l);
-                }
-                Fly(l);
-                break;
-            case birdBehaviors.flyRight:
-                anim.SetBool("flying", true);
-                anim.SetBool("idle", false);
-                float r = anim.GetFloat("flyingDirectionX");
-                if (r < 0.5f)
-                {
-                    r += 0.01f;
-                    anim.SetFloat("flyingDirectionX", r);
-                }
-                Fly(r);
-                break;
-            case birdBehaviors.flyStraight:
-                anim.SetBool("flying", true);
-                anim.SetBool("idle", false);
-                float s = anim.GetFloat("flyingDirectionX");
-                if (s > 0.0f)
-                {
-                    s -= 0.01f;
-                    anim.SetFloat("flyingDirectionX", s);
-                }
-                if (s < 0.0f)
-                {
-                    s += 0.01f;
-                    anim.SetFloat("flyingDirectionX", s);
-                }
-                Fly(s);
-                break;
-            case birdBehaviors.landing:
-                if (transform.position.y >= -0.001f)
-                {
-                    if (_hight2 > 0)
-                    {
-                        _hight2 = -_hight2;
-                    }
-                    anim.SetBool("landing", true);
-                    anim.SetBool("flying", false);
-                    Land();
-                }
-                else
-                {
-                    anim.SetBool("idle", true);
-                    anim.SetBool("landing", false);
-                    anim.SetBool("flying", false);
-                    float j = Random.Range(0, 1);
-                    anim.SetFloat("IdleAgitated", j);
-                }
-                break;*/
         }
     }
 
     public void Flytest(Transform target)
     {
-        _speed2 += 0.1f;
-        _speed2 = Mathf.Clamp(_speed2, 0, 5f);
-        transform.position = Vector3.MoveTowards(transform.position, target.position, _speed2 * Time.deltaTime);
+        _speed += 0.1f;
+        _speed = Mathf.Clamp(_speed, 0, 10f);
+        transform.position = Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
         gameObject.transform.LookAt(target.transform);
         UnityEngine.Debug.Log("FlyTest");
     }
 
     void Landtest(Transform target)
     {
-        if (transform.position.y == target.position.y)
+        if (transform.position.y == target.position.y + 2f)
         {
-            _speed2 = 0;
+            _speed = 0;
         }
         else
         {
-            _speed2 -= 0.1f;
-            _speed2 = Mathf.Clamp(_speed2, 0.5f, 5f);
+            _speed -= 0.1f;
+            _speed = Mathf.Clamp(_speed, 0.5f, 10f);
         }
         var direction = transform.forward;
-        // �����ɑ��x���|�����킹�Ĉړ��x�N�g�������߂�
-        transform.position = Vector3.MoveTowards(transform.position, target.position, _speed2 * Time.deltaTime);
+        // 方向に速度を掛け合わせて移動ベクトルを求める
+        transform.position = Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
         gameObject.transform.LookAt(target.transform);
         UnityEngine.Debug.Log("LandTest");
     }
 
     void Fly(float t)
     {
-        if (_hight2 > 0)
+        if (_hight > 0)
         {
-            _hight2 -= Random.Range(0.000001f, 0.00001f);
+            _hight -= Random.Range(0.000001f, 0.00001f);
         }
         else
         {
-            _hight2 = 0;
+            _hight = 0;
         }
         Angle = 60f * t;
         // �p�x�����W�A���ɕϊ�
         float rad = Angle * Mathf.Deg2Rad;
-        _speed2 += 10f;
-        _speed2 = Mathf.Clamp(_speed2, 0, 500f);
+        _speed += 10f;
+        _speed = Mathf.Clamp(_speed, 0, 50f);
         // ���W�A������i�s������ݒ�
-        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight2, Mathf.Cos(rad));
+        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight, Mathf.Cos(rad));
         // �����ɑ��x���|�����킹�Ĉړ��x�N�g�������߂�
-        _velocity = direction * _speed2 * Time.deltaTime;
+        _velocity = direction * _speed * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
         UnityEngine.Debug.Log(direction);
         direction.y = 0;
@@ -319,39 +220,26 @@ public class lb_Crow : MonoBehaviour
     {
         if (transform.position.y <= -0.001f)
         {
-            _hight2 = 0;
-            _speed2 = 0;
+            _hight = 0;
+            _speed = 0;
         }
         else
         {
-            _hight2 = Mathf.Clamp(_hight2, -0.5f, 0.1f);
-            _hight2 += Random.Range(0.000001f, 0.00001f);
-            _speed2 -= 0.1f;
-            _speed2 = Mathf.Clamp(_speed2, 100f, 500f);
+            _hight = Mathf.Clamp(_hight, -0.5f, 0.1f);
+            _hight += Random.Range(0.000001f, 0.00001f);
+            _speed -= 0.1f;
+            _speed = Mathf.Clamp(_speed, 10f, 50f);
         }
         // �p�x�����W�A���ɕϊ�
         float rad = Angle * Mathf.Deg2Rad;
         // ���W�A������i�s������ݒ�
-        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight2, Mathf.Cos(rad));
+        Vector3 direction = new Vector3(Mathf.Sin(rad), _hight, Mathf.Cos(rad));
         // �����ɑ��x���|�����킹�Ĉړ��x�N�g�������߂�
-        _velocity = direction * _speed2 * Time.deltaTime;
+        _velocity = direction * _speed * Time.deltaTime;
         transform.position += _velocity * Time.deltaTime;
         UnityEngine.Debug.Log(direction);
         direction.y = 0;
         transform.rotation = Quaternion.LookRotation(direction);
-    }
-
-
-    void PlaySong()
-    {
-        if (Random.value < .5)
-        {
-            GetComponent<AudioSource>().PlayOneShot(song1, 1);
-        }
-        else
-        {
-            GetComponent<AudioSource>().PlayOneShot(song2, 1);
-        }
     }
 
     void Start()
@@ -384,50 +272,6 @@ public class lb_Crow : MonoBehaviour
             {
                 DisplayBehavior(birdBehaviors.sing);
             }
-            /*if (_crowState.ToString() == "flyLeft")
-            {
-                DisplayBehavior(birdBehaviors.flyLeft);
-            }
-            if (_crowState.ToString() == "flyRight")
-            {
-                DisplayBehavior(birdBehaviors.flyRight);
-            }
-            if (_crowState.ToString() == "flyStraight")
-            {
-                DisplayBehavior(birdBehaviors.flyStraight);
-            }
-            if (_crowState.ToString() == "landing")
-            {
-                DisplayBehavior(birdBehaviors.landing);
-            }
-            if (_crowState.ToString() == "preen")
-            {
-                DisplayBehavior(birdBehaviors.preen);
-            }
-            if (_crowState.ToString() == "ruffle")
-            {
-                DisplayBehavior(birdBehaviors.ruffle);
-            }
-            if (_crowState.ToString() == "peck")
-            {
-                DisplayBehavior(birdBehaviors.peck);
-            }
-            if (_crowState.ToString() == "hopForward")
-            {
-                DisplayBehavior(birdBehaviors.hopForward);
-            }
-            if (_crowState.ToString() == "hopLeft")
-            {
-                DisplayBehavior(birdBehaviors.hopLeft);
-            }
-            if (_crowState.ToString() == "hopRight")
-            {
-                DisplayBehavior(birdBehaviors.hopRight);
-            }
-            if (_crowState.ToString() == "hopBackward")
-            {
-                DisplayBehavior(birdBehaviors.hopBackward);
-            }*/
         }
     }
 }

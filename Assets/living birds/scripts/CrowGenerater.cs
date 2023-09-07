@@ -17,9 +17,10 @@ public class CrowGenerater : MonoBehaviour
     public GameObject _targetStorage;
     public int _crowMaxNumber;
     public int _crowMinNumber;
-    public Vector3 _SpwanCenter;
 
     private List<GameObject> _crowList = new List<GameObject>(1);
+    public List<GameObject> CrowList => _crowList;
+
     private List<GameObject> _randomTargetList = new List<GameObject>(1);
 
     //出現可能の場所候補
@@ -167,29 +168,6 @@ public class CrowGenerater : MonoBehaviour
         {
             CrowGenerator();
         }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            int flyCrow=ScaredCrowNumber();
-
-            Debug.Log("飛んだカラス"+flyCrow);
-        }
-        
-    }
-
-    //カラスリスト内にある，鷹によって飛んだカラスを数えるメソッド
-    public int ScaredCrowNumber()
-    {
-        int count = 0;
-        foreach(GameObject crow in _crowList)
-        {
-            if (crow.transform.GetChild(2).GetComponent<lb_CrowTrigger>().IsEagleScared)
-            {
-                count++;
-            }
-        }
-
-        return count;
     }
 
     //カラスを_crowMaxNumberまで生成するメソッド　スポーンはCenterの位置を中心に正方形に生成

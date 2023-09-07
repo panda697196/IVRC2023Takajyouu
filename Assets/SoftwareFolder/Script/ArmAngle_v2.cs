@@ -6,7 +6,7 @@ using UnityEngine;
 public class ArmAngle_v2 : MonoBehaviour
 {
     public GameObject gameManager;
-    [SerializeField] private GameObject CanFlyArea;
+    // [SerializeField] private GameObject CanFlyArea;
 
     public FlyArmReadyDetection _flyArmReadyDetection;
     [SerializeField] private ArmCollisionDetection _armCollisionDetection; 
@@ -15,7 +15,7 @@ public class ArmAngle_v2 : MonoBehaviour
     // public Transform tracker2; // トラッカー2のTransformコンポーネント
 
     public float baseAngle = 65f;
-    public float span = 0.3f;
+    public float span = 0.01f;
 
     public Transform goalPosition;
     public Vector3 inputGoalPosition;
@@ -50,7 +50,7 @@ public class ArmAngle_v2 : MonoBehaviour
     [SerializeField] private float AvarageSpeed;
     private bool IsInFlyArea;
     private bool IsCanFlyAreaOn = false;
-    [SerializeField] private Collider CanFlyAreaCllider;
+    // [SerializeField] private Collider CanFlyAreaCllider;
     [SerializeField] private Transform NewParentsObj;
     [SerializeField] private Vector3 localOffset = new Vector3(0.180000007f,0,1.39999998f);
 
@@ -121,15 +121,15 @@ public class ArmAngle_v2 : MonoBehaviour
                 IsCanFlyAreaOn = true;
             }
             
-            if (CanFlyAreaCllider.bounds.Contains(trackerWaist.position)) //FlyAreaにいるならばTrue
-            {
-                IsInFlyArea = true;
-                Debug.Log("InFlyArea");
-            }
-            else
-            {
-                IsInFlyArea = false;
-            }
+            // if (CanFlyAreaCllider.bounds.Contains(trackerWaist.position)) //FlyAreaにいるならばTrue
+            // {
+            //     IsInFlyArea = true;
+            //     Debug.Log("InFlyArea");
+            // }
+            // else
+            // {
+            //     IsInFlyArea = false;
+            // }
             
             // if (AvarageSpeed >= BaseSpeed && (sceneTarans == 2 || sceneTarans == 5) && _isFirstReadyOfArmForFlyFlag == true && 
                 // IsInFlyArea)
