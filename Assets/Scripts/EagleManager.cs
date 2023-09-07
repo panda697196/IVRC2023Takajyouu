@@ -107,4 +107,23 @@ public class EagleManager : MonoBehaviour
         _edit.TakeOff();
         _navi.SetFlyState(Eagle_Navigation.FlyState.getOnArm);
     }
+
+    public bool IsEagleHandLanding()
+    {
+        if (_edit.EagleCurrentState == Eagle_Edit.EagleState.Lauding)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsEagleTakeOff()
+    {
+        if (_edit.EagleCurrentState == Eagle_Edit.EagleState.Takeoff)
+        {
+            return true;
+        }
+
+        return false;
+    }
 }
