@@ -80,11 +80,6 @@ public class ScoreCrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (_gameManager.GetgameSceneState()==7)
-        {
-            Invoke(nameof(ReadyToShow),3f);
-        }
-
         if (_scoreBoard.activeInHierarchy)
         {
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();

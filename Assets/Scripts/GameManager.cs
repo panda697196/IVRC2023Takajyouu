@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ArmAngle_v2 _armAngle_v2;//飛び立ちフラグを管理するスクリプト
     [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
     [SerializeField] private ScoreReceiver _scoreReceiver;
+    [SerializeField] private ScoreCrow _scoreCrow;
     // [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject _eagleTarget;//鷹の飛行すべき目標位置
     [SerializeField] private CrowGenerater _crowGenerater;
@@ -127,7 +128,7 @@ public class GameManager : MonoBehaviour
                 }
 
                 Debug.Log(_eagleManager.IsEagleHandLauding());
-                if (_eagleManager.IsEagleHandLauding() && !_isComingEagle)
+                if (_eagleManager.IsEagleHandLauding() && !_isComingEagle) //TODO:おもり落下が遅いので少し早めたい
                 {
                     _isComingEagle = true;
                     SetComeHawkSecond(_timeToHawkDrop); //Hardware（ComeHawk（））を動かす
@@ -365,6 +366,7 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("帰還B");
                     callOnceFlag = true;
+                    Invoke(nameof(ReadyToShowScore),3f);
 
                     _crowCount2ndTry = 38;//TODO:２回目のカラス取得
                     //スコアの算出と伝達
@@ -448,6 +450,11 @@ public class GameManager : MonoBehaviour
     {
         _isReadyToPopCrow = true;
     }
+
+    public void ReadyToShowScore()
+    {
+        _scoreCrow.ReadyToShow();
+    }
     
     public int GetgameSceneState()//ゲームシーン遷移を取得
     {
@@ -482,6 +489,11 @@ public class GameManager : MonoBehaviour
     public Vector3 GetFingerPos() //鷹が止まる場所の位置座標の取得
     {
         return fingerPos;
+    }
+
+    public bool GetIsReadyToPopCrow()
+    {
+        return _isReadyToPopCrow;
     }
 
     public void SetHardwareFlag (bool isHardwareStandby)

@@ -80,11 +80,11 @@ public class ArmAngle_v2 : MonoBehaviour
             // Debug.Log("平均スピード："+_averageSpeed);//Debug:平均スピード
 
             //条件が揃ったらフライフラグを立て,ゴールをセットする
-            if (_averageSpeed >= BaseSpeed && (_scene == 2 || _scene == 5) && _isFirstReadyOfArmForFlyFlag == true)
+            if (_averageSpeed >= BaseSpeed && (_scene == 2 || _scene == 5) && _isFirstReadyOfArmForFlyFlag == true && gameManager.GetIsReadyToPopCrow())
             {
-                flyFlag = true;//フライフラグを立てる
-                // Invoke(nameof(SetGoal), DeleyTime);//deley後にゴールをセットする
-                _isFirstReadyOfArmForFlyFlag = false;//FlyFlag用の腕位置検知のフラグを初期化
+                    flyFlag = true;//フライフラグを立てる
+                    // Invoke(nameof(SetGoal), DeleyTime);//deley後にゴールをセットする
+                    _isFirstReadyOfArmForFlyFlag = false;//FlyFlag用の腕位置検知のフラグを初期化
             }
 
             // 現在の位置情報を保存
