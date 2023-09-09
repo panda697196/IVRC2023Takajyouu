@@ -8,7 +8,8 @@ public class ArmAngle_v2 : MonoBehaviour
 {
     public GameManager gameManager;
 
-    [SerializeField] private ArmCollisionDetection _armCollisionDetection; 
+    [SerializeField] private ArmCollisionDetection _armCollisionDetection;
+    [SerializeField] private TargetChoicer _targetChoicer;
     
     public Transform trackerWaist; // トラッカー1のTransformコンポーネント
 
@@ -51,8 +52,6 @@ public class ArmAngle_v2 : MonoBehaviour
 
     private void Update()
     {
-        
-        
         _isFirstReadyOfArm = _armCollisionDetection.isArmCllisionDetection(trackerWaist,_hmdSideCollider);//コライダーと腕との接触位置判定をする
         // Debug.Log("HMDSideColliderDetection:"+_isFirstReadyOfArm);//debug:HMDSideColliderの腕検知
         
@@ -119,7 +118,10 @@ public class ArmAngle_v2 : MonoBehaviour
     // }
     public Vector3 GetEagleTargetFromSwing()//鷹のターゲットの位置を取得する(GameManagerがEagleTargetの位置を動かす)
     {
-        return _pointerPosition.position;
+        //return _pointerPosition.position;
+        Vector3 target = _targetChoicer.SetTarget();
+        _pointerPosition.transform.position = target;
+        return target;
     }
 
     private void Enqueue(float item)//キューに追加する（インキュー相当）
@@ -181,7 +183,9 @@ public class ArmAngle_v2 : MonoBehaviour
     //仮のゴールをセットする
     public Vector3 GetPlaceholderEagleTargetPos()//仮のEagleTargetの座標を取得(GameManagerがEagleTargetの位置を動かす)
     {
-        return _placeholderEagleTarget;
+        //仮の必要がなくなったので，直に入れています（試用）
+        return _targetChoicer.SetTarget();
+        //return _placeholderEagleTarget;
     }
 
 

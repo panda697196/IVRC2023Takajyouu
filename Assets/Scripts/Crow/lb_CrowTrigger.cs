@@ -14,10 +14,11 @@ public class  lb_CrowTrigger: MonoBehaviour
     private bool _isOnceTarget =true;
     private bool _isCrowFly;
     //private Transform newTarget ;
-   private GameObject newTarget;
-   private GameObject _crowTargetBox;
-   private bool _isEagleScared;
-   public bool IsEagleScared => _isEagleScared;
+    private GameObject newTarget;
+    private GameObject _crowTargetBox;
+    private bool _isEagleScared;
+    public bool IsEagleScared => _isEagleScared;
+    public CrowCount _crowCount;
    
     void Start()
     {
@@ -35,6 +36,7 @@ public class  lb_CrowTrigger: MonoBehaviour
         _crowTargetBox=GameObject.Find("CrowTargetBox");
         //移動先オブジェクトをBoxに格納
         newTarget.transform.parent = _crowTargetBox.transform;
+        _crowCount = GetComponent<CrowCount>();
 
     }
 
@@ -77,6 +79,7 @@ public class  lb_CrowTrigger: MonoBehaviour
                 newTarget.transform.position = 100*new Vector3(newTargetxz.x,newTargety, newTargetxz.y);
                //計算した目的地をカラスのスクリプトに渡す
                 _lbCrow.SetTarget(newTarget);
+                _crowCount.CountUp();
             }
             //カラスの移動フラグをオン
             _isCrowFly=true;
