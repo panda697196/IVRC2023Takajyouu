@@ -104,6 +104,7 @@ public class Eagle_Navigation : MonoBehaviour
             case Eagle_Edit.EagleState.Idle:
                 //手から鷹までのベクトルを計算
                 var hand2eagle = gameObject.transform.position - _hand.transform.position;
+                //Debug.Log("Hand2Eagle Distance="+hand2eagle.magnitude);
                 //もし手から鷹までの距離が一定以下かつ，鷹が手に載っていない場合
                 if (hand2eagle.magnitude < eagleHandTH &&!_isOnHand)
                 {
@@ -254,15 +255,15 @@ public class Eagle_Navigation : MonoBehaviour
                 {
                     gameObject.transform.LookAt(nextPos);
                 }
-
-                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.2f)
+                //鷹とターゲットオブジェクトとの距離が0.01以下の時に着地モーションへと以降
+                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.05f)
                 {
                     //人間の手の上面を取得
-                    var ArmTopAjust = yMargin;
+                    //var ArmTopAjust = yMargin;
                     
                     //人間の手の位置に向くように修正
-                    gameObject.transform.LookAt(new Vector3(target.transform.parent.transform.position.x,
-                        gameObject.transform.position.y,target.transform.parent.transform.position.z));
+                    gameObject.transform.LookAt(new Vector3(_hand.transform.position.x,
+                        gameObject.transform.position.y,_hand.transform.position.z));
                     //着地モーション再生
                     _edit.SetEagleState(Eagle_Edit.EagleState.Landing);
                     VariablesReset();
@@ -288,7 +289,7 @@ public class Eagle_Navigation : MonoBehaviour
     void Land(Transform target)
     {
         var ArmTopAdjust = yMargin;
-        var eagle2hand = target.transform.parent.transform.position - gameObject.transform.position;
+        var eagle2hand = _hand.transform.position - gameObject.transform.position;
         var handLaudPoint = eagle2hand + gameObject.transform.position;
         handLaudPoint.y = gameObject.transform.position.y;
         //_debug.transform.position = handLaudPoint;
@@ -333,6 +334,7 @@ public class Eagle_Navigation : MonoBehaviour
     private void VariablesReset()
     {
         _totalTime = 0.0f;
+        _flyTime = 0.0f;
         _isAroundOver = false;
         _isHardGetOnStandby = false;
     }
