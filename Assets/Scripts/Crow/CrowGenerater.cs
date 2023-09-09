@@ -24,7 +24,7 @@ public class CrowGenerater : MonoBehaviour
     private List<GameObject> _randomTargetList = new List<GameObject>(1);
 
 
-    [SerializeField] private CrowCount _crowCount;
+    //[SerializeField] private CrowCount _crowCount;
 
     //出現可能の場所候補
     [SerializeField] private GameObject _flyArea;
@@ -187,7 +187,7 @@ public class CrowGenerater : MonoBehaviour
         lbCrow.SetCrowState(birdBehaviors.flyToTarget);
         BoxCollider crowCollider = newCrow.GetComponent<BoxCollider>();
         lb_CrowTrigger trigger = newCrow.GetComponentInChildren<lb_CrowTrigger>();
-        trigger._crowCount = _crowCount;
+        //trigger._crowCount = _crowCount;
         crowCollider.enabled = false;
     }
     void RandomFlyToPopFlyCrow()
@@ -208,7 +208,7 @@ public class CrowGenerater : MonoBehaviour
         //生成したカラスをリストに追加
         _crowList.Add(newCrow);
         lb_CrowTrigger trigger = newCrow.GetComponentInChildren<lb_CrowTrigger>();
-        trigger._crowCount = _crowCount;
+        //trigger._crowCount = _crowCount;
         lbCrow.SetTargetList(_randomTargetList);
         lbCrow.SetCrowState(birdBehaviors.randomFly);
         
@@ -266,7 +266,7 @@ public class CrowGenerater : MonoBehaviour
         {
             DestoryCrowAndTarget();
         }
-        _count = _crowCount.Count;
+        //_count = _crowCount.Count;
         //_isFadeOut = false;
         _crowSound.volume = _crowSoundlevel - 1f / (float)_crowNum2 * (float)_count;
         
@@ -287,8 +287,8 @@ public class CrowGenerater : MonoBehaviour
     {
         _popUpPlaceList1W.Add(_popUpPlaceList1[0]);
         _popUpPlaceList2W.Add(_popUpPlaceList2[0]);
-        _popUpPlaceList1W.Add(_popUpPlaceList1[46]);
-        _popUpPlaceList2W.Add(_popUpPlaceList2[46]);
+        _popUpPlaceList1W.Add(_popUpPlaceList1[45]);
+        _popUpPlaceList2W.Add(_popUpPlaceList2[45]);
         _totalWeight = _popUpPlaceList1W.Count;
         for(int i = 0; i<_crowNum1; i++)
         {
@@ -303,7 +303,7 @@ public class CrowGenerater : MonoBehaviour
 
     public void CrowGenerator2()
     {
-        _crowCount.CountReset();
+        //_crowCount.CountReset();
         SumOfWeight();
         HaveWeightLsit();
         int num = 8 * _crowNum2 / 10;

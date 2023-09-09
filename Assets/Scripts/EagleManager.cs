@@ -43,24 +43,18 @@ public class EagleManager : MonoBehaviour
             _navi.SetFlyState(Eagle_Navigation.FlyState.targetAround); 
         }
         
-        if (Input.GetKeyDown(KeyCode.D))
-        {            
-            // ForTargetChanger._isStart = true;//あとでけす
-            _navi.SetTarget(_target);
-            _edit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
-            _navi.SetFlyState(Eagle_Navigation.FlyState.onlyTarget); 
-        }
+        // if (Input.GetKeyDown(KeyCode.D))
+        // {            
+        //     // ForTargetChanger._isStart = true;//あとでけす
+        //     _navi.SetTarget(_target);
+        //     _edit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
+        //     _navi.SetFlyState(Eagle_Navigation.FlyState.onlyTarget); 
+        // }
         if (Input.GetKeyDown(KeyCode.X))
         {
             _navi.SetTarget(_handTargetPosition);
             _navi.SetFlyState(Eagle_Navigation.FlyState.getOnArm); 
         }
-
-        if (Input.GetKeyDown(KeyCode.K))
-        {
-            _isHardOK = true;
-        }
-        
 
         if (Input.GetKeyDown(KeyCode.S))
         {

@@ -243,7 +243,6 @@ public class GameManager : MonoBehaviour
                     _isOnceComeStandby = true;
                     
                     
-                    _targetChoicer.OffTargetChoicePlane();
                 }
                 
                 
@@ -260,6 +259,7 @@ public class GameManager : MonoBehaviour
                     hardwareFlag = false;
                     gameSceneState = 4;
                     _isArounding = false;
+                    _targetChoicer.OffTargetChoicePlane();
                 }
                 break;
 

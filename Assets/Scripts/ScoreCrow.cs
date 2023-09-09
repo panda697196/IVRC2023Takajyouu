@@ -106,9 +106,12 @@ public class ScoreCrow : MonoBehaviour
     {
         //逃げたカラスを数え，残ったカラスを記録するS
         ScaredCrowNumber();
-        //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ
-        var EagleCharacterController = _eagle.GetComponent<CharacterController>();
-        EagleCharacterController.enabled = false;
+        //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ　←板倉が鷹の仕様変更したのでそれに伴いColliderに修正
+        //var EagleCharacterController = _eagle.GetComponent<CharacterController>();
+        //EagleCharacterController.enabled = false;
+        var eagleSphereCollider = _eagle.GetComponent<SphereCollider>();
+        eagleSphereCollider.enabled = false;
+        
         //残ったカラスをスコアボード近くに飛ばす
         ScoreCrowPos();
         //鷹がボードを持ってくる
