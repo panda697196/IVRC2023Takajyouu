@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.Serialization.Json;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using static lb_Crow;
@@ -15,8 +16,8 @@ public class CrowGenerater : MonoBehaviour
 
     public GameObject _crowStorage;
     public GameObject _targetStorage;
-    public int _crowMaxNumber;
-    public int _crowMinNumber;
+                                    //public int _crowMaxNumber;
+    //public int _crowMinNumber;
 
     private List<GameObject> _crowList = new List<GameObject>(1);
     public List<GameObject> CrowList => _crowList;
@@ -25,6 +26,10 @@ public class CrowGenerater : MonoBehaviour
 
     //出現可能の場所候補
     [SerializeField] private GameObject _flyArea;
+    [SerializeField] private int _crowNum1;
+    [SerializeField] private int _crowNum2;
+    [SerializeField] private float _radiusMax; //カラスが出現するエリアの最大半径
+    [SerializeField] private float _radiusMin; //カラスが出現するエリアの最小半径
     [SerializeField] private List<GameObject> _popUpPlaceList1;
     [SerializeField] private List<GameObject> _popUpPlaceList2;
     //重み付け
@@ -41,9 +46,11 @@ public class CrowGenerater : MonoBehaviour
     private Vector3 _offset;
     private float _areaMin = -0.5f;
     private float _areaMax = 0.5f;
+    private bool _popReady;
 
     void SumOfWeight()
     {
+        _totalWeight = 0;
         // 重みの総和計算
         for (var i = 0; i < _weights.Length; i++)
         {
@@ -53,6 +60,8 @@ public class CrowGenerater : MonoBehaviour
 
     void HaveWeightLsit()
     {
+        _popUpPlaceList1W.Clear();
+        _popUpPlaceList2W.Clear();
         int j = 0;
         for (int i = 0; i< _weights.Length; i++)
         {
@@ -66,7 +75,7 @@ public class CrowGenerater : MonoBehaviour
         }
     }
 
-    void RandomIdle()
+    /*void RandomPopIdleCrow()
     {
         //カラスの出現場所のリストの番号をランダムで選択
         _chooseNum = Random.Range(0, _totalWeight - 1);
@@ -77,7 +86,7 @@ public class CrowGenerater : MonoBehaviour
         float r = Random.Range(0, 1.0f);
         //Debug用
         /*GameObject newSphere = Instantiate(_sphere, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
-        GameObject newCrow = Instantiate(_crow, newSphere.transform.position, newSphere.transform.rotation);*/
+        GameObject newCrow = Instantiate(_crow, newSphere.transform.position, newSphere.transform.rotation);
         //カラスをインスタンス生成
         GameObject newCrow = Instantiate(_crow, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
         lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
@@ -88,7 +97,9 @@ public class CrowGenerater : MonoBehaviour
         _crowList.Add(newCrow);
     }
 
-    void RandomPositionCrow(int a)
+    
+
+    /*void RandomPopFlyCrow()
     {
         float randomRangeX = Random.Range(_areaMin, _areaMax);
         float randomRangeY = Random.Range(_areaMin, _areaMax);
@@ -106,7 +117,9 @@ public class CrowGenerater : MonoBehaviour
         _crowList.Add(newCrow);
         lbCrow.SetTargetList(_randomTargetList);
         lbCrow.SetCrowState(birdBehaviors.randomFly);
-        for (int i = 1; i < a; i++)
+
+        //生成した1羽のカラスについていく子カラスたち
+        /*for (int i = 1; i < a; i++)
         {
             float randomRangeXn = Random.Range(_areaMin, _areaMax);
             float randomRangeYn = Random.Range(_areaMin, _areaMax);
@@ -126,6 +139,59 @@ public class CrowGenerater : MonoBehaviour
             lbCrowN.SetTarget(newCrow);
             lbCrowN.SetCrowState(birdBehaviors.flyToTarget2);
         }
+    }*/
+
+    void RandomFlyToPopIdleCrow()
+    {
+        var radius = Random.Range(_radiusMin, _radiusMax);
+        var angle = Random.Range(0, 360);
+        var rad = angle * Mathf.Deg2Rad;
+        var px = Mathf.Cos(rad) * radius;
+        var py = Mathf.Sin(rad) * radius;
+        var spawnPos = new Vector3(px, 0, py) + _offset;
+        // Prefabをインスタンス化する
+        GameObject newCrow = Instantiate(_crow, spawnPos, Quaternion.identity);
+        lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
+        //見やすいように生成したカラスをCrowStorageに格納
+        newCrow.transform.parent = _crowStorage.transform;
+        //生成したカラスをリストに追加
+        _crowList.Add(newCrow);
+
+        //カラスの出現場所のリストの番号をランダムで選択
+        _chooseNum = Random.Range(0, _totalWeight);
+        Debug.Log(_popUpPlaceList1W[_chooseNum].name);
+        _point1 = _popUpPlaceList1W[_chooseNum].transform.position;
+        _point2 = _popUpPlaceList2W[_chooseNum].transform.position;
+        Vector3 popLine = _point1 - _point2;
+        float r = Random.Range(0, 1.0f);
+        //Debug用
+        /*GameObject newSphere = Instantiate(_sphere, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
+        GameObject newCrow = Instantiate(_crow, newSphere.transform.position, newSphere.transform.rotation);*/
+        //カラスをインスタンス生成
+        GameObject newTarget = Instantiate(_randomTarget, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
+        lbCrow._idleAgitated = r;//Idle時の動作を差を付けるため
+        //見やすいように生成したTargetをTargetStorageに格納
+        newTarget.transform.parent = _targetStorage.transform;
+        lbCrow.SetTarget(newTarget);
+        lbCrow.SetCrowState(birdBehaviors.flyToTarget);
+    }
+    void RandomFlyToPopFlyCrow()
+    {
+        var radius = Random.Range(_radiusMin, _radiusMax);
+        var angle = Random.Range(0, 360);
+        var rad = angle * Mathf.Deg2Rad;
+        var px = Mathf.Cos(rad) * radius;
+        var py = Mathf.Sin(rad) * radius;
+        var spawnPos = new Vector3(px, 0, py) + _offset;
+        // Prefabをインスタンス化する
+        GameObject newCrow = Instantiate(_crow, spawnPos, Quaternion.identity);
+        lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
+        //見やすいように生成したカラスをCrowStorageに格納
+        newCrow.transform.parent = _crowStorage.transform;
+        //生成したカラスをリストに追加
+        _crowList.Add(newCrow);
+        lbCrow.SetTargetList(_randomTargetList);
+        lbCrow.SetCrowState(birdBehaviors.randomFly);
     }
 
     void RandomPositionTarget(int b)
@@ -155,38 +221,75 @@ public class CrowGenerater : MonoBehaviour
         _randomTarget = (GameObject)Resources.Load("Sphere");
         _crowStorage =GameObject.Find("CrowStorage");
         _targetStorage = GameObject.Find("TargetStorage");
-        SumOfWeight();
-        HaveWeightLsit();
+        
         _areaSize = _flyArea.transform.localScale;
         _offset = _flyArea.transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    /*void Update()//Debug用
     {
-        if (Input.GetKeyDown(KeyCode.G))
+        if (Input.GetKeyDown(KeyCode.A))
         {
-            CrowGenerator();
+            CrowGenerator1();
         }
-    }
+        if (Input.GetKeyDown(KeyCode.B))
+        {
+            CrowGenerator2();
+        }
+        if (Input.GetKeyDown(KeyCode.D))
+        {
+            DestoryCrowAndTarget();
+        }
+    }*/
 
     //カラスを_crowMaxNumberまで生成するメソッド　スポーンはCenterの位置を中心に正方形に生成
-    public void CrowGenerator()
+    public void CrowGenerator1()
     {
-        int num = 8 * _crowMaxNumber /10;
-        RandomPositionTarget(5);
-        for (int i = 0; i < _crowMaxNumber; i++)
+        _popUpPlaceList1W.Add(_popUpPlaceList1[0]);
+        _popUpPlaceList2W.Add(_popUpPlaceList2[0]);
+        _popUpPlaceList1W.Add(_popUpPlaceList1[5]);
+        _popUpPlaceList2W.Add(_popUpPlaceList2[5]);
+        _totalWeight = _popUpPlaceList1W.Count;
+        for(int i = 0; i<_crowNum1; i++)
         {
-            if (i > num)
+            RandomFlyToPopIdleCrow();
+        }
+
+        _popReady = true;
+    }
+
+    public void CrowGenerator2()
+    {
+        SumOfWeight();
+        HaveWeightLsit();
+        int num = 8 * _crowNum2 / 10;
+        RandomPositionTarget(5);
+        for (int i = 0; i < _crowNum2; i++)
+        {
+            if (i < num)
             {
-                RandomIdle();
+                RandomFlyToPopFlyCrow();
             }
             else
             {
-                //int j = Random.Range(5,10);
-                RandomPositionCrow(1);
-                //i += j-1;
+                RandomFlyToPopIdleCrow();
             }
+        }
+
+        _popReady = true;
+    }
+
+    public void DestoryCrowAndTarget()
+    {
+        _crowList.Clear();
+        _randomTargetList.Clear();
+        foreach (Transform child in _crowStorage.transform)
+        {
+            Destroy(child.gameObject);
+        }
+        foreach (Transform child in _targetStorage.transform)
+        {
+            Destroy(child.gameObject);
         }
     }
 }

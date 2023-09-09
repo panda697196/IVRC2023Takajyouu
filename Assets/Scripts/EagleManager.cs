@@ -14,11 +14,12 @@ public class EagleManager : MonoBehaviour
     private bool _isHardOK =false;
     [SerializeField]private GameObject _handTargetPosition;
     public GameObject GetHandTargetPosition =>_handTargetPosition;
+    private bool _isEagleArounding;
     void Start()
     {
         _edit = gameObject.GetComponent<Eagle_Edit>();
         _navi = gameObject.GetComponent<Eagle_Navigation>();
-        //カラスの移動先となるオブジェクトを生成
+        //鷹が手に着地する際に移動先となるオブジェクトを生成
         //  _handTargetPosition = GameObject.CreatePrimitive(PrimitiveType.Cube);
         // // //移動先オブジェクトのコライダーとメッシュレンダラーをオフに
         //  _handTargetPosition.GetComponent<BoxCollider>().enabled=false;
@@ -30,14 +31,16 @@ public class EagleManager : MonoBehaviour
         // // //ターゲット位置をローカル座標をずらして設定
         //  _handTargetPosition.transform.Translate(0,1,1.5f);
         //
-        
-        //_handTargetPosition=
+
         _navi.SetHandPosition(_handTargetPosition);
     }
 
     // Update is called once per frame
     void Update()
     {
+        
+        // Debug.Log(IsEagleHandLauding());
+        // Debug.Log(_edit.GetEagleCurrentAnimState().ToString());
         if (Input.GetKeyDown(KeyCode.A))
         {
 
@@ -71,7 +74,7 @@ public class EagleManager : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.S))
         {
-            EagleAround2GetOn(_isHardOK);
+            StartGetOnHand();
         }
 
     }
@@ -87,12 +90,44 @@ public class EagleManager : MonoBehaviour
     {
         if (hardok)
         {
-            _navi._isOn=true;
+            _navi.SetIsHardGetOnStandby(true);
         }
     }
 
     public bool EagleOnHand()
     {
         return _navi.GetIsOnHand;
+    }
+
+    public bool IsEagleAround()
+    {
+        return _navi.IsRotating();
+    }
+
+    public void StartGetOnHand()
+    {
+        _navi.SetTarget(_handTargetPosition);
+        _edit.TakeOff();
+        _navi.SetFlyState(Eagle_Navigation.FlyState.getOnArm);
+    }
+
+    public bool IsEagleHandLauding()
+    {
+        
+        if (_edit.GetEagleCurrentAnimState().ToString() == "Landing")
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public bool IsEagleTakeOff()
+    {
+        if (_edit.GetEagleCurrentAnimState().ToString() == "Takeoff")
+        {
+            return true;
+        }
+
+        return false;
     }
 }

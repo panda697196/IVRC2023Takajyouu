@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor.UI;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
@@ -13,44 +14,49 @@ public class GameManager : MonoBehaviour
      */
 
 
+    public  bool _isEagleGetOnArm;//鷹がうでにとまった状態であるかどうかのフラグ
+
     [SerializeField] private int gameSceneState;//ゲームシーン遷移を管理する変数
     //0:スタート　,1:鷹到着シーン　2：待機a, 3:飛び立ちa、4：帰還a、５：待機b、６：飛び立ちb、７：帰還b、8:結果b, 9:終了処理
 
     private bool callOnceFlag; //１シーンに一回呼び出すときに使う変数,trueなら呼び出し済み
-
-    [SerializeField] private TextMeshProUGUI titleLabel; //タイトル画面
-    [SerializeField] private TextMeshProUGUI instructionLabel; //instructionUI
-    [SerializeField] private TextMeshPro scoreText; // UI 得点を表示するためのテキスト要素
-    [SerializeField] private TextMeshProUGUI thankYouText;// UI "Thank you for playing "を表示するためのテキスト要素。
     
     // [SerializeField] private Eagle_Edit eagleEdit;//鷹の状態用スクリプト
     // [SerializeField] private Eagle_Navigation eagleNavigation;//鷹の移動を管理するスクリプト
-    [SerializeField] private EagleManager eagleManager;//鷹の移動を管理するスクリプト
-    [SerializeField] private ArmAngle_v2 flyFlagObj;//飛び立ちフラグを管理するスクリプト
+    [SerializeField] private EagleManager _eagleManager;//鷹の移動を管理するスクリプト
+    [SerializeField] private ArmAngle_v2 _armAngle_v2;//飛び立ちフラグを管理するスクリプト
     [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
-    [SerializeField] private Transform rawfingerPos;//左手の親指の位置
-    [SerializeField] private GameObject eagleTarget;//鷹の飛行すべき目標位置
+    [SerializeField] private ScoreReceiver _scoreReceiver;
+    [SerializeField] private ScoreCrow _scoreCrow;
+    // [SerializeField] private Transform rawfingerPos;//左手の親指の位置
+    [SerializeField] private GameObject _eagleTarget;//鷹の飛行すべき目標位置
+    [SerializeField] private CrowGenerater _crowGenerater;
+    [SerializeField] private float _timeToHawkDrop = 1.0f;
+    [SerializeField] private float _delayTargetTime = 1.0f;
     
     [SerializeField] private bool hardwareFlag; //ハードウェアと鷹との連携に使用する
     [SerializeField] private bool eagleWaitFlag; //ハードウェアと鷹との連携に使用する
     [SerializeField] private int gameScore; //スコアを入れる変数
-    [SerializeField] private int crowCountFromCase2; // ケース2で追い払ったカラスの数
-    [SerializeField] private int crowCountFromCase6; // ケース6で追い払ったカラスの数
-    [SerializeField] private bool playerReady; //プレイヤーが準備完了したかどうかのフラグ
-    [SerializeField] private bool eagleGetOnArm;//鷹がうでにとまった状態であるかどうかのフラグ
+    [SerializeField] private int _crowCount1stTry; // ケース2で追い払ったカラスの数
+    [SerializeField] private int _crowCount2ndTry; // ケース6で追い払ったカラスの数
     [SerializeField] private bool huntFinFlag; //飛び時ハードウェアと鷹の準備が完了したかどうかのフラグ
     [SerializeField] private bool eargleHasScorebord;//スコアボードを鷹が持ったかどうか
     [SerializeField] private bool putScorebord;//スコアボードを地面に置いたことを判定する
-    
+    [SerializeField] private bool _isComingEagle = false; //ComeHawkを一回するためのフラグ
 
-    
+
+
     // private int initialSpeed; // 初速（現状不要）
     // private int initialSpeedFromCase2; // ケース2で得られた初速（現状不要）
     // private int initialSpeedFromCase6; // ケース6で得られた初速（現状不要）
-    [SerializeField] private bool IsFirstReadyOfPlayerArm;
+    [SerializeField] private bool _isFirstReadyOfPlayerArm;
     [SerializeField] private bool flyFlag; //飛び立ちフラグ
     private Vector3 fingerPos;//左手の親指の座標（transform.position）
     private Vector3 eagleTargetPos;//左手の親指の座標（transform.position）
+    private float _secToCome;
+    private bool _isReadyToPopCrow = false;
+    private bool _isArounding = false;
+    private bool _isOnceComeStandby = false;
 
     [SerializeField] private bool _isUseHardware = false;//ハードウェアを使わずにデバッグしたい場合はこれを切ってください
 
@@ -68,29 +74,28 @@ public class GameManager : MonoBehaviour
 
         hardwareFlag = false;//ハードウェアフラグ初期化
         eagleWaitFlag = false;//鷹待機フラグ初期化
-        playerReady = false;//プレイヤー準備フラグの初期化
-        eagleGetOnArm = false;//鷹がうでに止まったかのフラグ初期化
+        _isEagleGetOnArm = false;//鷹がうでに止まったかのフラグ初期化
         putScorebord = false;//スコアボードを地面に置くフラグを初期化
         eargleHasScorebord = false;//スコアボードを鷹が持ったかの判定フラグの初期化
-        
-        titleLabel.gameObject.SetActive(false);// titleLabelの初期化
-        instructionLabel.gameObject.SetActive(false);//インストラクションの初期化
-        
-        flyFlag = flyFlagObj.GetFlyFlag();//flyFlagの取得かつ初期化
+        _isReadyToPopCrow = false; 
+        _isArounding = false;
 
-        fingerPos = rawfingerPos.position;//左手の座標の取得かつ初期化
+
+        flyFlag = false;//flyFlagの初期化
+
+        // fingerPos = rawfingerPos.position;//左手の座標の取得かつ初期化
 
         // eagleTargetPos = eagleTarget.position;//鷹のターゲットの位置を初期化
     }
 
     void Update()
     {
-        fingerPos = rawfingerPos.position;//左手の座標の取得
+        // fingerPos = rawfingerPos.position;//左手の座標の取得
         
         
         switch (gameSceneState)
         {
-            case 0:// スタートシーン(case0)
+            case 0:// スタートシーン(case0)腕を構えるまで
                 // --------------------スタートシーンでの処理内容(毎フレーム)------------------------------------------------
                 
                 //player = true//プレイヤーが準備できかを監視
@@ -98,28 +103,15 @@ public class GameManager : MonoBehaviour
                 //----------------------------------------------------------------------------------------------------
                 
                 
-                if (callOnceFlag == false) //一回だけ実行(if文の中)
-                {
-                    titleLabel.gameObject.SetActive(true);
-                    instructionLabel.gameObject.SetActive(true);
 
-                    titleLabel.text = "Takasyo"; //タイトル
-                    instructionLabel.text = "Please press enter key"; // プロンプトテキストの設定
-
-                    callOnceFlag = true;
-                }
-
-                if (Input.GetKeyDown(KeyCode.Return) || playerReady == true) //シーン遷移処理（プレイヤーの準備が完了すると）
+                if (Input.GetKeyDown(KeyCode.Return)) //シーン遷移処理（プレイヤーの準備が完了すると）
                 {
                     callOnceFlag = false; //一回フラグの初期化
-
-                    // ヘッダーとアラートを隠す
-                    titleLabel.gameObject.SetActive(false);
-                    instructionLabel.gameObject.SetActive(false);
 
                     gameSceneState = 1;//鷹到着シーンへ（case1）
                 }
                 break;
+
             case 1://鷹到着シーン
                 // --------------------------------鷹到着シーンでの処理内容(毎フレーム)--------------------------------------------
                 //鷹がうでにとまったかどうか監視するスクリプト
@@ -130,60 +122,82 @@ public class GameManager : MonoBehaviour
                 if (callOnceFlag == false) //一回だけ実行(if文の中)
                 {
                     _hardwareManager.StandbyComeHawk();//鷹がくる準備　この後に3secくらいは欲しい
-                    
+                    //TODO:鷹が腕に留まるまで
+                    _eagleManager.StartGetOnHand();
                     callOnceFlag = true;
-                    
-                    
                 }
-                
-                
 
-                if (Input.GetKeyDown(KeyCode.Return) || eagleGetOnArm == true) //シーン遷移処理（鷹がうでに止まる）
+                Debug.Log(_eagleManager.IsEagleHandLauding());
+                if (_eagleManager.IsEagleHandLauding() && !_isComingEagle) //TODO:おもり落下が遅いので少し早めたい
                 {
-                    _hardwareManager.ComeHawk();//鷹がくる刺激の提示
+                    _isComingEagle = true;
+                    SetComeHawkSecond(_timeToHawkDrop); //Hardware（ComeHawk（））を動かす
+                }
+
+
+                if (Input.GetKeyDown(KeyCode.Return) || _isEagleGetOnArm == true) //シーン遷移処理（鷹がうでに止まる）
+                {
                     callOnceFlag = false; //一回フラグの初期化
-                    
+                    _isEagleGetOnArm = false;
+                    _isComingEagle = false;
+
                     gameSceneState = 2;//待機シーン（case2）へ
                 }
                 break;
+
             case 2:// 待機a
                 // ---------------------------待機aでの処理内容(毎フレーム)---------------------------------------------------------
-                IsFirstReadyOfPlayerArm = flyFlagObj.GetIsFirstReadyOfArm(); //うでの最初の準備完了状態の監視
-                flyFlag = flyFlagObj.GetFlyFlag(); //うでの振り速度の閾値越えの監視
+                //_isFirstReadyOfPlayerArm = flyFlagObj.GetIsFirstReadyOfArm(); //うでの最初の準備完了状態の監視
+                flyFlag = _armAngle_v2.GetFlyFlag(); //うでの振り速度の閾値越えの監視
                 Debug.Log("flyflag:"+flyFlag);
-
 
                 //-------------------------------------------------------------------------------------------------------------
                 if (callOnceFlag == false)//1回だけの処理
                 {
                     Debug.Log("待機A");
                     callOnceFlag = true;
+
+                    //TODO:カラス沸かせる1（少なめ，集中，固定）
+                    _crowGenerater.CrowGenerator1();//カラスを沸かす、一回目
+                    Invoke(nameof(ReadyToDisappear),2f);//hard引き上げ準備
+                    Invoke(nameof(ReadyToPopCrow),3f);
                     
-                    //TODO:腕を振る少し前に以下の関数を実行．UI表示とともにかな．
-                    _hardwareManager.StandbyDisappear();
+
+                    SetEagleTarget(_armAngle_v2.GetPlaceholderEagleTargetPos());//仮のターゲットをセット
+
                 }
-                
-                
+
+                // ReadyToPop()により次への動作を取得，_hardwareManager.StandbyDisappear()も処理した．
+
 
                 // if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出
-                if (Input.GetKeyDown(KeyCode.Return) || flyFlag == true) // シーン遷移処理（腕の振りを検出）
+                if (Input.GetKeyDown(KeyCode.Return) || (flyFlag == true  && _isReadyToPopCrow)) // シーン遷移処理（腕の振りを検出）
                 {
-                    _hardwareManager.StandbyDisappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい
-                    flyFlagObj.flyFlag = false; //flyFlag初期化
+                    //飛び立つ瞬間（飛んでない）
+                    
+                    //仮のターゲットに飛ぶ
+                    _eagleManager.EagleTarget2Around(_eagleTarget);
+                    _hardwareManager.Disappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい　←よさそう
+                    
+                    Invoke(nameof(RealTarget),_delayTargetTime);
+                   
+                    _armAngle_v2.RsetFlyFlag(); //flyFlag初期化
                     flyFlag = false; //GameManagerのフライフラフ初期化
                     callOnceFlag = false; // 1回フラグの初期化
                     gameSceneState = 3; // 飛び立ちシーン（case3）へ
+                    _isReadyToPopCrow = false;
                 }
                 break;
+
             case 3:// 飛び立ちaシーン
                
                 if (callOnceFlag == false)//1回だけの処理
                 {
-                    
+                     //飛び立った直後
                     Debug.Log("飛び立ちA");
                     callOnceFlag = true;
+                    _isOnceComeStandby = false;
 
-                    eagleManager.EagleTarget2Around(eagleTarget);
 
 
                     // Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
@@ -207,22 +221,22 @@ public class GameManager : MonoBehaviour
                     //    // eagleNavigation.SetSpeed(flightSpeed);
                     // }
                     //カラス？？
-                    // crowCountFromCase2 = 38;//殺したカラス
-                    
-                    //TODO:鷹が折り返し，腕を固定し出したタイミングで以下を実行
-                    _hardwareManager.StandbyComeHawk();
                 }
                 // -----------------------------------飛び立ちaシーンにおける処理(毎フレーム)-----------------------------------------------------
-                
-                //hardwareFlag = hoge.flag://ハードウェアからのフラグを監視 - すでにSetHardwareFlagで実装済　消してもいい
-                // eagleWaitFlag = taka.flag;//鷹からの待機状態のフラグを監視
 
-                // if (hardwareFlag == true && eagleWaitFlag == true)
-                // {
-                //     huntFinFlag = true;//ハードと鷹が帰還準備完了であることを記録
-                // }
+
+                _isArounding = _eagleManager.IsEagleAround();
                 
-                eagleManager.EagleAround2GetOn(hardwareFlag);
+                //_isAroundingがfalseからtrueになったときに一回だけアニメーションからUI表示
+                
+
+                if (_isArounding && !_isOnceComeStandby)//TODO:旋回中　腕を固定したかの判定（←重要）　1回のみ呼び出し
+                {
+                    //TODO:腕を固定していたら
+                    _hardwareManager.StandbyComeHawk();
+                    //UIを消す？
+                    _isOnceComeStandby = true;
+                }
                 
                 
                 //-----------------------------------------------------------------------------------------------------
@@ -231,21 +245,23 @@ public class GameManager : MonoBehaviour
 
                 if (Input.GetKeyDown(KeyCode.Return) || hardwareFlag == true)//シーン遷移（ハードの準備と鷹の準備ができたら）
                 {
-                    _hardwareManager.ComeHawk();
+                    _eagleManager.EagleAround2GetOn(hardwareFlag);//関数にしてもいいよ
+
                     callOnceFlag = false;
                     huntFinFlag = false;//初期化
                     hardwareFlag = false;
                     gameSceneState = 4;
+                    _isArounding = false;
                 }
-
                 break;
+
             case 4:// 一回目の帰還シーン（帰還a）(case4)
                 // -----------------------------------一回目の帰還における処理(毎フレーム)-----------------------------------------------------
-                
-                //鷹がうでに止まったかどうかを監視
-                eagleGetOnArm = eagleManager.EagleOnHand();
-                
-                
+                if (_eagleManager.IsEagleHandLauding() && !_isComingEagle)
+                {
+                    _isComingEagle = true;
+                    SetComeHawkSecond(_timeToHawkDrop); //Hardware（ComeHawk（））を動かす
+                }
                 
                 //-----------------------------------------------------------------------------------------------------
                 if (callOnceFlag == false)//１回だけの処理
@@ -253,37 +269,21 @@ public class GameManager : MonoBehaviour
                     Debug.Log("帰還A");
                     callOnceFlag = true;
 
-                    // トラッカーから提供されたプレーヤーの手の位置を取得する。
-
-                    // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
-                    Eagle_Edit eagleEdit = GetComponent<Eagle_Edit>();
-                    Eagle_Navigation eagleNavigation = GetComponent<Eagle_Navigation>();
-
-                    if (eagleEdit != null && eagleNavigation != null)
-                    {
-                        // Eagle_Editスクリプトを使用したターゲットの場所の設定
-                        eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
-
-                        // イーグルの目標位置をプレーヤーの手の位置に設定する。
-                       // eagleNavigation.SetTarget(playerHandPosition);
-
-                        // 必要に応じて飛行速度を設定する
-                        //eagleNavigation.SetSpeed(yourSpeedValue);
-                    }
                 }
 
-
-                if (Input.GetKeyDown(KeyCode.Return) ||　eagleGetOnArm == true)//シーン遷移(鷹がうでに止まる)
+                if (Input.GetKeyDown(KeyCode.Return) || _isEagleGetOnArm == true)//シーン遷移(鷹がうでに止まる)
                 {
                     callOnceFlag = false;
+                    _isComingEagle = false;
+                    _isEagleGetOnArm = false;
                     gameSceneState = 5;//二回目の待機シーンへ
                 }
                 break;
+
             case 5://二回目の待機シーン（待機b）(case５)
 
                 // -------------------------------二回目の待機での処理内容(毎フレーム)-----------------------------------------------------
-                IsFirstReadyOfPlayerArm = flyFlagObj.GetIsFirstReadyOfArm(); //うでの最初の準備完了状態の監視
-                flyFlag = flyFlagObj.GetFlyFlag(); //うでの振り速度の閾値越えの監視
+                flyFlag = _armAngle_v2.GetFlyFlag(); //うでの振り速度の閾値越えの監視
                 Debug.Log("flyflag:"+flyFlag);
 
 
@@ -292,25 +292,45 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("待機B");
                     callOnceFlag = true;
+
+                    _crowCount1stTry = 38;//TODO:１回目のカラス取得
                     
-                    //TODO:鷹が折り返し，腕を固定し出したタイミングで以下を実行
-                    _hardwareManager.StandbyComeHawk();
+                    _crowGenerater.DestoryCrowAndTarget();//カラスとターゲットを消す
+                    //TODO：スカイボックスを変更し，カラスを飛び立たせる
+                    
+                    //TODO:カラス沸かせる２（多め，バラバラ）
+                    _crowGenerater.CrowGenerator2();//カラスを沸かす、二回目
+                    Invoke(nameof(ReadyToDisappear),2f);//hard引き上げ準備
+                    Invoke(nameof(ReadyToPopCrow),3f);
+                    //TODO:TakeOffアニメーション もしくは 適当なターゲットに飛ぶ（ソフトウェア）
+                    //_eagleTarget = （仮のターゲット指定）
+                    SetEagleTarget(_armAngle_v2.GetPlaceholderEagleTargetPos());
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return)　|| flyFlag == true) // シーン遷移（うでの振り検知）
+                // ReadyToPop()により次への動作を取得，_hardwareManager.StandbyDisappear()も処理した．
+
+
+                // if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出
+                if (Input.GetKeyDown(KeyCode.Return) || (flyFlag == true && _isReadyToPopCrow)) // シーン遷移処理（腕の振りを検出）
                 {
-                    _hardwareManager.StandbyDisappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい
+                    //飛び立つ瞬間（飛んでない）
+                    _isReadyToPopCrow = false;
                     
-                    callOnceFlag = false; // 一回だけフラグの初期化
+                    //仮のターゲットに飛ぶ
+                    _eagleManager.EagleTarget2Around(_eagleTarget);
+                    _hardwareManager.Disappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい　←よさそう
                     
-                    flyFlagObj.flyFlag = false; //flyFlag初期化
-                    flyFlag = false; //GameManagerのフライフラフ初期化
-
-
-                    gameSceneState = 6; // 二回目の飛び立ちシーンへ
+                    Invoke(nameof(RealTarget),_delayTargetTime);
+                    
+                    // eagleManager.EagleTarget2Around(_eagleTarget);
+                    _armAngle_v2.RsetFlyFlag(); //flyFlag初期化
+                    flyFlag = false; //GameManagerのフライフラグ初期化
+                    callOnceFlag = false; // 1回フラグの初期化
+                    gameSceneState = 6; // 飛び立ちシーン（case3）へ
+                    _isReadyToPopCrow = false;
                 }
                 break;
-                
+
             case 6: //2回目の飛び立ちシーン処理(飛び立ちb)(case6)
                 //---------------------------------------------------2回目の飛び立ちシーンの処理-----------------------------------------------------------------------------------
                 
@@ -324,29 +344,18 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("飛び立ちB");
                     callOnceFlag = true;
-                    
-                    eagleManager.EagleTarget2Around(eagleTarget);
-
-
-
-                   // Vector3 targetPosition = GetTargetPosition(); // 目標位置の取得
-                    //float flightSpeed = GetFlightSpeed(); // 飛行速度を得る
-
-                    //initialSpeedFromCase6 = flightSpeed;
-
-                    // Eagle_EditコンポーネントとEagle_Navigationコンポーネントの取得
-                    
-
-                    
                 }
 
-                if (Input.GetKeyDown(KeyCode.Return) || eargleHasScorebord == true)//シーン遷移処理(鷹がカラスを追い払い終わり、スコアボードを持ったら？)
+                _isArounding = _eagleManager.IsEagleAround();
+                
+                if (Input.GetKeyDown(KeyCode.Return) || _isArounding)//シーン遷移処理(鷹がカラスを追い払い終わり、旋回開始
                 {
                     callOnceFlag = false;
                     gameSceneState = 7;
                 }
                 break;
-            case 7:// 2回目の帰還シーン（スコアボードを持ってくる鷹）(帰還b)(case2)
+
+            case 7://スコアボードを持ってくる鷹
                 //---------------------------------帰還b（Case 7）毎フレームの処理-----------------------------------------------------
                 
                 // putScorebord = true;//スコアボードを地面に置いたかどうかを監視
@@ -357,32 +366,27 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("帰還B");
                     callOnceFlag = true;
+                    Invoke(nameof(ReadyToShowScore),3f);
 
-                    // トラッカーから提供されたプレーヤーの手の位置を取得する。
-                    //Vector3 playerHandPosition = GetPlayerHandPosition();
-
-                    // if (eagleEdit != null && eagleNavigation != null)
-                    // {
-                    //     // Eagle_Editスクリプトを使用したターゲットの場所の設定
-                    //     eagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
-                    //
-                    //     // イーグルの目標位置をプレーヤーの手の位置に設定する。
-                    //    // eagleNavigation.SetTarget(playerHandPosition);
-                    //
-                    //     // 必要に応じて飛行速度を設定する
-                    //    // eagleNavigation.SetSpeed(yourSpeedValue);
-                    // }
+                    _crowCount2ndTry = 38;//TODO:２回目のカラス取得
+                    //スコアの算出と伝達
+                    _scoreReceiver.GetScore(_crowCount1stTry + _crowCount2ndTry);
                 }
 
+                //ゲームの終了
 
+
+                /*
                 if (Input.GetKeyDown(KeyCode.Return) || putScorebord == true)//シーン遷移（鷹がスコアボードを落としたら）
                 {
                     callOnceFlag = false;
                     gameSceneState = 8;
                 }
+                */
 
 
                 break;
+
             case 8://スコア表示シーン(case8)
                 //--------スコア表示シーンの処理(毎フレーム）-------------------------------------------------------------------
                 
@@ -398,12 +402,8 @@ public class GameManager : MonoBehaviour
 
                     // ケース6で計算した初速とカラスの数を用いてスコアを計算する
                     // int finalScore = initialSpeedFromCase6 + crowCountFromCase6;（現状不要）
+                    
 
-                    // UI Text要素にスコアを表示する（べつスクリプトで行う可能性あり）
-                    if (scoreText != null)
-                    {
-                        // scoreText.text = "スコア: " + finalScore.ToString();
-                    }
                 }
 
                 if (Input.GetKeyDown(KeyCode.Return))//シーンの移行処理(EnterKeyを押す)
@@ -444,6 +444,17 @@ public class GameManager : MonoBehaviour
         
         
     }
+
+
+    private void ReadyToPopCrow()
+    {
+        _isReadyToPopCrow = true;
+    }
+
+    public void ReadyToShowScore()
+    {
+        _scoreCrow.ReadyToShow();
+    }
     
     public int GetgameSceneState()//ゲームシーン遷移を取得
     {
@@ -470,16 +481,6 @@ public class GameManager : MonoBehaviour
         return gameScore;
     }
 
-    public int GetcrowCountFromCase2()//一回目のカラスの撃退数を取得
-    {
-        return crowCountFromCase2;
-    }
-
-    public int GetcrowCountFromCase6()//二回目のカラスの撃退数を取得
-    {
-        return crowCountFromCase6;
-    }
-
     public Vector3 GeteagleTargetPos()//カラス目標とするターゲットの座標を取得
     {
         return eagleTargetPos;
@@ -490,8 +491,35 @@ public class GameManager : MonoBehaviour
         return fingerPos;
     }
 
+    public bool GetIsReadyToPopCrow()
+    {
+        return _isReadyToPopCrow;
+    }
+
     public void SetHardwareFlag (bool isHardwareStandby)
     {
         hardwareFlag = isHardwareStandby;
+    }
+    public void SetComeHawkSecond(float comeToSec)
+    {
+        _secToCome = comeToSec;
+        StartCoroutine(_hardwareManager.ComeHawkToSecond(_secToCome));
+        Debug.Log("鷹が来るぞ");
+    }
+    public void ReadyToDisappear()
+    {
+        _hardwareManager.StandbyDisappear();
+        //TODO:振りかぶるUI表示
+    }
+    public void SetEagleTarget(Vector3 target)
+    {
+        _eagleTarget.transform.position = target;
+    }
+    
+
+    public void RealTarget()
+    {
+        SetEagleTarget(_armAngle_v2.GetEagleTargetFromSwing());//真のターゲットをセット
+        _eagleManager.EagleTarget2Around(_eagleTarget);
     }
 }

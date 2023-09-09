@@ -23,7 +23,7 @@ public class MySerialHandler : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
         if (_isNewMessageReceived)
         {
@@ -70,6 +70,7 @@ public class MySerialHandler : MonoBehaviour
                 // if (serialPort_.BytesToRead > 0) {
                 _message = _serialPort.ReadLine();
                 _isNewMessageReceived = true;
+                Debug.Log("1");
                 // }
             }
             catch (System.Exception e)

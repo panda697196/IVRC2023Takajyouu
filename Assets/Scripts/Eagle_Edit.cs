@@ -29,7 +29,7 @@ public class Eagle_Edit : MonoBehaviour
     private bool _isDebug=true;
     public enum EagleState
     {
-        Idle,Takeoff,TurnR,TurnL,Lauding,Walk,Walkend,Glide,Attack,Hunt,Fly,nothing,
+        Idle,Takeoff,TurnR,TurnL,Landing,Walk,Walkend,Glide,Attack,Hunt,Fly,nothing,
     }
 
     private Eagle_Navigation _navi;
@@ -83,12 +83,12 @@ public class Eagle_Edit : MonoBehaviour
                // RootMotionOnOff(true);
                 TurnRight();
             }
-            if (_eagleState.ToString()=="Lauding")
+            if (_eagleState.ToString()=="Landing")
             {
                 IdleFlyMode();
                 
                 //RootMotionOnOff(true);
-                Lauding();
+                Landing();
             }
             if (_eagleState.ToString()=="Walk")
             {
@@ -146,7 +146,7 @@ public class Eagle_Edit : MonoBehaviour
     {
         eagle.SetBool("idle", false);
         eagle.SetBool("takeoff", true);
-        //_eagleState = EagleState.Idle;
+        _eagleState = EagleState.Idle;
     }
 
     public void TurnLeft()
@@ -169,7 +169,7 @@ public class Eagle_Edit : MonoBehaviour
         _eagleState = EagleState.TurnR;
     }
 
-    public void Lauding()
+    public void Landing()
     {
         eagle.SetBool("landing", true);
         eagle.SetBool("fly", false);
@@ -226,24 +226,23 @@ public class Eagle_Edit : MonoBehaviour
 
     public EagleState GetEagleCurrentAnimState()
     {
-        //今のアニメーションが何か調べます．使うIdle,takeoff,fly,Laudingのみです
+        //今のアニメーションが何か調べます．使うIdle,takeoff,fly,Landingのみです
         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("idle"))
         {
             return EagleState.Idle;
         }
-         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("fly"))
+        if (eagle.GetCurrentAnimatorStateInfo(0).IsName("fly"))
         {
             return EagleState.Fly;
         }
-
-         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("takeoff"))
+        if (eagle.GetCurrentAnimatorStateInfo(0).IsName("takeoff"))
          {
              return EagleState.Takeoff;
          }
 
-         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("lauding"))
+         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("landing"))
          {
-             return EagleState.Lauding;
+             return EagleState.Landing;
          }
 
          return EagleState.nothing;

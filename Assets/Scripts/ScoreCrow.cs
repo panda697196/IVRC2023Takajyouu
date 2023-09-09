@@ -28,7 +28,8 @@ public class ScoreCrow : MonoBehaviour
     [SerializeField] private GameObject _eagleIdle; //鷹の最終停止位置
     [SerializeField] private GameObject _crowBackCenter;
     private GameObject CrowManager;
-    CrowGenerater Crowgene;
+    [SerializeField] private CrowGenerater Crowgene;
+    [SerializeField] private GameManager _gameManager;
 
 
 
@@ -79,19 +80,6 @@ public class ScoreCrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            //逃げたカラスを数え，残ったカラスを記録する
-            ScaredCrowNumber();
-            //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ
-            var EagleCharacterController = _eagle.GetComponent<CharacterController>();
-            EagleCharacterController.enabled = false;
-            //残ったカラスをスコアボード近くに飛ばす
-            ScoreCrowPos();
-            //鷹がボードを持ってくる
-            EagleAndBoard();
-        }
-
         if (_scoreBoard.activeInHierarchy)
         {
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
@@ -107,6 +95,19 @@ public class ScoreCrow : MonoBehaviour
                 Invoke(nameof(WaitRotation), 7f);
             }
         }
+    }
+
+    public void ReadyToShow()
+    {
+        //逃げたカラスを数え，残ったカラスを記録する
+        ScaredCrowNumber();
+        //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ
+        var EagleCharacterController = _eagle.GetComponent<CharacterController>();
+        EagleCharacterController.enabled = false;
+        //残ったカラスをスコアボード近くに飛ばす
+        ScoreCrowPos();
+        //鷹がボードを持ってくる
+        EagleAndBoard();
     }
 
     public void WaitFly()
@@ -127,6 +128,7 @@ public class ScoreCrow : MonoBehaviour
         int i = 0;
         _scaredCrow = 0;
         List<GameObject> _crowList = Crowgene.CrowList;
+        
         foreach (GameObject crow in _crowList)
         {
             if (crow.transform.GetChild(2).GetComponent<lb_CrowTrigger>().IsEagleScared)

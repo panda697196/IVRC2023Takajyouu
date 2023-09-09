@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.18028378, g: 0.22571412, b: 0.30692285, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -2894,15 +2894,15 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 146529938}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: -0, y: 0.94617724, z: -0, w: 0.323649}
+  m_LocalPosition: {x: -13.29, y: 0, z: 4.45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 699523168}
   m_Father: {fileID: 0}
   m_RootOrder: 15
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 142.233, z: 0}
 --- !u!1 &153110884
 GameObject:
   m_ObjectHideFlags: 0
@@ -11242,9 +11242,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _crowStorage: {fileID: 0}
+  _targetStorage: {fileID: 0}
   _crowMaxNumber: 100
   _crowMinNumber: 0
-  _SpwanCenter: {x: -1, y: 0, z: 1}
+  _flyArea: {fileID: 0}
+  _popUpPlaceList1: []
+  _popUpPlaceList2: []
+  _weights: 
 --- !u!4 &623112202
 Transform:
   m_ObjectHideFlags: 0
@@ -22475,9 +22479,9 @@ MonoBehaviour:
   _height: 3
   _rotationSpeed: 4.7
   _hand: {fileID: 699523167}
-  _isTargetGet: 0
-  _isOn: 0
-  debug: {fileID: 609572336}
+  _debug: {fileID: 609572336}
+  eagleHandTH: 0
+  _animator: {fileID: 0}
 --- !u!114 &1478839604
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -22490,9 +22494,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 1dc18067b958a56448830762c0a5d94b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MainCamera: {fileID: 699523167}
+  ForTargetChanger: {fileID: 0}
   _eagleState: 0
-  _isDebug: 1
 --- !u!143 &1478839606
 CharacterController:
   m_ObjectHideFlags: 0
@@ -22602,7 +22605,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _target: {fileID: 734376556}
-  _userHand: {fileID: 699523167}
+  _userHand: {fileID: 146529938}
+  _handTargetPosition: {fileID: 699523167}
 --- !u!1 &1504882781
 GameObject:
   m_ObjectHideFlags: 0
