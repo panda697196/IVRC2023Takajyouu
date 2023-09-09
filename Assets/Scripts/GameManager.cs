@@ -28,6 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private HardwareManager _hardwareManager; //ハードウェア班からのスクリプト
     [SerializeField] private ScoreReceiver _scoreReceiver;
     [SerializeField] private ScoreCrow _scoreCrow;
+    [SerializeField] private TargetChoicer _targetChoicer;
     // [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject _eagleTarget;//鷹の飛行すべき目標位置
     [SerializeField] private CrowGenerater _crowGenerater;
@@ -162,6 +163,7 @@ public class GameManager : MonoBehaviour
                     _crowGenerater.CrowGenerator1();//カラスを沸かす、一回目
                     Invoke(nameof(ReadyToDisappear),2f);//hard引き上げ準備
                     Invoke(nameof(ReadyToPopCrow),3f);
+                    _targetChoicer.On1stTarget();
                     
 
                     SetEagleTarget(_armAngle_v2.GetPlaceholderEagleTargetPos());//仮のターゲットをセット
@@ -178,6 +180,8 @@ public class GameManager : MonoBehaviour
                     
                     //仮のターゲットに飛ぶ
                     _eagleManager.EagleTarget2Around(_eagleTarget);
+                    _targetChoicer.DecideTarget();//ターゲット位置確定
+                    
                     _hardwareManager.Disappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい　←よさそう
                     
                     Invoke(nameof(RealTarget),_delayTargetTime);
@@ -237,6 +241,9 @@ public class GameManager : MonoBehaviour
                     _hardwareManager.StandbyComeHawk();
                     //UIを消す？
                     _isOnceComeStandby = true;
+                    
+                    
+                    _targetChoicer.OffTargetChoicePlane();
                 }
                 
                 
@@ -306,6 +313,9 @@ public class GameManager : MonoBehaviour
                     //TODO:TakeOffアニメーション もしくは 適当なターゲットに飛ぶ（ソフトウェア）
                     //_eagleTarget = （仮のターゲット指定）
                     SetEagleTarget(_armAngle_v2.GetPlaceholderEagleTargetPos());
+                    
+                    
+                    _targetChoicer.On2ndTarget();
                 }
 
                 // ReadyToPop()により次への動作を取得，_hardwareManager.StandbyDisappear()も処理した．
@@ -319,6 +329,8 @@ public class GameManager : MonoBehaviour
                     
                     //仮のターゲットに飛ぶ
                     _eagleManager.EagleTarget2Around(_eagleTarget);
+                    _targetChoicer.DecideTarget();//ターゲット位置確定
+                    
                     _hardwareManager.Disappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい　←よさそう
                     
                     Invoke(nameof(RealTarget),_delayTargetTime);
@@ -352,6 +364,8 @@ public class GameManager : MonoBehaviour
                 if (Input.GetKeyDown(KeyCode.Return) || _isArounding)//シーン遷移処理(鷹がカラスを追い払い終わり、旋回開始
                 {
                     callOnceFlag = false;
+                    
+                    _targetChoicer.OffTargetChoicePlane();
                     gameSceneState = 7;
                 }
                 break;
