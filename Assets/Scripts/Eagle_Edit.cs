@@ -226,7 +226,7 @@ public class Eagle_Edit : MonoBehaviour
 
     public EagleState GetEagleCurrentAnimState()
     {
-        //今のアニメーションが何か調べます．使うIdle,takeoff,fly,Landingのみです
+        //今のアニメーションが何か調べます．使うIdle,takeoff,fly,Landing,Glideのみです
         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("idle"))
         {
             return EagleState.Idle;
@@ -245,6 +245,15 @@ public class Eagle_Edit : MonoBehaviour
              return EagleState.Landing;
          }
 
+         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("glide"))
+         {
+             return EagleState.Glide;
+         }
+
+         if (eagle.GetCurrentAnimatorStateInfo(0).IsName("flyleft"))
+         {
+             return EagleState.TurnL;
+         }
          return EagleState.nothing;
     }
     // public void ToFry()

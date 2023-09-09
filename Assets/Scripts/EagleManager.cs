@@ -17,34 +17,20 @@ public class EagleManager : MonoBehaviour
     private bool _isEagleArounding;
     [SerializeField] private Vector3 _targetOfset;
     private Quaternion _handTargetInitialRotation;
+
+    [SerializeField] private GameObject _tracker;
+    [SerializeField] private GameObject _debug;
     void Start()
     {
         _edit = gameObject.GetComponent<Eagle_Edit>();
         _navi = gameObject.GetComponent<Eagle_Navigation>();
-        //鷹が手に着地する際に移動先となるオブジェクトを生成
-        //  _handTargetPosition = GameObject.CreatePrimitive(PrimitiveType.Cube);
-        // // //移動先オブジェクトのコライダーとメッシュレンダラーをオフに
-        //  _handTargetPosition.GetComponent<BoxCollider>().enabled=false;
-        //  //_handTargetPosition.GetComponent<MeshRenderer>().enabled = false;
-        // // //生成してオブジェクトをまず手の位置と同期
-        //  _handTargetPosition.transform.position = _userHand.transform.position;
-        // // //生成したオブジェクトを手のターゲット位置に配置
-        //  _handTargetPosition.transform.parent = _userHand.transform;   
-        // // //ターゲット位置をローカル座標をずらして設定
-        //  _handTargetPosition.transform.Translate(0,1,1.5f);
-        //
-
         _navi.SetHandPosition(_handTargetPosition);
     }
 
     // Update is called once per frame
     void Update()
     {
-        Debug.Log("Hand World Position"+_userHand.transform.position);
-        //_handTargetPosition.transform.position = _userHand.transform.position + _targetOfset;
-       
-        // Debug.Log(IsEagleHandLauding());
-        // Debug.Log(_edit.GetEagleCurrentAnimState().ToString());
+        TargetProject(_tracker.transform);
         if (Input.GetKeyDown(KeyCode.A))
         {
 
@@ -80,6 +66,8 @@ public class EagleManager : MonoBehaviour
         {
             StartGetOnHand();
         }
+        
+       
 
     }
     public void EagleTarget2Around(GameObject target)
@@ -133,5 +121,14 @@ public class EagleManager : MonoBehaviour
         }
 
         return false;
+    }
+
+    private void TargetProject(Transform tracker)
+    {
+        var pos = Vector3.ProjectOnPlane(-tracker.forward, Vector3.up);
+        pos = pos.normalized * 1.92f;
+        pos += tracker.position;
+        pos.y += 0.82f;
+        _debug.transform.position = pos;
     }
 }
