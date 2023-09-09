@@ -57,6 +57,7 @@ public class GameManager : MonoBehaviour
     private bool _isReadyToPopCrow = false;
     private bool _isArounding = false;
     private bool _isOnceComeStandby = false;
+    private bool isArmMoving = false;//左手が動いているかどうかの判定
 
     [SerializeField] private bool _isUseHardware = false;//ハードウェアを使わずにデバッグしたい場合はこれを切ってください
 
@@ -522,4 +523,9 @@ public class GameManager : MonoBehaviour
         SetEagleTarget(_armAngle_v2.GetEagleTargetFromSwing());//真のターゲットをセット
         _eagleManager.EagleTarget2Around(_eagleTarget);
     }
+    public void GetArmStatus(bool armMoving)
+    {
+        isArmMoving = armMoving;
+    }
+
 }
