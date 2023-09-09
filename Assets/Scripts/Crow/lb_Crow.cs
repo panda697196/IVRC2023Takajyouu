@@ -147,6 +147,7 @@ public class lb_Crow : MonoBehaviour
                 }
                 float dis2 = Vector3.SqrMagnitude(_target.transform.position - transform.position);
                 _speed = Random.Range(3.0f, 5.0f);
+                dis2 = dis2 * Random.Range(0.5f, 1f);
                 if (dis2 > 10f)
                 {
                     anim.SetBool("flying", true);
@@ -157,7 +158,7 @@ public class lb_Crow : MonoBehaviour
                 {
                     anim.SetBool("flying", true);
                     anim.SetBool("idle", false);
-                    _target = _randomTargetList[Random.Range(0, _randomTargetList.Count - 1)];
+                    _target = _randomTargetList[Random.Range(0, _randomTargetList.Count)];
                     Flytest(_target.transform);
                 }
                 break;

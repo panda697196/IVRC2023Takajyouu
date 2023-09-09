@@ -64,7 +64,7 @@ public class ScoreCrow : MonoBehaviour
     void Start()
     {
         //TargetのPregfabの読み取り
-        _randomScoreTarget = (GameObject)Resources.Load("Sphere");
+        _randomScoreTarget = (GameObject)Resources.Load("StaySphere");
         //TragetのPregfabから生成したオブジェの格納
         _randomScoreTargetStorage = GameObject.Find("RandomScoreTargetStorage");
         CrowManager = GameObject.Find("CrowManager");
@@ -80,6 +80,11 @@ public class ScoreCrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.L))
+        {
+            ReadyToShow();
+        }
+
         if (_scoreBoard.activeInHierarchy)
         {
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
@@ -99,7 +104,7 @@ public class ScoreCrow : MonoBehaviour
 
     public void ReadyToShow()
     {
-        //逃げたカラスを数え，残ったカラスを記録する
+        //逃げたカラスを数え，残ったカラスを記録するS
         ScaredCrowNumber();
         //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ
         var EagleCharacterController = _eagle.GetComponent<CharacterController>();
@@ -173,7 +178,7 @@ public class ScoreCrow : MonoBehaviour
 
     public void DropScoreBoard()
     {
-        _scoreBoard.transform.SetParent(null);
+        _eagleIdle.transform.SetParent(null);
         var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
         BoardCollider.enabled = true;
         var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
