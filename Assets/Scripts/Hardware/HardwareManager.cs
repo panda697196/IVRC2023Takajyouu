@@ -177,6 +177,12 @@ public class HardwareManager : MonoBehaviour
             {
                 _weightSender.DataSend("S\n");
                 _ropeSender.DataSend("S\n");
+                _isRopeTight = false;
+                StopCoroutine(StandbyRope());
+            }
+            if (Input.GetKeyDown(KeyCode.D))
+            {
+                _gameManager.SetHardwareFlag(true);
             }
         }
     }
@@ -281,7 +287,6 @@ public class HardwareManager : MonoBehaviour
         _isRopeLoose = false;
         //_isStandbyFinished = false;
         _gameManager._isEagleGetOnArm = true;
-        _gameManager.SetHardwareFlag(false);
     }
 
     public IEnumerator StandbyDisappearShock()

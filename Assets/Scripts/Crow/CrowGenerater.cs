@@ -23,11 +23,15 @@ public class CrowGenerater : MonoBehaviour
 
     private List<GameObject> _randomTargetList = new List<GameObject>(1);
 
+
+    [SerializeField] private CrowCount _crowCount;
+
     //出現可能の場所候補
     [SerializeField] private GameObject _flyArea;
     [SerializeField] private int _flyAreaTarget = 0;
     [SerializeField] private int _crowNum1;
     [SerializeField] private int _crowNum2;
+    [SerializeField] private float _fadeDuration;
     [SerializeField] private float _radiusMax; //カラスが出現するエリアの最大半径
     [SerializeField] private float _radiusMin; //カラスが出現するエリアの最小半径
     [SerializeField] private List<GameObject> _popUpPlaceList1;
@@ -47,6 +51,11 @@ public class CrowGenerater : MonoBehaviour
     private Vector3 _offset;
     private float _areaMin = -0.5f;
     private float _areaMax = 0.5f;
+    AudioSource _crowSound;
+    private bool _isFadeOut = true;
+    private float _fadingTime;
+    private int _count;
+    private float _crowSoundlevel;
 
 
 
@@ -177,6 +186,8 @@ public class CrowGenerater : MonoBehaviour
         lbCrow.SetTarget(newTarget);
         lbCrow.SetCrowState(birdBehaviors.flyToTarget);
         BoxCollider crowCollider = newCrow.GetComponent<BoxCollider>();
+        lb_CrowTrigger trigger = newCrow.GetComponentInChildren<lb_CrowTrigger>();
+        trigger._crowCount = _crowCount;
         crowCollider.enabled = false;
     }
     void RandomFlyToPopFlyCrow()
@@ -196,8 +207,12 @@ public class CrowGenerater : MonoBehaviour
         newCrow.transform.parent = _crowStorage.transform;
         //生成したカラスをリストに追加
         _crowList.Add(newCrow);
+        lb_CrowTrigger trigger = newCrow.GetComponentInChildren<lb_CrowTrigger>();
+        trigger._crowCount = _crowCount;
         lbCrow.SetTargetList(_randomTargetList);
         lbCrow.SetCrowState(birdBehaviors.randomFly);
+        
+
     }
 
     void RandomPositionTarget(int b)
@@ -228,6 +243,8 @@ public class CrowGenerater : MonoBehaviour
         _randomMoveTarget = (GameObject)Resources.Load("MoveSphere");
         _crowStorage =GameObject.Find("CrowStorage");
         _targetStorage = GameObject.Find("TargetStorage");
+        _crowSound = GetComponent<AudioSource>();
+        _crowSound.Stop();
         
         _areaSize = _flyArea.transform.localScale;
         _offset = _flyArea.transform.position;
@@ -238,15 +255,31 @@ public class CrowGenerater : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.A))
         {
             CrowGenerator1();
+            _fadingTime = _fadeDuration;
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
             CrowGenerator2();
+            _fadingTime = _fadeDuration;
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
             DestoryCrowAndTarget();
         }
+        _count = _crowCount.Count;
+        //_isFadeOut = false;
+        _crowSound.volume = _crowSoundlevel - 1f / (float)_crowNum2 * (float)_count;
+        
+
+        /*if (_isFadeOut)
+        {
+            _fadingTime -= Time.deltaTime;
+            _crowSound.volume = _fadingTime / _fadeDuration;
+        }
+        if (_fadingTime <= 0)
+        {
+            _isFadeOut = false;
+        }*/
     }
 
     //カラスを_crowMaxNumberまで生成するメソッド　スポーンはCenterの位置を中心に正方形に生成
@@ -261,10 +294,16 @@ public class CrowGenerater : MonoBehaviour
         {
             RandomFlyToPopIdleCrow();
         }
+        //_isFadeOut = false;
+        //AudioSource crowSound = GetComponent<AudioSource>();
+        _crowSound.volume = 1f / (float)_crowNum2 * (float)_crowNum1;
+        _crowSoundlevel = _crowSound.volume;
+        _crowSound.Play();
     }
 
     public void CrowGenerator2()
     {
+        _crowCount.CountReset();
         SumOfWeight();
         HaveWeightLsit();
         int num = 8 * _crowNum2 / 10;
@@ -280,6 +319,10 @@ public class CrowGenerater : MonoBehaviour
                 RandomFlyToPopIdleCrow();
             }
         }
+        //_isFadeOut = false;
+        _crowSound.volume = 1f / (float)_crowNum2 * (float)_crowNum2;
+        _crowSoundlevel = _crowSound.volume;
+        _crowSound.Play();
     }
 
     public void DestoryCrowAndTarget()
@@ -294,5 +337,8 @@ public class CrowGenerater : MonoBehaviour
         {
             Destroy(child.gameObject);
         }
+        //_isFadeOut = true;
+        _crowSound.Stop();
     }
+
 }
