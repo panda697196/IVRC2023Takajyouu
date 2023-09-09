@@ -9,6 +9,7 @@ TagManager:
   - lb_bird
   - eagle
   - handTarget
+  - Tracker
   layers:
   - Default
   - TransparentFX
