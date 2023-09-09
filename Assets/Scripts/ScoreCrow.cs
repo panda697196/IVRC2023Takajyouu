@@ -178,7 +178,7 @@ public class ScoreCrow : MonoBehaviour
 
     public void DropScoreBoard()
     {
-        _eagleIdle.transform.SetParent(null);
+        _scoreBoard.transform.SetParent(null);
         var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
         BoardCollider.enabled = true;
         var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
