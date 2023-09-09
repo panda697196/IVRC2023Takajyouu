@@ -15,6 +15,8 @@ public class EagleManager : MonoBehaviour
     [SerializeField]private GameObject _handTargetPosition;
     public GameObject GetHandTargetPosition =>_handTargetPosition;
     private bool _isEagleArounding;
+    [SerializeField] private Vector3 _targetOfset;
+    private Quaternion _handTargetInitialRotation;
     void Start()
     {
         _edit = gameObject.GetComponent<Eagle_Edit>();
@@ -38,7 +40,9 @@ public class EagleManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        Debug.Log("Hand World Position"+_userHand.transform.position);
+        //_handTargetPosition.transform.position = _userHand.transform.position + _targetOfset;
+       
         // Debug.Log(IsEagleHandLauding());
         // Debug.Log(_edit.GetEagleCurrentAnimState().ToString());
         if (Input.GetKeyDown(KeyCode.A))
