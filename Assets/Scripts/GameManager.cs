@@ -29,6 +29,8 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ScoreReceiver _scoreReceiver;
     [SerializeField] private ScoreCrow _scoreCrow;
     [SerializeField] private TargetChoicer _targetChoicer;
+    [SerializeField] private SkyBoxChanger _skyBoxChanger;
+    
     // [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject _eagleTarget;//鷹の飛行すべき目標位置
     [SerializeField] private CrowGenerater _crowGenerater;
@@ -69,6 +71,9 @@ public class GameManager : MonoBehaviour
         {
             _hardwareManager.NotUseHardware();
         }
+
+        _skyBoxChanger.ChangeSkyBoxToDaytime();//昼間のスカイボックスにする
+        
         gameSceneState = 0; //シーン遷移用変数の初期化
         gameScore = 0; //ゲームスコアの初期化
         
@@ -314,7 +319,7 @@ public class GameManager : MonoBehaviour
                     _eagleManager.GetSetCrowCount = 0;
                     _crowGenerater.DestoryCrowAndTarget();//カラスとターゲットを消す
                     //TODO：スカイボックスを変更し，カラスを飛び立たせる
-                    
+                    _skyBoxChanger.ChangeSkyBoxToSunset();//夕方のスカイボックスにする
                     //TODO:カラス沸かせる２（多め，バラバラ）
                     _crowGenerater.CrowGenerator2();//カラスを沸かす、二回目
                     Invoke(nameof(ReadyToDisappear),2f);//hard引き上げ準備
