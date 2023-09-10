@@ -29,7 +29,7 @@ public class Eagle_Navigation : MonoBehaviour
     public float _speed = 1.0f;
     public enum FlyState
     {
-        laud,target,targetAround,getOnArm,onlyTarget
+        laud,target,targetAround,getOnArm,onlyTarget,getOnScoreBoard
     }
     public void SetFlyState(FlyState state)
     {
@@ -87,6 +87,10 @@ public class Eagle_Navigation : MonoBehaviour
     public Animator _animator;
     [Header("グライド動作中の速度")]
     [SerializeField] float _GlideSpeed;
+
+    [Header("スコアボードの着地に必要なオブジェクト")] 
+    [SerializeField] private GameObject _eagleIdle;
+
     void Start()
     {
         _edit = gameObject.GetComponent<Eagle_Edit>();
@@ -190,12 +194,17 @@ public class Eagle_Navigation : MonoBehaviour
                 _flyTime += Time.deltaTime;
                 //_flyTimeにリミットタイムの20分/1をたしているのは，最初のスタート地点が同じ場所だと鷹の方向がおかしくなるため．
                 var nextPos = Vector3.Slerp(_slerpStart, arrangeTarget, Mathf.Min(1.0f,(_flyTime+_limitTime/20) / _limitTime));
-            
+                _debug.transform.position = nextPos;
                 // 向かせる
                 gameObject.transform.LookAt(nextPos);
-
-                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 1f)
+                //目標物と近すぎると挙動が変になるため．
+                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) > 0.4f)
                 {
+                    gameObject.transform.LookAt(nextPos);
+                }
+                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.1f)
+                {
+                    Debug.Log("スコアの着地モーション入ってます．");
                     gameObject.transform.LookAt(new Vector3(target.transform.position.x,arrangeTarget.y,target.transform.position.z));
                     _edit.SetEagleState(Eagle_Edit.EagleState.Landing);
                 }
@@ -215,7 +224,7 @@ public class Eagle_Navigation : MonoBehaviour
                     //グライド中のスピードから普通のスピードに線形保管している。ただし、グライドスピードが速すぎるため、半分に割っている。
                     var nextSpeed = Mathf.Lerp(_GlideSpeed/2, _speed,
                         Mathf.Min(1.0f,1-(gameObject.transform.position - target.transform.position).magnitude / 10));
-                    Debug.Log("nextSpeed"+nextSpeed);
+                    //Debug.Log("nextSpeed"+nextSpeed);
                     _edit.SetEagleState(Eagle_Edit.EagleState.Idle);
                     _animator.SetFloat("Speed",nextSpeed );
                 }
@@ -240,7 +249,7 @@ public class Eagle_Navigation : MonoBehaviour
 
             case "targetAround":
             {
-                _edit.SetEagleState(Eagle_Edit.EagleState.TurnL);
+               // _edit.SetEagleState(Eagle_Edit.EagleState.TurnL);
                 //_edit.SetEagleState(Eagle_Edit.EagleState.Glide);
                 _animator.SetFloat("Speed", _speed);
                 gameObject.transform.LookAt(CalcRotationPosition(target));
@@ -284,7 +293,7 @@ public class Eagle_Navigation : MonoBehaviour
                     //グライド中のスピードから普通のスピードに線形保管している。ただし、グライドスピードが速すぎるため、半分に割っている。
                     var nextSpeed = Mathf.Lerp(_GlideSpeed/2, _speed,
                         Mathf.Min(1.0f,1-(gameObject.transform.position - target.transform.position).magnitude / 10));
-                    Debug.Log("nextSpeed"+nextSpeed);
+                    //Debug.Log("nextSpeed"+nextSpeed);
                     _edit.SetEagleState(Eagle_Edit.EagleState.Idle);
                     _animator.SetFloat("Speed",nextSpeed );
                 }
@@ -293,6 +302,7 @@ public class Eagle_Navigation : MonoBehaviour
                 {
                     gameObject.transform.LookAt(nextPos);
                 }
+               
                 //鷹とターゲットオブジェクトとの距離が0.01以下の時に着地モーションへと以降
                 if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.05f)
                 {
@@ -315,6 +325,47 @@ public class Eagle_Navigation : MonoBehaviour
                 gameObject.transform.LookAt(target);
 
                 break;
+            }
+
+            case "getOnScoreBoard":
+            {
+                var arrangeTarget = target.position ;
+                
+                if (_flyFirst)
+                {
+                    _slerpStart = gameObject.transform.position;
+                    _flyTime = 0;
+                    _flyFirst = false;
+                }
+                
+                // 次の移動場所を計算する
+                _flyTime += Time.deltaTime;
+                //_flyTimeにリミットタイムの20分/1をたしているのは，最初のスタート地点が同じ場所だと鷹の方向がおかしくなるため．
+                var nextPos = Vector3.Slerp(_slerpStart, target.transform.position, Mathf.Min(1.0f,(_flyTime+_limitTime/20) / _limitTime));
+                _debug.transform.position=nextPos;
+                gameObject.transform.LookAt(nextPos);
+                //近すぎると挙動が変になるので，距離が4センチより遠かったら実行
+                /*if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) > 0.4f)
+                {
+                    gameObject.transform.LookAt(nextPos);
+                }*/
+                Debug.Log("目標と鷹の距離"+Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude));
+                //鷹とターゲットオブジェクトとの距離が0.01以下の時に着地モーションへと以降
+                if (Mathf.Abs((gameObject.transform.position - arrangeTarget).magnitude) < 0.05f)
+                {
+                    //人間の手の上面を取得
+                    //var ArmTopAjust = yMargin;
+                    
+                    //人間の手の位置に向くように修正
+                    gameObject.transform.LookAt(new Vector3(_eagleIdle.transform.position.x,
+                        gameObject.transform.position.y,_eagleIdle.transform.position.z));
+                    //着地モーション再生
+                    _edit.SetEagleState(Eagle_Edit.EagleState.Landing);
+                    VariablesReset();
+                }
+                
+                break;
+                
             }
         }
         
