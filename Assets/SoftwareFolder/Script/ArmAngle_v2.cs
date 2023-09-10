@@ -12,18 +12,19 @@ public class ArmAngle_v2 : MonoBehaviour
     [SerializeField] private TargetChoicer _targetChoicer;
     
     public Transform trackerWaist; // トラッカー1のTransformコンポーネント
+    public Transform _reference; // 参照オブジェクトの位置
 
     public float span = 0.01f;
 
     [SerializeField] Transform _pointerPosition;
 
-    private Vector3 _prevPositionWaist;
+    private float _prevPositionWaist;
     private float angle;
 
+    private bool _isPreReadyOfArm;
     private bool _isFirstReadyOfArm;
     [SerializeField] private bool _isFirstReadyOfArmForFlyFlag;
-
-    private int _scene;//シーンの遷移
+    [SerializeField] private float _armFlagContinuousTime = 0.2f;
 
     private bool _isMonitoringArm; //腕を監視するかどうか
 
@@ -45,45 +46,52 @@ public class ArmAngle_v2 : MonoBehaviour
 
     private void Start()
     {
-        _scene = gameManager.GetComponent<GameManager>().GetgameSceneState(); //scene遷移の初期化
-        _prevPositionWaist = trackerWaist.position;//trackerの過去の位置初期化
+        _prevPositionWaist = (_reference.position - trackerWaist.position).magnitude;//trackerの過去の位置初期化
         _isFirstReadyOfArmForFlyFlag = false;//_isFirstReadyOfArmForFlyFlag
+        _isPreReadyOfArm = false;
     }
 
-    private void Update()
+    public void ThrowThresholdCal()
     {
-        _isFirstReadyOfArm = _armCollisionDetection.isArmCllisionDetection(trackerWaist,_hmdSideCollider);//コライダーと腕との接触位置判定をする
-        // Debug.Log("HMDSideColliderDetection:"+_isFirstReadyOfArm);//debug:HMDSideColliderの腕検知
-        
-        _scene = gameManager.GetComponent<GameManager>().GetgameSceneState();//シーンの遷移を取得する
-        
+        _isFirstReadyOfArm = _armCollisionDetection.isArmCllisionDetection(trackerWaist, _hmdSideCollider);//コライダーと腕との接触位置判定をする
+                                                                                                           // Debug.Log("HMDSideColliderDetection:"+_isFirstReadyOfArm);//debug:HMDSideColliderの腕検知
+        if (_isPreReadyOfArm && !_isFirstReadyOfArm)
+        {
+            StartCoroutine(LeaveReadyFlagTrue());
+        }
+
         this.Set_isFirstReadyOfArmForFlyFlag(); //flyflag用に腕の接触を保存する
 
         // Debug.Log("Pre;"+prevPosition1+"now"+tracker1.position); //Debug用
         // Debug.Log(_sceneTarans); //Debug用シーン遷移の確認
-        
+
         if (_delta > span)//spanの時間間隔
         {
-            Vector3 currentPosition1 = trackerWaist.position;// トラッカーの現在の位置情報を取得
-            
-            Vector3 positionDiff1 = (currentPosition1 - _prevPositionWaist) / span;// 前フレームからの位置変化を計算
+            Vector3 currentVector1 = _reference.position - trackerWaist.position;// トラッカーから参照位置へのベクトルを算出
+            float currentPosition1 = currentVector1.magnitude;
+            //Debug.Log(currentPosition1);
 
-            TrackerSpeed = positionDiff1.magnitude;
-            
+            float TrackerSpeed = (_prevPositionWaist - currentPosition1) / span;// 前フレームからの距離変化を計算，距離が近くなれば値がプラスになるように引き算の順序を調整している
+
             // Debug.Log(TrackerSpeed); //debug:trackerのスピード
-            
+
             Enqueue(TrackerSpeed);//トラッカーの差分をインキュー(Maxを超えるとデキュー)
-            // Debug.Log("きゅーのかず："+queueArray.Count);//debug:現在のキューの数
+                                  // Debug.Log("きゅーのかず："+queueArray.Count);//debug:現在のキューの数
 
             _averageSpeed = GetAverage();
             // Debug.Log("平均スピード："+_averageSpeed);//Debug:平均スピード
 
             //条件が揃ったらフライフラグを立て,ゴールをセットする
-            if (_averageSpeed >= BaseSpeed && (_scene == 2 || _scene == 5) && _isFirstReadyOfArmForFlyFlag == true && gameManager.GetIsReadyToPopCrow())
+            if (_averageSpeed >= BaseSpeed && _isFirstReadyOfArmForFlyFlag == true && gameManager.GetIsReadyToPopCrow())
             {
-                    flyFlag = true;//フライフラグを立てる
-                    // Invoke(nameof(SetGoal), DeleyTime);//deley後にゴールをセットする
-                    _isFirstReadyOfArmForFlyFlag = false;//FlyFlag用の腕位置検知のフラグを初期化
+                flyFlag = true;//フライフラグを立てる
+                               // Invoke(nameof(SetGoal), DeleyTime);//deley後にゴールをセットする
+                _isFirstReadyOfArmForFlyFlag = false;//FlyFlag用の腕位置検知のフラグを初期化
+            }
+
+            if (_averageSpeed >= BaseSpeed)
+            {
+                Debug.Log("Fly!");
             }
 
             // 現在の位置情報を保存
@@ -91,7 +99,8 @@ public class ArmAngle_v2 : MonoBehaviour
 
             this._delta = 0; //deltaの初期化
         }
-        
+
+        _isPreReadyOfArm = _isFirstReadyOfArm;
         _delta += Time.deltaTime;
     }
     
@@ -160,7 +169,7 @@ public class ArmAngle_v2 : MonoBehaviour
     //_isFirstReadyOfArmForFlyFlagをセットする
     private void Set_isFirstReadyOfArmForFlyFlag()
     {
-        if ((_scene == 2 || _scene == 5) && _isFirstReadyOfArm == true)
+        if (_isFirstReadyOfArm == true)
         {
             _isFirstReadyOfArmForFlyFlag = true;
         }
@@ -193,8 +202,15 @@ public class ArmAngle_v2 : MonoBehaviour
         //return _placeholderEagleTarget;
     }
 
+    private IEnumerator LeaveReadyFlagTrue()
+    {
+        Debug.Log("飛ぶか！？");
+        _isFirstReadyOfArmForFlyFlag = true;
+        yield return new WaitForSeconds(_armFlagContinuousTime);
+        _isFirstReadyOfArmForFlyFlag = false;
+        Debug.Log("飛ばない～");
+    }
 
-    
 
 }
 

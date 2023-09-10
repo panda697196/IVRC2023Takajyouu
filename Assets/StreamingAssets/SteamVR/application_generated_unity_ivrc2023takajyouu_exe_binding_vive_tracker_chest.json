@@ -1,0 +1,45 @@
+{
+   "action_manifest_version" : 0,
+   "alias_info" : {},
+   "app_key" : "application.generated.unity.ivrc2023takajyouu.exe",
+   "bindings" : {
+      "/actions/default" : {
+         "chords" : [],
+         "haptics" : [],
+         "poses" : [
+            {
+               "output" : "/actions/default/in/pose",
+               "path" : "/user/shoulder/left/pose/raw"
+            },
+            {
+               "output" : "/actions/default/in/pose",
+               "path" : "/user/waist/pose/raw"
+            },
+            {
+               "output" : "/actions/default/in/pose",
+               "path" : "/devices/htc/vive_trackerLHR-447AFD7B/pose/raw"
+            },
+            {
+               "output" : "/actions/default/in/pose",
+               "path" : "/user/chest/pose/raw"
+            }
+         ],
+         "skeleton" : [],
+         "sources" : []
+      },
+      "/actions/legacy" : {
+         "chords" : [],
+         "haptics" : [],
+         "poses" : [],
+         "skeleton" : [],
+         "sources" : []
+      }
+   },
+   "category" : "steamvr_input",
+   "controller_type" : "vive_tracker_chest",
+   "description" : "",
+   "interaction_profile" : "",
+   "name" : "Viveトラッカー：胸用のIVRC2023Takajyouu [Testing]設定",
+   "options" : {},
+   "simulated_actions" : []
+}

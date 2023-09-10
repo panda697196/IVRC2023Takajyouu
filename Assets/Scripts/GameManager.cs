@@ -172,7 +172,8 @@ public class GameManager : MonoBehaviour
                 flyFlag = _armAngle_v2.GetFlyFlag(); //うでの振り速度の閾値越えの監視
                 Debug.Log("flyflag:"+flyFlag);
                 _targetChoicer.TraceTarget();
-                
+                _armAngle_v2.ThrowThresholdCal();
+
 
                 // ReadyToPop()により次への動作を取得，_hardwareManager.StandbyDisappear()も処理した．
 
@@ -298,6 +299,7 @@ public class GameManager : MonoBehaviour
                 // -------------------------------二回目の待機での処理内容(毎フレーム)-----------------------------------------------------
                 flyFlag = _armAngle_v2.GetFlyFlag(); //うでの振り速度の閾値越えの監視
                 Debug.Log("flyflag:"+flyFlag);
+                _armAngle_v2.ThrowThresholdCal();
 
 
                 //-------------------------------------------------------------------------------------------------------------
