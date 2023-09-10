@@ -80,6 +80,8 @@ public class ScoreCrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float debugdis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
+        Debug.Log("スコアと鷹の距離＝"+debugdis);
         if (Input.GetKeyDown(KeyCode.L))
         {
             ReadyToShow();
@@ -87,10 +89,12 @@ public class ScoreCrow : MonoBehaviour
 
         if (_scoreBoard.activeInHierarchy)
         {
+            
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
             float dis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
             if (dis<2f)
             {
+                //UnityEditor.EditorApplication.isPaused = true;
                 DropScoreBoard();
                 EagleNavi.SetTarget(_eagleIdle);
                 var EagleEdit = _eagle.GetComponent<Eagle_Edit>();
@@ -106,9 +110,12 @@ public class ScoreCrow : MonoBehaviour
     {
         //逃げたカラスを数え，残ったカラスを記録するS
         ScaredCrowNumber();
-        //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ
-        var EagleCharacterController = _eagle.GetComponent<CharacterController>();
-        EagleCharacterController.enabled = false;
+        //鷹のコライダーをオフにすることで，カラスが払われるのを防ぐ　←板倉が鷹の仕様変更したのでそれに伴いColliderに修正
+        //var EagleCharacterController = _eagle.GetComponent<CharacterController>();
+        //EagleCharacterController.enabled = false;
+        var eagleSphereCollider = _eagle.GetComponent<SphereCollider>();
+        eagleSphereCollider.enabled = false;
+        
         //残ったカラスをスコアボード近くに飛ばす
         ScoreCrowPos();
         //鷹がボードを持ってくる
@@ -178,7 +185,7 @@ public class ScoreCrow : MonoBehaviour
 
     public void DropScoreBoard()
     {
-        _eagleIdle.transform.SetParent(null);
+        _scoreBoard.transform.SetParent(null);
         var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
         BoardCollider.enabled = true;
         var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
