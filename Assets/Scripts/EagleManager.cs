@@ -19,10 +19,10 @@ public class EagleManager : MonoBehaviour
     private Quaternion _handTargetInitialRotation;
 
     [SerializeField] private GameObject _tracker;
-    [SerializeField] private GameObject _debug;
 
     [SerializeField] private int _crowCount;
-
+    [SerializeField] private GameObject _scoreBoardTarget;
+    
     public int GetSetCrowCount
     {
         get
@@ -83,10 +83,9 @@ public class EagleManager : MonoBehaviour
     }
     public void EagleTarget2Around(GameObject target)
     {
-        _navi.SetTarget(_target);
+        _navi.SetTarget(target);
         _navi.SetFlyState(Eagle_Navigation.FlyState.target);
         _edit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
-       
     }
 
     public void EagleAround2GetOn(bool hardok)
@@ -140,6 +139,12 @@ public class EagleManager : MonoBehaviour
         pos = pos.normalized * 1.92f;
         pos += tracker.position;
         pos.y += 0.82f;
-        _debug.transform.position = pos;
+        _handTargetPosition.transform.position = pos;
+    }
+    public void StartGetOnScoreBoard()
+    {
+        _navi.SetTarget(_scoreBoardTarget);
+        _edit.TakeOff();
+        _navi.SetFlyState(Eagle_Navigation.FlyState.getOnScoreBoard);
     }
 }
