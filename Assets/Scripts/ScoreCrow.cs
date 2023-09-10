@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using static Eagle_Navigation;
 using static UnityEngine.GraphicsBuffer;
@@ -25,12 +26,16 @@ public class ScoreCrow : MonoBehaviour
     [SerializeField] private GameObject _eagle; //鷹
     [SerializeField] private GameObject _toTakeScore; //スコアボードを取りに行く振りのためのTarget
     [SerializeField] private GameObject _showScore; //スコアボードを配置する場所
+    [SerializeField] private GameObject _scoreBoardTarget;//鷹がスコアボードに着地するための目的地点
     [SerializeField] private GameObject _eagleIdle; //鷹の最終停止位置
     [SerializeField] private GameObject _crowBackCenter;
     private GameObject CrowManager;
     [SerializeField] private CrowGenerater Crowgene;
-    [SerializeField] private GameManager _gameManager;
+    //[SerializeField] private GameManager _gameManager;
+    [SerializeField]
+    private EagleManager _eagleManager;
 
+    
 
 
     void RandomCirclePos(int a)
@@ -52,7 +57,7 @@ public class ScoreCrow : MonoBehaviour
             GameObject newCrow = _backCrowList[i];
             var CrowRigidbody = newCrow.GetComponent<Rigidbody>();
             CrowRigidbody.useGravity= false;
-            var CrowCollider = newCrow.GetComponent<BoxCollider>();
+            //var CrowCollider = newCrow.GetComponent<BoxCollider>();
             //CrowCollider.isTrigger = true;
             lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
             lbCrow.SetTarget(newTarget);
@@ -71,17 +76,19 @@ public class ScoreCrow : MonoBehaviour
         lb_CrowTrigger lbTrigger = new lb_CrowTrigger();
         Crowgene = CrowManager.GetComponent<CrowGenerater>();
         _scoreBoard.SetActive(false);
-        var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
-        BoardRigidbody.useGravity = false;
+        //始めにリジッドボディを付けていると上手くいかないので削除しました．（板倉）
+        //var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
+        // BoardRigidbody.useGravity = false;
+        //Destroy(BoardRigidbody);
         var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
-        BoardCollider.enabled = false;
+        BoardCollider.enabled = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        float debugdis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
-        Debug.Log("スコアと鷹の距離＝"+debugdis);
+       
+
         if (Input.GetKeyDown(KeyCode.L))
         {
             ReadyToShow();
@@ -89,20 +96,26 @@ public class ScoreCrow : MonoBehaviour
 
         if (_scoreBoard.activeInHierarchy)
         {
-            
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
             float dis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
             if (dis<2f)
             {
-                //UnityEditor.EditorApplication.isPaused = true;
-                DropScoreBoard();
-                EagleNavi.SetTarget(_eagleIdle);
-                var EagleEdit = _eagle.GetComponent<Eagle_Edit>();
-                EagleNavi.SetFlyState(Eagle_Navigation.FlyState.targetAround);
-                Invoke(nameof(ChangeGravity), 4f);
-                Invoke(nameof(WaitFly), 5f);
-                Invoke(nameof(WaitRotation), 7f);
+                
+                  
+                    //UnityEditor.EditorApplication.isPaused = true;
+                    DropScoreBoard();
+                    EagleNavi.SetTarget(_eagleIdle);
+                    var EagleEdit = _eagle.GetComponent<Eagle_Edit>(); 
+                    EagleNavi.SetFlyState(Eagle_Navigation.FlyState.target);
+                    
+                    //_eagleManager.EagleTarget2Around(_scoreBoardTarget);
+                    // Invoke(nameof(ChangeGravity), 4f);
+                    //Invoke(nameof(WaitFly), 5f);
+                    // Invoke(nameof(WaitRotation), 7f);
+                  
             }
+
+            
         }
     }
 
@@ -124,13 +137,17 @@ public class ScoreCrow : MonoBehaviour
 
     public void WaitFly()
     {
-        var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
-        EagleNavi.SetTarget(_eagleIdle);
-        EagleNavi.SetFlyState(Eagle_Navigation.FlyState.laud);
+        Debug.Log("ウェイトフライ　呼ばれたよ");
+        //var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
+        //EagleNavi.SetTarget(_scoreBoardTarget);
+        //_eagleManager.StartGetOnScoreBoard();
+        // EagleNavi.SetFlyState(Eagle_Navigation.FlyState.onlyTarget);
+        // EagleNavi.SetFlyState(Eagle_Navigation.FlyState.getOnScoreBoard);
     }
 
     public void WaitRotation()
     {
+        Debug.Log("wait Rotation Called");
         _eagle.transform.rotation = Quaternion.Euler(_scoreBoard.transform.rotation.z, _scoreBoard.transform.rotation.y, _scoreBoard.transform.rotation.x);
     }
 
@@ -188,12 +205,15 @@ public class ScoreCrow : MonoBehaviour
         _scoreBoard.transform.SetParent(null);
         var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
         BoardCollider.enabled = true;
+        _scoreBoard.AddComponent<Rigidbody>();
         var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
         BoardRigidbody.useGravity = true;
+        BoardRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     public void ChangeGravity()
     {
+        Debug.Log("Gravity Called");
         var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
         BoardRigidbody.useGravity = false;
         var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
