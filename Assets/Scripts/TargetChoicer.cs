@@ -112,8 +112,6 @@ public class TargetChoicer : MonoBehaviour
 			return Get2Average(targetOfLook.Position, targetOfHandVector.Position);
 		else if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
 			return Get2Average(targetOfThrow.Position, targetOfHandVector.Position);
-		else if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
-			return Get2Average(targetOfThrow.Position, targetOfHandVector.Position);
 		else if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
 			return Get2Average(targetOfThrow.Position, targetOfLook.Position);
 
@@ -125,8 +123,35 @@ public class TargetChoicer : MonoBehaviour
 
     public Vector3 Set2ndTarget()
     {
-		//TODO:2回目を記述
-		return _target;
+	    //候補から選ぶ
+	    //plane上に乗っているかのチェック
+	    var targetOfLook       = _raycastTo2ndPlane.ThrowRay(_fixedHmdPosition, _fixedLookPosition); //返り値は(bool, position)
+	    var targetOfHandVector = _raycastTo2ndPlane.ThrowRay(_fixedHandPosition, _fixedAfterHandPosition); //返り値は(bool, position)
+	    var targetOfThrow      = _raycastTo2ndPlane.ThrowRay(_fixedHandPosition, _fixedThrowPosition); //返り値は(bool, position)
+
+	    _debugPositionOfLook.transform.position = targetOfLook.Position;
+	    _debugPositionOfVector.transform.position = targetOfHandVector.Position;
+	    _debugPositionOfThrow.transform.position = targetOfThrow.Position;
+		
+	    //一つだけ枠内なら，それを採用
+	    if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+		    return targetOfLook.Position;
+	    else if(!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+		    return targetOfHandVector.Position;
+	    else if(!targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+		    return targetOfThrow.Position;
+
+	    //２つ枠内なら，その平均値を使用
+	    if (targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+		    return Get2Average(targetOfLook.Position, targetOfHandVector.Position);
+	    else if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+		    return Get2Average(targetOfThrow.Position, targetOfHandVector.Position);
+	    else if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+		    return Get2Average(targetOfThrow.Position, targetOfLook.Position);
+
+	    //3つ枠内，もしくは全て枠外なら，全ての平均値を使用
+	    return Get3Average(targetOfLook.Position, targetOfHandVector.Position, targetOfThrow.Position);
+	    //return _target;
 	}
 
 	public Vector3 Get2Average(Vector3 vector1, Vector3 vector2)
@@ -143,8 +168,8 @@ public class TargetChoicer : MonoBehaviour
     {
 		//飛ばした瞬間のターゲット確定
 		_fixedHmdPosition = _hmdPosition.position;
-		_fixedLookPosition = _positionOfLookBack[_backFrameToLook];
-		_fixedHandPosition = _positionOfHandBack[_backFrameToLook];
+		_fixedLookPosition = _positionOfLookBack[_backFrameToLook - 1];
+		_fixedHandPosition = _positionOfHandBack[_backFrameToLook - 1];
     }
 
 	public void AfterDecideTarget()
