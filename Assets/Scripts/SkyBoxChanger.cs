@@ -14,37 +14,36 @@ public class SkyBoxChanger : MonoBehaviour
 
     void Update()
     {
-        // //---------------------Debug-----------------------------------
-        // if (Input.GetKeyDown(KeyCode.E)) ChangeSkyBoxToSunset();
-        // if (Input.GetKeyDown(KeyCode.Comma)) ChageSkyBoxToDaytime();
-        // //-------------------------------------------------------------
+        //---------------------Debug-----------------------------------
+        if (Input.GetKeyDown(KeyCode.E)) ChangeSkyBoxToSunset();
+        if (Input.GetKeyDown(KeyCode.Comma)) ChageSkyBoxToDaytime();
+        //-------------------------------------------------------------
     }
 
     public void ChageSkyBoxToDaytime() // skyboxを昼間に変化させる
     {
-        _hasStateSkyBox = 0;
-        SetSkyBox(_hasStateSkyBox);
+        _hasStateSkyBox = 0;//skyboxを昼間に変更
+        SetSkyBox(_hasStateSkyBox);//skyboxの適応
     }
 
     public void ChangeSkyBoxToSunset() //skyboxを夕日に変化させる
     {
-        _hasStateSkyBox = 1;
-        SetSkyBox(_hasStateSkyBox);
+        _hasStateSkyBox = 1;//skyboxを夕日に変更
+        SetSkyBox(_hasStateSkyBox);//skyboxの適応
     }
 
     private void SetSkyBox(int stateSkyBox)//skyboxを変更する
     {
         switch (stateSkyBox)
         {
-            case 0:
-                RenderSettings.skybox = _daytimeSkybox;
+            case 0://昼間のskybox
+                RenderSettings.skybox = _daytimeSkybox;//skyboxの設定
                 
                 break;
-            case 1:
-                RenderSettings.skybox = _sunsetSkybox;
+            case 1://夕日のskybox
+                RenderSettings.skybox = _sunsetSkybox;//skyboxの設定
                 
                 break;
-            
         }
     }
 }
