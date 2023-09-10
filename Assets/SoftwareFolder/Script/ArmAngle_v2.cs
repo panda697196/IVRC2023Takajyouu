@@ -116,10 +116,16 @@ public class ArmAngle_v2 : MonoBehaviour
     //     
     //     Debug.Log("一時ゴールの位置："+tmpGoalPosObj.position);
     // }
-    public Vector3 GetEagleTargetFromSwing()//鷹のターゲットの位置を取得する(GameManagerがEagleTargetの位置を動かす)
+    public Vector3 GetEagleTargetFromSwing(int scene)//鷹のターゲットの位置を取得する(GameManagerがEagleTargetの位置を動かす)
     {
         //return _pointerPosition.position;
-        Vector3 target = _targetChoicer.SetTarget();
+		//候補のうちからターゲットを選定
+		Vector3 target;
+		if (scene < 4) //１回目の飛ばし
+			target = _targetChoicer.Set1stTarget();
+		else
+			target = _targetChoicer.Set2ndTarget();
+
         _pointerPosition.transform.position = target;
         return target;
     }
@@ -183,8 +189,7 @@ public class ArmAngle_v2 : MonoBehaviour
     //仮のゴールをセットする
     public Vector3 GetPlaceholderEagleTargetPos()//仮のEagleTargetの座標を取得(GameManagerがEagleTargetの位置を動かす)
     {
-        //仮の必要がなくなったので，直に入れています（試用）
-        return _targetChoicer.SetTarget();
+        return _targetChoicer.SetTempTarget();
         //return _placeholderEagleTarget;
     }
 

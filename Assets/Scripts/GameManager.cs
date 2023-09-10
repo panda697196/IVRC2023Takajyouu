@@ -149,11 +149,6 @@ public class GameManager : MonoBehaviour
                 break;
 
             case 2:// 待機a
-                // ---------------------------待機aでの処理内容(毎フレーム)---------------------------------------------------------
-                //_isFirstReadyOfPlayerArm = flyFlagObj.GetIsFirstReadyOfArm(); //うでの最初の準備完了状態の監視
-                flyFlag = _armAngle_v2.GetFlyFlag(); //うでの振り速度の閾値越えの監視
-                Debug.Log("flyflag:"+flyFlag);
-
                 //-------------------------------------------------------------------------------------------------------------
                 if (callOnceFlag == false)//1回だけの処理
                 {
@@ -171,6 +166,13 @@ public class GameManager : MonoBehaviour
 
                 }
 
+                // ---------------------------待機aでの処理内容(毎フレーム)---------------------------------------------------------
+                //_isFirstReadyOfPlayerArm = flyFlagObj.GetIsFirstReadyOfArm(); //うでの最初の準備完了状態の監視
+                flyFlag = _armAngle_v2.GetFlyFlag(); //うでの振り速度の閾値越えの監視
+                Debug.Log("flyflag:"+flyFlag);
+                _targetChoicer.TraceTarget();
+                
+
                 // ReadyToPop()により次への動作を取得，_hardwareManager.StandbyDisappear()も処理した．
 
 
@@ -179,9 +181,10 @@ public class GameManager : MonoBehaviour
                 {
                     //飛び立つ瞬間（飛んでない）
                     
+                    _targetChoicer.DecideTarget();//ターゲット位置候補確定
+                    
                     //仮のターゲットに飛ぶ
                     _eagleManager.EagleTarget2Around(_eagleTarget);
-                    _targetChoicer.DecideTarget();//ターゲット位置確定
                     
                     _hardwareManager.Disappear(); //飛び立ち刺激　本当は飛び立つ0.5secに送りたい　←よさそう
                     
@@ -538,7 +541,9 @@ public class GameManager : MonoBehaviour
 
     public void RealTarget()
     {
-        SetEagleTarget(_armAngle_v2.GetEagleTargetFromSwing());//真のターゲットをセット
+        _targetChoicer.AfterDecideTarget();//一定時間後に確定する候補ターゲットの作成
+        
+        SetEagleTarget(_armAngle_v2.GetEagleTargetFromSwing(gameSceneState));//真のターゲットをセット
         _eagleManager.EagleTarget2Around(_eagleTarget);
     }
     public void GetArmStatus(bool armMoving)

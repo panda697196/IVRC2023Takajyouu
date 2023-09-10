@@ -5,22 +5,31 @@ using UnityEngine;
 public class RaycastToPlane : MonoBehaviour
 {
     [SerializeField] private Transform _planeObject;
-    [SerializeField] private Transform _hmdObject;
-    [SerializeField] private Transform _centerObject;
     [SerializeField] private Transform _hitObject;
+
+    private Vector3 _originObject;
+    private Vector3 _throwObject;
     private bool _isBorderRefresh;
 
     void Start()
     {
     }
 
+	
     // Update is called once per frame
     void Update()
+	{
+	}
+
+    // Update is called once per frame
+    public (bool IsBorderOn, Vector3 Position) ThrowRay(Vector3 originObject, Vector3 throwObject)
     {
+		_originObject = originObject;
+		_throwObject = throwObject;
         _isBorderRefresh = false;
         
         var plane = new Plane(_planeObject.up, _planeObject.position);
-        var ray = new Ray(_hmdObject.position, _centerObject.position);
+        var ray = new Ray(_originObject, _throwObject);
         
         
         // レイと平面との当たり判定
@@ -36,6 +45,8 @@ public class RaycastToPlane : MonoBehaviour
             _hitObject.position = ray.GetPoint(enter);
             TestRangeOfPlane();
         }
+
+		return (_isBorderRefresh, _hitObject.transform.position);
     }
 
     private void TestRangeOfPlane()
@@ -66,13 +77,5 @@ public class RaycastToPlane : MonoBehaviour
     private bool GetBorderRefreshFlag()
     {
         return _isBorderRefresh;
-    }
-
-    public Vector3 GetTarget()
-    {
-        if (_isBorderRefresh)
-            return _hitObject.transform.position;
-        else
-            return _centerObject.transform.position;
     }
 }
