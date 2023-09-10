@@ -98,21 +98,25 @@ public class TargetChoicer : MonoBehaviour
 		_debugPositionOfLook.transform.position = targetOfLook.Position;
 		_debugPositionOfVector.transform.position = targetOfHandVector.Position;
 		_debugPositionOfThrow.transform.position = targetOfThrow.Position;
-		
-		//一つだけ枠内なら，それを採用
-		if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+
+
+		//Debug.Log(targetOfLook.IsBorderOn + "" + targetOfHandVector.IsBorderOn + "" + targetOfThrow.IsBorderOn);
+		//Debug.Log(_debugPositionOfLook.transform.position + "" +_debugPositionOfVector.transform.position + "" + "" +_debugPositionOfThrow.transform.position);
+
+			//一つだけ枠内なら，それを採用
+			if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
 			return targetOfLook.Position;
-		else if(!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+		else if(targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
 			return targetOfHandVector.Position;
-		else if(!targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+		else if(targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
 			return targetOfThrow.Position;
 
 		//２つ枠内なら，その平均値を使用
-		if (targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+		if (!targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
 			return Get2Average(targetOfLook.Position, targetOfHandVector.Position);
-		else if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+		else if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
 			return Get2Average(targetOfThrow.Position, targetOfHandVector.Position);
-		else if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+		else if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
 			return Get2Average(targetOfThrow.Position, targetOfLook.Position);
 
 		//3つ枠内，もしくは全て枠外なら，全ての平均値を使用
@@ -132,26 +136,27 @@ public class TargetChoicer : MonoBehaviour
 	    _debugPositionOfLook.transform.position = targetOfLook.Position;
 	    _debugPositionOfVector.transform.position = targetOfHandVector.Position;
 	    _debugPositionOfThrow.transform.position = targetOfThrow.Position;
-		
-	    //一つだけ枠内なら，それを採用
-	    if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
-		    return targetOfLook.Position;
-	    else if(!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
-		    return targetOfHandVector.Position;
-	    else if(!targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
-		    return targetOfThrow.Position;
 
-	    //２つ枠内なら，その平均値を使用
-	    if (targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
-		    return Get2Average(targetOfLook.Position, targetOfHandVector.Position);
-	    else if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
-		    return Get2Average(targetOfThrow.Position, targetOfHandVector.Position);
-	    else if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
-		    return Get2Average(targetOfThrow.Position, targetOfLook.Position);
 
-	    //3つ枠内，もしくは全て枠外なら，全ての平均値を使用
-	    return Get3Average(targetOfLook.Position, targetOfHandVector.Position, targetOfThrow.Position);
-	    //return _target;
+		//一つだけ枠内なら，それを採用
+		if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+			return targetOfLook.Position;
+		else if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+			return targetOfHandVector.Position;
+		else if (targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+			return targetOfThrow.Position;
+
+		//２つ枠内なら，その平均値を使用
+		if (!targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && targetOfThrow.IsBorderOn)
+			return Get2Average(targetOfLook.Position, targetOfHandVector.Position);
+		else if (targetOfLook.IsBorderOn && !targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+			return Get2Average(targetOfThrow.Position, targetOfHandVector.Position);
+		else if (!targetOfLook.IsBorderOn && targetOfHandVector.IsBorderOn && !targetOfThrow.IsBorderOn)
+			return Get2Average(targetOfThrow.Position, targetOfLook.Position);
+
+		//3つ枠内，もしくは全て枠外なら，全ての平均値を使用
+		return Get3Average(targetOfLook.Position, targetOfHandVector.Position, targetOfThrow.Position);
+		//return _target;
 	}
 
 	public Vector3 Get2Average(Vector3 vector1, Vector3 vector2)
