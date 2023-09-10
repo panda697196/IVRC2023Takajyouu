@@ -33,7 +33,7 @@ public class ArmMovementDetector : MonoBehaviour
             averageMagnitude /= trackerPositions.Count;
             averageMagnitude /= Time.deltaTime;
 
-            Debug.Log(averageMagnitude);
+            //Debug.Log(averageMagnitude);
 
             // 平均変化が閾値より小さい場合、左手は静止しているとみなされる
             if (averageMagnitude < movementThreshold)

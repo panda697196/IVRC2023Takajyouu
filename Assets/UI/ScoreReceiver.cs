@@ -57,18 +57,18 @@ public class ScoreReceiver : MonoBehaviour
     public void ReloadRanking(int score) //ランキングの更新
     {
         /*ランキング配列の決定*/
-        if(score >= _rankingScore[0])
+        if(score > _rankingScore[0])
         {
             _rankingScore[2] = _rankingScore[1];
             _rankingScore[1] = _rankingScore[0];
             _rankingScore[0] = score;
         }
-        else if(score < _rankingScore[0] && score >= _rankingScore[1])
+        else if(score < _rankingScore[0] && score > _rankingScore[1])
         {
             _rankingScore[2] = _rankingScore[1];
             _rankingScore[1] = score;
         }
-        else if (score < _rankingScore[1] && score >= _rankingScore[2])
+        else if (score < _rankingScore[1] && score > _rankingScore[2])
         {
             _rankingScore[2] = score;
         }
