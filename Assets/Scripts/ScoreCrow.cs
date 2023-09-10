@@ -81,7 +81,7 @@ public class ScoreCrow : MonoBehaviour
     void Update()
     {
         float debugdis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
-        Debug.Log("スコアと鷹の距離＝"+debugdis);
+        //Debug.Log("スコアと鷹の距離＝"+debugdis);
         if (Input.GetKeyDown(KeyCode.L))
         {
             ReadyToShow();

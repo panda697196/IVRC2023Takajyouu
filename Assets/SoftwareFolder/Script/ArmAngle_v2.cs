@@ -12,16 +12,18 @@ public class ArmAngle_v2 : MonoBehaviour
     [SerializeField] private TargetChoicer _targetChoicer;
     
     public Transform trackerWaist; // トラッカー1のTransformコンポーネント
+    public Transform _reference;
 
     public float span = 0.01f;
 
     [SerializeField] Transform _pointerPosition;
 
-    private Vector3 _prevPositionWaist;
+    private float _prevPositionWaist;
     private float angle;
 
     private bool _isFirstReadyOfArm;
     [SerializeField] private bool _isFirstReadyOfArmForFlyFlag;
+    [SerializeField] private float _armFlagContinuousTime = 0.5f;
 
     private int _scene;//シーンの遷移
 
@@ -40,13 +42,13 @@ public class ArmAngle_v2 : MonoBehaviour
     [SerializeField] private Collider _hmdSideCollider;
     
     [Header("仮のEagleTarget")]
-    [SerializeField] private Vector3 _placeholderEagleTarget =new Vector3(0.0f,0.0f,0.0f); //仮のEagleTargetの位置座標
+    [SerializeField] private Vector3 _placeholderEagleTarget = new Vector3(0.0f,0.0f,0.0f); //仮のEagleTargetの位置座標
 
 
     private void Start()
     {
         _scene = gameManager.GetComponent<GameManager>().GetgameSceneState(); //scene遷移の初期化
-        _prevPositionWaist = trackerWaist.position;//trackerの過去の位置初期化
+        _prevPositionWaist = (_reference.position - trackerWaist.position).magnitude;//trackerと参照位置との過去の距離初期化
         _isFirstReadyOfArmForFlyFlag = false;//_isFirstReadyOfArmForFlyFlag
     }
 
@@ -64,11 +66,11 @@ public class ArmAngle_v2 : MonoBehaviour
         
         if (_delta > span)//spanの時間間隔
         {
-            Vector3 currentPosition1 = trackerWaist.position;// トラッカーの現在の位置情報を取得
+            Vector3 currentVector1 = _reference.position - trackerWaist.position;// トラッカーから参照位置へのベクトルを算出
+            float currentPosition1 = currentVector1.magnitude;
+            //Debug.Log(currentPosition1);
             
-            Vector3 positionDiff1 = (currentPosition1 - _prevPositionWaist) / span;// 前フレームからの位置変化を計算
-
-            TrackerSpeed = positionDiff1.magnitude;
+            float TrackerSpeed = (_prevPositionWaist - currentPosition1) / span;// 前フレームからの距離変化を計算，距離が近くなれば値がプラスになるように引き算の順序を調整している
             
             // Debug.Log(TrackerSpeed); //debug:trackerのスピード
             
@@ -84,6 +86,11 @@ public class ArmAngle_v2 : MonoBehaviour
                     flyFlag = true;//フライフラグを立てる
                     // Invoke(nameof(SetGoal), DeleyTime);//deley後にゴールをセットする
                     _isFirstReadyOfArmForFlyFlag = false;//FlyFlag用の腕位置検知のフラグを初期化
+            }
+
+            if(_averageSpeed >= BaseSpeed)
+            {
+                Debug.Log("Fly!");
             }
 
             // 現在の位置情報を保存
@@ -187,8 +194,6 @@ public class ArmAngle_v2 : MonoBehaviour
         return _targetChoicer.SetTarget();
         //return _placeholderEagleTarget;
     }
-
-
     
 
 }
