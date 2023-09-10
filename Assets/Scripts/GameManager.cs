@@ -81,7 +81,9 @@ public class GameManager : MonoBehaviour
         eargleHasScorebord = false;//スコアボードを鷹が持ったかの判定フラグの初期化
         _isReadyToPopCrow = false; 
         _isArounding = false;
-
+        
+        //鷹につけられたクロウカウントを初期化
+        _eagleManager.GetSetCrowCount = 0;
 
         flyFlag = false;//flyFlagの初期化
 
@@ -104,8 +106,7 @@ public class GameManager : MonoBehaviour
                 
                 //----------------------------------------------------------------------------------------------------
 
-                //鷹につけられたクロウカウントを初期化
-                _eagleManager.GetSetCrowCount = 0;
+               
 
                 if (Input.GetKeyDown(KeyCode.Return)) //シーン遷移処理（プレイヤーの準備が完了すると）
                 {
