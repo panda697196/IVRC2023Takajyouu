@@ -171,7 +171,7 @@ public class lb_Crow : MonoBehaviour
         _speed = Mathf.Clamp(_speed, 0, 10f);
         transform.position = Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
         gameObject.transform.LookAt(target.transform);
-        UnityEngine.Debug.Log("FlyTest");
+        //UnityEngine.Debug.Log("FlyTest");
     }
 
     void Landtest(Transform target)
@@ -189,7 +189,7 @@ public class lb_Crow : MonoBehaviour
         // 方向に速度を掛け合わせて移動ベクトルを求める
         transform.position = Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
         gameObject.transform.LookAt(target.transform);
-        UnityEngine.Debug.Log("LandTest");
+        //UnityEngine.Debug.Log("LandTest");
     }
 
     void Fly(float t)

@@ -80,8 +80,8 @@ public class ScoreCrow : MonoBehaviour
         //var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
         // BoardRigidbody.useGravity = false;
         //Destroy(BoardRigidbody);
-        var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
-        BoardCollider.enabled = true;
+        //var BoardCollider = _scoreBoard.GetComponent<BoxCollider>();
+        //BoardCollider.enabled = true;
     }
 
     // Update is called once per frame
