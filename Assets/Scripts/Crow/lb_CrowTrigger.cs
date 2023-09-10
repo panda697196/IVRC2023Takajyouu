@@ -79,7 +79,7 @@ public class  lb_CrowTrigger: MonoBehaviour
                 newTarget.transform.position = 100*new Vector3(newTargetxz.x,newTargety, newTargetxz.y);
                //計算した目的地をカラスのスクリプトに渡す
                 _lbCrow.SetTarget(newTarget);
-                _crowCount.CountUp();
+                //_crowCount.CountUp();
             }
             //カラスの移動フラグをオン
             _isCrowFly=true;

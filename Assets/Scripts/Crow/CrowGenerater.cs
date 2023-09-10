@@ -52,10 +52,11 @@ public class CrowGenerater : MonoBehaviour
     private float _areaMin = -0.5f;
     private float _areaMax = 0.5f;
     AudioSource _crowSound;
-    private bool _isFadeOut = true;
+    private bool _isFadeOut = false;
     private float _fadingTime;
     private int _count;
     private float _crowSoundlevel;
+    private bool _isFadeIn = false;
 
 
 
@@ -186,8 +187,9 @@ public class CrowGenerater : MonoBehaviour
         lbCrow.SetTarget(newTarget);
         lbCrow.SetCrowState(birdBehaviors.flyToTarget);
         BoxCollider crowCollider = newCrow.GetComponent<BoxCollider>();
-        lb_CrowTrigger trigger = newCrow.GetComponentInChildren<lb_CrowTrigger>();
-        //trigger._crowCount = _crowCount;
+        //CrowCount count = newCrow.transform.GetChild(2).GetComponent<lb_CrowTrigger>()._crowCount;
+        //count = _crowCount;
+
         crowCollider.enabled = false;
     }
     void RandomFlyToPopFlyCrow()
@@ -207,8 +209,10 @@ public class CrowGenerater : MonoBehaviour
         newCrow.transform.parent = _crowStorage.transform;
         //生成したカラスをリストに追加
         _crowList.Add(newCrow);
-        lb_CrowTrigger trigger = newCrow.GetComponentInChildren<lb_CrowTrigger>();
-        //trigger._crowCount = _crowCount;
+        // lb_CrowTrigger trigger = newCrow.transform.GetChild(2).GetComponent<lb_CrowTrigger>();
+        // trigger._crowCount = _crowCount;
+        //CrowCount count = newCrow.transform.GetChild(2).GetComponent<lb_CrowTrigger>()._crowCount;
+        //count = _crowCount;
         lbCrow.SetTargetList(_randomTargetList);
         lbCrow.SetCrowState(birdBehaviors.randomFly);
         
@@ -268,10 +272,22 @@ public class CrowGenerater : MonoBehaviour
         }
         //_count = _crowCount.Count;
         //_isFadeOut = false;
-        _crowSound.volume = _crowSoundlevel - 1f / (float)_crowNum2 * (float)_count;
+        /*if (_isFadeIn == false && _isFadeOut == false)
+        {
+            _crowSound.volume = _crowSoundlevel - 1f / (float)_crowNum2 * (float)_count;
+        }
         
 
-        /*if (_isFadeOut)
+        if (_isFadeIn)
+        {
+            _fadingTime += Time.deltaTime;
+            _crowSound.volume = _fadingTime / _fadeDuration;
+        }
+        if (_fadingTime <= 0)
+        {
+            _isFadeOut = false;
+        }
+        if (_isFadeOut)
         {
             _fadingTime -= Time.deltaTime;
             _crowSound.volume = _fadingTime / _fadeDuration;
@@ -279,6 +295,10 @@ public class CrowGenerater : MonoBehaviour
         if (_fadingTime <= 0)
         {
             _isFadeOut = false;
+        }
+        else
+        {
+            _crowSound.volume = _crowSoundlevel - 1f / (float)_crowNum2 * (float)_count;
         }*/
     }
 
@@ -287,8 +307,8 @@ public class CrowGenerater : MonoBehaviour
     {
         _popUpPlaceList1W.Add(_popUpPlaceList1[0]);
         _popUpPlaceList2W.Add(_popUpPlaceList2[0]);
-        _popUpPlaceList1W.Add(_popUpPlaceList1[45]);
-        _popUpPlaceList2W.Add(_popUpPlaceList2[45]);
+        _popUpPlaceList1W.Add(_popUpPlaceList1[46]);
+        _popUpPlaceList2W.Add(_popUpPlaceList2[46]);
         _totalWeight = _popUpPlaceList1W.Count;
         for(int i = 0; i<_crowNum1; i++)
         {
