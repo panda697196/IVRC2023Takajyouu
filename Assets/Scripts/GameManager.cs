@@ -103,8 +103,9 @@ public class GameManager : MonoBehaviour
                 //player = true//プレイヤーが準備できかを監視
                 
                 //----------------------------------------------------------------------------------------------------
-                
-                
+
+                //鷹につけられたクロウカウントを初期化
+                _eagleManager.GetSetCrowCount = 0;
 
                 if (Input.GetKeyDown(KeyCode.Return)) //シーン遷移処理（プレイヤーの準備が完了すると）
                 {
@@ -300,9 +301,11 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("待機B");
                     callOnceFlag = true;
-
-                    _crowCount1stTry = 38;//TODO:１回目のカラス取得
                     
+                    //１回目に飛ばしたカラスの羽数を記録
+                    _crowCount1stTry = _eagleManager.GetSetCrowCount;//TODO:１回目に飛ばしたカラスの個数を取得
+                    //飛ばしたカラスの羽数を初期化
+                    _eagleManager.GetSetCrowCount = 0;
                     _crowGenerater.DestoryCrowAndTarget();//カラスとターゲットを消す
                     //TODO：スカイボックスを変更し，カラスを飛び立たせる
                     
@@ -324,6 +327,7 @@ public class GameManager : MonoBehaviour
                 // if (Input.GetKeyDown(KeyCode.Return)) // 腕の振りを検出
                 if (Input.GetKeyDown(KeyCode.Return) || (flyFlag == true && _isReadyToPopCrow)) // シーン遷移処理（腕の振りを検出）
                 {
+                    
                     //飛び立つ瞬間（飛んでない）
                     _isReadyToPopCrow = false;
                     
@@ -382,8 +386,8 @@ public class GameManager : MonoBehaviour
                     Debug.Log("帰還B");
                     callOnceFlag = true;
                     Invoke(nameof(ReadyToShowScore),3f);
-
-                    _crowCount2ndTry = 38;//TODO:２回目のカラス取得
+                    //２回目で飛ばしたカラスの羽数を取得
+                    _crowCount2ndTry = _eagleManager.GetSetCrowCount;//TODO:２回目のカラス取得
                     //スコアの算出と伝達
                     _scoreReceiver.GetScore(_crowCount1stTry + _crowCount2ndTry);
                 }

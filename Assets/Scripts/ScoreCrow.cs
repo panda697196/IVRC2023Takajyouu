@@ -80,6 +80,8 @@ public class ScoreCrow : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        float debugdis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
+        Debug.Log("スコアと鷹の距離＝"+debugdis);
         if (Input.GetKeyDown(KeyCode.L))
         {
             ReadyToShow();

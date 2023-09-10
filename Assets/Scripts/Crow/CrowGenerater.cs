@@ -250,6 +250,7 @@ public class CrowGenerater : MonoBehaviour
         _crowSound = GetComponent<AudioSource>();
         _crowSound.Stop();
         
+        
         _areaSize = _flyArea.transform.localScale;
         _offset = _flyArea.transform.position;
     }

@@ -20,8 +20,25 @@ public class EagleManager : MonoBehaviour
 
     [SerializeField] private GameObject _tracker;
     [SerializeField] private GameObject _debug;
+
+    [SerializeField] private int _crowCount;
+
+    public int GetSetCrowCount
+    {
+        get
+        {
+            return _crowCount;
+            
+        }
+        set
+        {
+            _crowCount = value;
+        }
+    }
+    
     void Start()
     {
+        
         _edit = gameObject.GetComponent<Eagle_Edit>();
         _navi = gameObject.GetComponent<Eagle_Navigation>();
         _navi.SetHandPosition(_handTargetPosition);
