@@ -89,10 +89,12 @@ public class ScoreCrow : MonoBehaviour
 
         if (_scoreBoard.activeInHierarchy)
         {
+            
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
             float dis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
             if (dis<2f)
             {
+                //UnityEditor.EditorApplication.isPaused = true;
                 DropScoreBoard();
                 EagleNavi.SetTarget(_eagleIdle);
                 var EagleEdit = _eagle.GetComponent<Eagle_Edit>();
