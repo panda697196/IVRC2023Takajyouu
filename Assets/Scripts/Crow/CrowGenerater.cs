@@ -185,11 +185,45 @@ public class CrowGenerater : MonoBehaviour
         newTarget.transform.parent = _targetStorage.transform;
         lbCrow.SetTarget(newTarget);
         lbCrow.SetCrowState(birdBehaviors.flyToTarget);
-        BoxCollider crowCollider = newCrow.GetComponent<BoxCollider>();
-        
-
-        crowCollider.enabled = false;
+        //BoxCollider crowCollider = newCrow.GetComponent<BoxCollider>();
+        //crowCollider.enabled = false;
     }
+
+    void RandomFlyToPopTowerCrow()
+    {
+        var radius = Random.Range(_radiusMin, _radiusMax);
+        var angle = Random.Range(0, 360);
+        var rad = angle * Mathf.Deg2Rad;
+        var px = Mathf.Cos(rad) * radius;
+        var py = Mathf.Sin(rad) * radius;
+        var spawnPos = new Vector3(px, 0, py) + _offset;
+        // Prefabをインスタンス化する
+        GameObject newCrow = Instantiate(_crow, spawnPos, Quaternion.identity);
+        lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
+        //見やすいように生成したカラスをCrowStorageに格納
+        newCrow.transform.parent = _crowStorage.transform;
+        //生成したカラスをリストに追加
+        _crowList.Add(newCrow);
+
+        //カラスの出現場所のリストの番号をランダムで選択
+        _chooseNum = Random.Range(7, 16);
+        //Debug.Log(_popUpPlaceList1W[_chooseNum].name);
+        _point1 = _popUpPlaceList1[_chooseNum].transform.position;
+        _point2 = _popUpPlaceList2[_chooseNum].transform.position;
+        Vector3 popLine = _point1 - _point2;
+        float r = Random.Range(0, 1.0f);
+        //Debug用
+        /*GameObject newSphere = Instantiate(_sphere, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
+        GameObject newCrow = Instantiate(_crow, newSphere.transform.position, newSphere.transform.rotation);*/
+        //カラスをインスタンス生成
+        GameObject newTarget = Instantiate(_randomStayTarget, (_point2 + popLine * r), Quaternion.Euler(0, Random.Range(0, 180), 0));
+        lbCrow._idleAgitated = r;//Idle時の動作を差を付けるため
+        //見やすいように生成したTargetをTargetStorageに格納
+        newTarget.transform.parent = _targetStorage.transform;
+        lbCrow.SetTarget(newTarget);
+        lbCrow.SetCrowState(birdBehaviors.flyToTarget);
+    }
+
     void RandomFlyToPopFlyCrow()
     {
         var radius = Random.Range(_radiusMin, _radiusMax);
@@ -201,16 +235,14 @@ public class CrowGenerater : MonoBehaviour
         // Prefabをインスタンス化する
         GameObject newCrow = Instantiate(_crow, spawnPos, Quaternion.identity);
         lb_Crow lbCrow = newCrow.GetComponent<lb_Crow>();
-        BoxCollider crowCollider= newCrow.GetComponent<BoxCollider>();
-        crowCollider.enabled = false;
+        //BoxCollider crowCollider= newCrow.GetComponent<BoxCollider>();
+        //crowCollider.enabled = false;
         //見やすいように生成したカラスをCrowStorageに格納
         newCrow.transform.parent = _crowStorage.transform;
         //生成したカラスをリストに追加
         _crowList.Add(newCrow);
         lbCrow.SetTargetList(_randomTargetList);
         lbCrow.SetCrowState(birdBehaviors.randomFly);
-        
-
     }
 
     void RandomPositionTarget(int b)
@@ -265,7 +297,7 @@ public class CrowGenerater : MonoBehaviour
         }
         if (Input.GetKeyDown(KeyCode.B))
         {
-            CrowGenerator2();
+            CrowGenerator3();
         }
         if (Input.GetKeyDown(KeyCode.D))
         {
@@ -308,6 +340,32 @@ public class CrowGenerater : MonoBehaviour
             if (i < num)
             {
                 RandomFlyToPopFlyCrow();
+            }
+            else
+            {
+                RandomFlyToPopIdleCrow();
+            }
+        }
+        _crowSound.volume = 1f / (float)_crowNum2 * (float)_crowNum2;
+        _crowSoundlevel = _crowSound.volume;
+        _crowSound.Play();
+    }
+
+    public void CrowGenerator3()
+    {
+        SumOfWeight();
+        HaveWeightLsit();
+        int num = 8 * _crowNum2 / 10;
+        RandomPositionTarget(_flyAreaTarget);
+        for (int i = 0; i < _crowNum2; i++)
+        {
+            if (i < num)
+            {
+                RandomFlyToPopFlyCrow();
+            }
+            if (i > (_crowNum2 - 6))
+            {
+                RandomFlyToPopTowerCrow();
             }
             else
             {
