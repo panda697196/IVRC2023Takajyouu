@@ -5838,6 +5838,7 @@ MonoBehaviour:
   _scoreCrow: {fileID: 1495952948}
   _targetChoicer: {fileID: 833044543}
   _skyBoxChanger: {fileID: 384144410}
+  _armMovementDetector: {fileID: 1554461367}
   _eagleTarget: {fileID: 1910683028}
   _crowGenerater: {fileID: 1975935869}
   _timeToHawkDrop: 0
@@ -15338,7 +15339,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1345947674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16184,7 +16185,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1451927864
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17550,7 +17551,8 @@ MonoBehaviour:
   detectionDuration: 1
   movementThreshold: 0.1
   averageMove: {x: 0, y: 0, z: 0}
-  trackerPositions: []
+  _trackerMovements: []
+  _timeThreshold: 1
 --- !u!4 &1554461368
 Transform:
   m_ObjectHideFlags: 0
@@ -18200,7 +18202,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1641998159
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21121,7 +21123,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1912271734
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -21701,7 +21703,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1988013305
 MonoBehaviour:
   m_ObjectHideFlags: 0

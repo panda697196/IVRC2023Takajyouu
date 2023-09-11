@@ -34,7 +34,7 @@ public class ArmCollisionDetection : MonoBehaviour
         // 所定の位置のコライダー内にトラッカーが入ったかどうかを検知
         if (Collider.bounds.Contains(trackerPosition))
         {
-            Debug.Log("腕が所定の位置に移動しました！");
+            //Debug.Log("腕が所定の位置に移動しました！");
             // ここに移動が検知されたときの処理を追加する
             _isArmCllisionDetection = true;
         }
