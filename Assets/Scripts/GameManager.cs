@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private ScoreCrow _scoreCrow;
     [SerializeField] private TargetChoicer _targetChoicer;
     [SerializeField] private SkyBoxChanger _skyBoxChanger;
+    [SerializeField] private ArmMovementDetector _armMovementDetector;
     
     // [SerializeField] private Transform rawfingerPos;//左手の親指の位置
     [SerializeField] private GameObject _eagleTarget;//鷹の飛行すべき目標位置
@@ -60,7 +61,7 @@ public class GameManager : MonoBehaviour
     private bool _isReadyToPopCrow = false;
     private bool _isArounding = false;
     private bool _isOnceComeStandby = false;
-    private bool isArmMoving = false;//左手が動いているかどうかの判定
+    private bool _isArmStandby = false;//左手が固定されているかどうかの判定
 
     [SerializeField] private bool _isUseHardware = false;//ハードウェアを使わずにデバッグしたい場合はこれを切ってください
 
@@ -105,15 +106,13 @@ public class GameManager : MonoBehaviour
         switch (gameSceneState)
         {
             case 0:// スタートシーン(case0)腕を構えるまで
-                // --------------------スタートシーンでの処理内容(毎フレーム)------------------------------------------------
-                
+                   // --------------------スタートシーンでの処理内容(毎フレーム)------------------------------------------------
+
                 //player = true//プレイヤーが準備できかを監視
-                
+
                 //----------------------------------------------------------------------------------------------------
 
-               
-
-                if (Input.GetKeyDown(KeyCode.Return)) //シーン遷移処理（プレイヤーの準備が完了すると）
+                if (Input.GetKeyDown(KeyCode.Return)) //シーン遷移処理（プレイヤーの準備が完了すると，最初の腕の固定は目視で確認お願いします）
                 {
                     callOnceFlag = false; //一回フラグの初期化
 
@@ -243,13 +242,13 @@ public class GameManager : MonoBehaviour
 
 
                 _isArounding = _eagleManager.IsEagleAround();
-                
-                //_isAroundingがfalseからtrueになったときに一回だけアニメーションからUI表示
-                
 
-                if (_isArounding && !_isOnceComeStandby)//TODO:旋回中　腕を固定したかの判定（←重要）　1回のみ呼び出し
+                //_isAroundingがfalseからtrueになったときに一回だけアニメーションからUI表示
+
+                _armMovementDetector.ArmMovementDetect(); // 腕の固定が完了しているかの検知
+
+                if (_isArounding && !_isOnceComeStandby　&& _isArmStandby)//TODO:旋回中　腕を固定したかの判定（←重要）　1回のみ呼び出し
                 {
-                    //TODO:腕を固定していたら
                     _hardwareManager.StandbyComeHawk();
                     //UIを消す？
                     _isOnceComeStandby = true;
@@ -556,9 +555,9 @@ public class GameManager : MonoBehaviour
         SetEagleTarget(_armAngle_v2.GetEagleTargetFromSwing(gameSceneState));//真のターゲットをセット
         _eagleManager.EagleTarget2Around(_eagleTarget);
     }
-    public void GetArmStatus(bool armMoving)
+    public void GetArmStatus(bool armStopping)
     {
-        isArmMoving = armMoving;
+        _isArmStandby = armStopping;
     }
 
 }
