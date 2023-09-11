@@ -5837,7 +5837,7 @@ MonoBehaviour:
   _scoreReceiver: {fileID: 1758561134}
   _scoreCrow: {fileID: 1495952948}
   _targetChoicer: {fileID: 833044543}
-  _skyBoxChanger: {fileID: 0}
+  _skyBoxChanger: {fileID: 384144410}
   _eagleTarget: {fileID: 1910683028}
   _crowGenerater: {fileID: 1975935869}
   _timeToHawkDrop: 0
@@ -21568,6 +21568,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _crowStorage: {fileID: 75253175}
   _targetStorage: {fileID: 1301395714}
+  _eaglePlayer: {fileID: 431753548}
   _flyArea: {fileID: 1243439437}
   _flyAreaTarget: 20
   _crowNum1: 100
@@ -22184,7 +22185,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2014578744}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
