@@ -48,7 +48,7 @@ public class ArmMovementDetector : MonoBehaviour
             // ドロップされたロケーションレコードのリストを空にする
             trackerPositions.Clear();
             
-            Debug.Log(isArmMoving);
+            //Debug.Log(isArmMoving);
 
             // 腕の状態をGameManagercに渡す
             gameManager.GetArmStatus(isArmMoving);

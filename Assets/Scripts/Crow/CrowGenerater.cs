@@ -253,6 +253,13 @@ public class CrowGenerater : MonoBehaviour
         
         _areaSize = _flyArea.transform.localScale;
         _offset = _flyArea.transform.position;
+
+        //以下の部分を付け加えたため、必ず最初にCrowGenerator1を動かすこと、2の後にするとCrowGenerator1の挙動がおかしくなる
+        _popUpPlaceList1W.Add(_popUpPlaceList1[0]);
+        _popUpPlaceList2W.Add(_popUpPlaceList2[0]);
+        _popUpPlaceList1W.Add(_popUpPlaceList1[46]);
+        _popUpPlaceList2W.Add(_popUpPlaceList2[46]);
+        _totalWeight = _popUpPlaceList1W.Count;
     }
 
     void Update()//Debug用
@@ -306,11 +313,11 @@ public class CrowGenerater : MonoBehaviour
     //カラスを_crowMaxNumberまで生成するメソッド　スポーンはCenterの位置を中心に正方形に生成
     public void CrowGenerator1()
     {
-        _popUpPlaceList1W.Add(_popUpPlaceList1[0]);
+        /*_popUpPlaceList1W.Add(_popUpPlaceList1[0]);
         _popUpPlaceList2W.Add(_popUpPlaceList2[0]);
         _popUpPlaceList1W.Add(_popUpPlaceList1[46]);
         _popUpPlaceList2W.Add(_popUpPlaceList2[46]);
-        _totalWeight = _popUpPlaceList1W.Count;
+        _totalWeight = _popUpPlaceList1W.Count;*/
         for(int i = 0; i<_crowNum1; i++)
         {
             RandomFlyToPopIdleCrow();

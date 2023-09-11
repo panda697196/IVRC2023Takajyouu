@@ -136,11 +136,13 @@ public class GameManager : MonoBehaviour
                     callOnceFlag = true;
                 }
 
-                Debug.Log(_eagleManager.IsEagleHandLauding());
+                //Debug.Log(_eagleManager.IsEagleHandLauding());
                 if (_eagleManager.IsEagleHandLauding() && !_isComingEagle) //TODO:おもり落下が遅いので少し早めたい
                 {
                     _isComingEagle = true;
                     SetComeHawkSecond(_timeToHawkDrop); //Hardware（ComeHawk（））を動かす
+                    //TODO:カラス沸かせる1（少なめ，集中，固定）
+                    _crowGenerater.CrowGenerator1();//カラスを沸かす、一回目
                 }
 
 
@@ -161,8 +163,7 @@ public class GameManager : MonoBehaviour
                     Debug.Log("待機A");
                     callOnceFlag = true;
 
-                    //TODO:カラス沸かせる1（少なめ，集中，固定）
-                    _crowGenerater.CrowGenerator1();//カラスを沸かす、一回目
+                    
                     Invoke(nameof(ReadyToDisappear),2f);//hard引き上げ準備
                     Invoke(nameof(ReadyToPopCrow),3f);
                     _targetChoicer.On1stTarget();
@@ -295,24 +296,6 @@ public class GameManager : MonoBehaviour
                     callOnceFlag = false;
                     _isComingEagle = false;
                     _isEagleGetOnArm = false;
-                    gameSceneState = 5;//二回目の待機シーンへ
-                }
-                break;
-
-            case 5://二回目の待機シーン（待機b）(case５)
-
-                // -------------------------------二回目の待機での処理内容(毎フレーム)-----------------------------------------------------
-                flyFlag = _armAngle_v2.GetFlyFlag(); //うでの振り速度の閾値越えの監視
-                Debug.Log("flyflag:"+flyFlag);
-                _armAngle_v2.ThrowThresholdCal();
-
-
-                //-------------------------------------------------------------------------------------------------------------
-                if (callOnceFlag == false)//１回だけの処理
-                {
-                    Debug.Log("待機B");
-                    callOnceFlag = true;
-                    
                     //１回目に飛ばしたカラスの羽数を記録
                     _crowCount1stTry = _eagleManager.GetSetCrowCount;//TODO:１回目に飛ばしたカラスの個数を取得
                     //飛ばしたカラスの羽数を初期化
@@ -322,6 +305,25 @@ public class GameManager : MonoBehaviour
                     _skyBoxChanger.ChangeSkyBoxToSunset();//夕方のスカイボックスにする
                     //TODO:カラス沸かせる２（多め，バラバラ）
                     _crowGenerater.CrowGenerator2();//カラスを沸かす、二回目
+                    gameSceneState = 5;//二回目の待機シーンへ
+                }
+                break;
+
+            case 5://二回目の待機シーン（待機b）(case５)
+
+                // -------------------------------二回目の待機での処理内容(毎フレーム)-----------------------------------------------------
+                flyFlag = _armAngle_v2.GetFlyFlag(); //うでの振り速度の閾値越えの監視
+                //Debug.Log("flyflag:"+flyFlag);
+                _armAngle_v2.ThrowThresholdCal();
+
+
+                //-------------------------------------------------------------------------------------------------------------
+                if (callOnceFlag == false)//１回だけの処理
+                {
+                    Debug.Log("待機B");
+                    callOnceFlag = true;
+                    
+                    
                     Invoke(nameof(ReadyToDisappear),2f);//hard引き上げ準備
                     Invoke(nameof(ReadyToPopCrow),3f);
                     //TODO:TakeOffアニメーション もしくは 適当なターゲットに飛ぶ（ソフトウェア）
