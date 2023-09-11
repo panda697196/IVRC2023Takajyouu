@@ -25,7 +25,7 @@ public class ScoreCrow : MonoBehaviour
     [SerializeField] private GameObject _scoreBoard; //スコアボード
     [SerializeField] private GameObject _eagle; //鷹
     [SerializeField] private GameObject _toTakeScore; //スコアボードを取りに行く振りのためのTarget
-    //[SerializeField] private GameObject _toTakeScore2;
+    [SerializeField] private GameObject _toTakeScore2;
     [SerializeField] private GameObject _showScore; //スコアボードを配置する場所
     [SerializeField] private GameObject _scoreBoardTarget;//鷹がスコアボードに着地するための目的地点
     [SerializeField] private GameObject _eagleIdle; //鷹の最終停止位置
@@ -100,7 +100,7 @@ public class ScoreCrow : MonoBehaviour
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
             float dis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
             Debug.Log(dis);
-            if (dis<2f)
+            if (dis<20f)
             {
                 
                   
@@ -187,7 +187,6 @@ public class ScoreCrow : MonoBehaviour
         EagleNavi.SetTarget(_toTakeScore);
         var EagleEdit = _eagle.GetComponent<Eagle_Edit>();
         EagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
-        //EagleEdit.SetEagleState(Eagle_Edit.EagleState.Fly);
         EagleNavi.SetFlyState(Eagle_Navigation.FlyState.target);
         Invoke(nameof(ShowBoard),6f);
     }
@@ -196,12 +195,12 @@ public class ScoreCrow : MonoBehaviour
     {
         _scoreBoard.SetActive(true);
         var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
-        //EagleNavi.SetTarget(_toTakeScore2);
-        EagleNavi.SetTarget(_showScore);
+        EagleNavi.SetTarget(_toTakeScore2);
+        //EagleNavi.SetTarget(_showScore);
         var EagleEdit = _eagle.GetComponent<Eagle_Edit>();
         EagleEdit.SetEagleState(Eagle_Edit.EagleState.Takeoff);
         EagleNavi.SetFlyState(Eagle_Navigation.FlyState.target);
-        //Invoke(nameof(FlyToDrop), 3f);
+        Invoke(nameof(FlyToDrop), 3f);
     }
 
     public void FlyToDrop()
@@ -222,7 +221,7 @@ public class ScoreCrow : MonoBehaviour
         _scoreBoard.AddComponent<Rigidbody>();
         var BoardRigidbody = _scoreBoard.GetComponent<Rigidbody>();
         BoardRigidbody.useGravity = true;
-        BoardRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
+        //BoardRigidbody.constraints = RigidbodyConstraints.FreezeRotation;
     }
 
     public void ChangeGravity()
