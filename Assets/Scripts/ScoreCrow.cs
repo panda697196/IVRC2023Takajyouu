@@ -99,7 +99,7 @@ public class ScoreCrow : MonoBehaviour
         {
             var EagleNavi = _eagle.GetComponent<Eagle_Navigation>();
             float dis = Vector3.SqrMagnitude(_showScore.transform.position - _eagle.transform.position);
-            Debug.Log(dis);
+            //Debug.Log(dis);
             if (dis<20f)
             {
                 

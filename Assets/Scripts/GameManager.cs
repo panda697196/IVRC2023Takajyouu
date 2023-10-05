@@ -141,7 +141,7 @@ public class GameManager : MonoBehaviour
                     _isComingEagle = true;
                     SetComeHawkSecond(_timeToHawkDrop); //Hardware（ComeHawk（））を動かす
                     //TODO:カラス沸かせる1（少なめ，集中，固定）
-                    _crowGenerater.CrowGenerator1();//カラスを沸かす、一回目
+                    //_crowGenerater.CrowGenerator1();//カラスを沸かす、一回目
                 }
 
 
@@ -151,7 +151,7 @@ public class GameManager : MonoBehaviour
                     _isEagleGetOnArm = false;
                     _isComingEagle = false;
 
-                    gameSceneState = 2;//待機シーン（case2）へ
+                    gameSceneState = 4;//待機シーン（case2）へ
                 }
                 break;
 
@@ -279,7 +279,7 @@ public class GameManager : MonoBehaviour
                 if (_eagleManager.IsEagleHandLauding() && !_isComingEagle)
                 {
                     _isComingEagle = true;
-                    SetComeHawkSecond(_timeToHawkDrop); //Hardware（ComeHawk（））を動かす
+                    //SetComeHawkSecond(_timeToHawkDrop); //Hardware（ComeHawk（））を動かす
                 }
                 
                 //-----------------------------------------------------------------------------------------------------
@@ -287,7 +287,7 @@ public class GameManager : MonoBehaviour
                 {
                     Debug.Log("帰還A");
                     callOnceFlag = true;
-
+                    _isEagleGetOnArm = true;
                 }
 
                 if (Input.GetKeyDown(KeyCode.Return) || _isEagleGetOnArm == true)//シーン遷移(鷹がうでに止まる)
