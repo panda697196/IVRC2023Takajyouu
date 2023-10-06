@@ -93,6 +93,8 @@ public class GameManager : MonoBehaviour
 
         flyFlag = false;//flyFlagの初期化
 
+        _skyBoxChanger.ChangeSkyBoxToSunset();//夕方のスカイボックスにする
+
         // fingerPos = rawfingerPos.position;//左手の座標の取得かつ初期化
 
         // eagleTargetPos = eagleTarget.position;//鷹のターゲットの位置を初期化
@@ -151,7 +153,7 @@ public class GameManager : MonoBehaviour
                     _isEagleGetOnArm = false;
                     _isComingEagle = false;
 
-                    gameSceneState = 4;//待機シーン（case2）へ
+                    gameSceneState = 4;//帰還シーン（case4）へ
                 }
                 break;
 
@@ -301,7 +303,7 @@ public class GameManager : MonoBehaviour
                     _eagleManager.GetSetCrowCount = 0;
                     _crowGenerater.DestoryCrowAndTarget();//カラスとターゲットを消す
                     //TODO：スカイボックスを変更し，カラスを飛び立たせる
-                    _skyBoxChanger.ChangeSkyBoxToSunset();//夕方のスカイボックスにする
+                    //_skyBoxChanger.ChangeSkyBoxToSunset();//夕方のスカイボックスにする
                     //TODO:カラス沸かせる２（多め，バラバラ）
                     _crowGenerater.CrowGenerator2();//カラスを沸かす、二回目
                     gameSceneState = 5;//二回目の待機シーンへ
